@@ -11,29 +11,29 @@ public enum CardState
 }
 public class Card
 {
-    private int cardId { get; }
-    private string name { 
-        get 
-        {
-            return name;
-        } 
-    }
-    private string description {
+    public string name;
+    public string description {
         get
         {
             UpdateDescription();
             return description;
         }
     }
-    private int rarity { get; }
-    private int damage { get; }
-    private int heal { get; }
-    private int cost { get; }
-    private int upgradeCount { get; set; }
-    private List<int> effects;
+    public int rarity { get; }
+    public int damage;
+    public int heal;
+    public int cost;
+    public int upgradeCount;
+    public List<int> effects;
 
     private void UpdateDescription()
     {
         //TODO
+    }
+
+    public Card(string _name,int _damage)
+    {
+        name = _name;
+        damage = _damage;
     }
 }

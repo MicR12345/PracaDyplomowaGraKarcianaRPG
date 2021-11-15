@@ -16,9 +16,13 @@ public class Player
     private int deckSize { get; set; }
     private List<Card> cardStack { get; }
     private int stackKnowledge { get; set; }
-    private List<Card> hand { get; set; }
+    public List<Card> hand;
     private int handSize { get; set; }
     private List<Card> abilityCards { get; set; }
     private List<Tuple<int,int>> activeEffects { get; set; }
-    
+    //Debug constructor
+    public Player()
+    {
+        hand = new List<Card>();
+    }
 }

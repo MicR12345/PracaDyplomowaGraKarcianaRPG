@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class PlayerObject : MonoBehaviour
 {
-    Player player;
+    private Player player;
     Sprite playerSprite;
 
     SpriteRenderer spriteRenderer;
     Material spriteMaterial;
 
     GameManager gm;
-    public PlayerObject(GameManager _gm,Player _player, Sprite _playerSprite,Material _spriteMaterial)
+
+    public GameObject Hand;
+    List<GameObject> cardsInHand;
+    public void PlayerObjectSetup(GameManager _gm,Player _player, Sprite _playerSprite,Material _spriteMaterial)
     {
+        this.name = "Player";
         player = _player;
         playerSprite = _playerSprite;
         spriteMaterial = _spriteMaterial;
@@ -22,6 +26,12 @@ public class PlayerObject : MonoBehaviour
         spriteRenderer = this.gameObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = playerSprite;
 
+        Hand = new GameObject();
+        Hand.name = "Hand";
+        Hand.transform.parent = this.gameObject.transform;
+        Hand.transform.localPosition = new Vector3(0f, -30f, -1f);
+
+        cardsInHand = new List<GameObject>();
     }
     void Start()
     {
@@ -32,5 +42,32 @@ public class PlayerObject : MonoBehaviour
     void Update()
     {
         
+    }
+    public void AddCardToPlayerHand(Card card)
+    {
+        player.hand.Add(card);
+    }
+    //Execute order 66 and remake all children from scratch
+    public void RefreshHand()
+    {
+        foreach (GameObject inHand in cardsInHand)
+        {
+            GameObject.Destroy(inHand);
+        }
+        foreach (Card item in player.hand)
+        {
+            CardObject cardPrototype = gm.cardLibrary.FindCardByName(item.name);
+            if (cardPrototype != null)
+            {
+                cardPrototype.card = item;
+                GameObject newCard = Instantiate(cardPrototype.gameObject, Hand.transform);
+                newCard.GetComponent<CardObject>().CreateCard();
+                cardsInHand.Add(newCard);
+            }
+            else
+            {
+                Debug.LogError("Card not found in library \"" + item.name + "\"");
+            }
+        }
     }
 }

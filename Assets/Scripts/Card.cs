@@ -25,6 +25,7 @@ public class Card
     public int cost;
     public int upgradeCount;
     public List<int> effects;
+    public List<string> tags;
 
     private void UpdateDescription()
     {

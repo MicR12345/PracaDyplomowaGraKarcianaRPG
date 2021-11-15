@@ -28,7 +28,32 @@ public class CardLibrary : MonoBehaviour
         cards = new List<CardObject>();
         Card card = new Card("0_cardTest", 1);
         Texture2D texture2D = LoadCardImg(card.name);
-        Sprite sprite = Sprite.Create(texture2D,new Rect(0.0f,0.0f,texture2D.width,texture2D.height), new Vector2(0.5f, 0.5f));
-        cards.Add(new CardObject(sprite, sprite, card));
+        Sprite sprite = Sprite.Create(texture2D,new Rect(0.0f,0.0f,texture2D.width,texture2D.height), new Vector2(0.5f, 0.5f),15f);
+        AddCardPrototype(card,sprite,null);
+    }
+    public void AddCardPrototype(Card card,Sprite cardImage,Sprite cardBorder)
+    {
+        GameObject cardObject = new GameObject(card.name);
+        CardObject newCard = cardObject.AddComponent<CardObject>();
+        cardObject.transform.parent = this.transform;
+        cardObject.transform.localPosition = Vector3.zero;
+        newCard.SetupCardPrototype(cardObject, cardImage, cardBorder, card);
+        cards.Add(newCard);
+    }
+    public CardObject FindCardByName(string name)
+    {
+        foreach (CardObject item in cards)
+        {
+            Debug.Log("Compared " + item.card.name + " to " + name);
+            if (item.card.name == name) return item;
+        }
+        return null;
+    }
+    public void DebugPrintAllCardsNames()
+    {
+        foreach (CardObject item in cards)
+        {
+            Debug.Log(item.card.name);
+        }
     }
 }

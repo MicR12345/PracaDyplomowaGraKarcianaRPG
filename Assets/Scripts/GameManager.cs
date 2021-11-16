@@ -15,8 +15,6 @@ public class GameManager : MonoBehaviour
     GameObject Player;
     PlayerObject player;
     
-
-   
     void Start()
     {
         cardLibrary = CardLibrary.GetComponent<CardLibrary>();

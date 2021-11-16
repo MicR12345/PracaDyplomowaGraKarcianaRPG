@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CardObject : MonoBehaviour
 {
@@ -14,7 +15,8 @@ public class CardObject : MonoBehaviour
     GameObject spriteObject;
     GameObject borderObject;
 
-    public void SetupCardPrototype(GameObject _go,Sprite _cardImage, Sprite _cardBorder, Card _card)
+    BoxCollider2D boxCollider;
+    public void SetupCardPrototype(Sprite _cardImage, Sprite _cardBorder, Card _card)
     {
         cardImage = _cardImage;
         cardBorder = _cardBorder;
@@ -22,7 +24,7 @@ public class CardObject : MonoBehaviour
 
         CreateSpriteChild();
         //CreateBorderChild();
-        
+
         gameObject.SetActive(false);
     }
     public void CreateCard()
@@ -37,6 +39,8 @@ public class CardObject : MonoBehaviour
         spriteObject.transform.localPosition = Vector3.zero;
         spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = cardImage;
+        spriteObject.tag = "card_sprite";
+        spriteObject.AddComponent<BoxCollider2D>();
     }
     void CreateBorderChild()
     {

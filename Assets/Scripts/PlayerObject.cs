@@ -47,7 +47,6 @@ public class PlayerObject : MonoBehaviour
     {
         player.hand.Add(card);
     }
-    //Execute order 66 and remake all children from scratch
     public void RefreshHand()
     {
         foreach (GameObject inHand in cardsInHand)

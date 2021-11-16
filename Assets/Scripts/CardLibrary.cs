@@ -36,8 +36,9 @@ public class CardLibrary : MonoBehaviour
         GameObject cardObject = new GameObject(card.name);
         CardObject newCard = cardObject.AddComponent<CardObject>();
         cardObject.transform.parent = this.transform;
+        cardObject.tag = "Card";
         cardObject.transform.localPosition = Vector3.zero;
-        newCard.SetupCardPrototype(cardObject, cardImage, cardBorder, card);
+        newCard.SetupCardPrototype(cardImage, cardBorder, card);
         cards.Add(newCard);
     }
     public CardObject FindCardByName(string name)

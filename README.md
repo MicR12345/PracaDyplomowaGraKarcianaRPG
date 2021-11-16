@@ -1,2 +1,3 @@
-# PracaInzynierska
+# Praca Dyplomowa
  
+Praca inżynierska Michał Ruść , MiłoszProc

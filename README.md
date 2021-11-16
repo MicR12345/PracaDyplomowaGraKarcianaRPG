@@ -1,3 +1,3 @@
 # Praca Dyplomowa
  
-Praca inżynierska Michał Ruść , MiłoszProc
+Praca dyplomowa Michał Ruść , MiłoszProc

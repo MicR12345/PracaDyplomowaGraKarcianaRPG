@@ -30,13 +30,19 @@ public class PointerControl : MonoBehaviour
 
     private void OnClickPerformed(InputAction.CallbackContext obj)
     {
-        Physics.Raycast(mouseWorldPosition, new Vector3(0f, 0f, 1f),out raycastHit, 10f);
-        Debug.Log(mouseWorldPosition);
-        Debug.Log(raycastHit.collider);
-        if (raycastHit.collider !=null && raycastHit.collider.CompareTag("card_sprite")) 
+        if (grabbedCard == null)
         {
-            Debug.Log(mouseWorldPosition);
-            grabbedCard = raycastHit.collider.gameObject;
+            Physics.Raycast(mouseWorldPosition, new Vector3(0f, 0f, 1f), out raycastHit, 10f);
+            if (raycastHit.collider != null && raycastHit.collider.CompareTag("card_sprite"))
+            {
+                Debug.Log(mouseWorldPosition);
+                grabbedCard = raycastHit.collider.gameObject;
+            }
+        }
+        else
+        {
+            //TODO
+            grabbedCard = null;
         }
     }
 
@@ -55,6 +61,5 @@ public class PointerControl : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(mouseWorldPosition, new Vector3(0f, 0f, 0f));
-        Gizmos.DrawLine(mouseWorldPosition,mouseWorldPosition + new Vector3(0f, 0f, 10f));
     }
 }

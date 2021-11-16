@@ -26,10 +26,16 @@ public class CardLibrary : MonoBehaviour
     public void LoadAllCards()
     {
         cards = new List<CardObject>();
-        Card card = new Card("0_cardTest", 1);
+        CreateDebugCard("0_cardTest", 1);
+        CreateDebugCard("cardTest2", 1);
+        CreateDebugCard("cardTest3", 1);
+    }
+    void CreateDebugCard(string name,int damage)
+    {
+        Card card = new Card(name, damage);
         Texture2D texture2D = LoadCardImg(card.name);
-        Sprite sprite = Sprite.Create(texture2D,new Rect(0.0f,0.0f,texture2D.width,texture2D.height), new Vector2(0.5f, 0.5f),15f);
-        AddCardPrototype(card,sprite,null);
+        Sprite sprite = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);
+        AddCardPrototype(card, sprite, null);
     }
     public void AddCardPrototype(Card card,Sprite cardImage,Sprite cardBorder)
     {

@@ -40,7 +40,7 @@ public class CardObject : MonoBehaviour
         spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = cardImage;
         spriteObject.tag = "card_sprite";
-        spriteObject.AddComponent<BoxCollider2D>();
+        spriteObject.AddComponent<BoxCollider>();
     }
     void CreateBorderChild()
     {

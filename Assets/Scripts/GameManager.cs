@@ -26,7 +26,8 @@ public class GameManager : MonoBehaviour
     {
         CreatePlayerObject();
         player.AddCardToPlayerHand(cardLibrary.FindCardByName("0_cardTest").card);
-        player.AddCardToPlayerHand(cardLibrary.FindCardByName("0_cardTest").card);
+        player.AddCardToPlayerHand(cardLibrary.FindCardByName("cardTest2").card);
+        player.AddCardToPlayerHand(cardLibrary.FindCardByName("cardTest3").card);
         player.RefreshHand();
     }
     void CreatePlayerObject()

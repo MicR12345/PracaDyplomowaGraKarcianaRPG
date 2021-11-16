@@ -46,6 +46,16 @@ public class PlayerObject : MonoBehaviour
     public void AddCardToPlayerHand(Card card)
     {
         player.hand.Add(card);
+        SetupCardLocation();
+    }
+    void SetupCardLocation()
+    {
+        Vector3 BasePosition = Hand.transform.position;
+        float startPos = -cardsInHand.Count * 11f;
+        for (int i = 0; i < cardsInHand.Count; i++)
+        {
+            cardsInHand[i].transform.position = BasePosition + new Vector3(startPos + startPos * i, 0f, 0f);
+        }
     }
     public void RefreshHand()
     {

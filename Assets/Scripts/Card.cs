@@ -19,7 +19,7 @@ public class Card
             return description;
         }
     }
-    public int rarity { get; }
+    public int rarity;
     public int damage;
     public int heal;
     public int cost;

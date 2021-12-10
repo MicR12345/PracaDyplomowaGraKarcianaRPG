@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -30,6 +30,7 @@ public class PointerControl : MonoBehaviour
 
     private void OnClickPerformed(InputAction.CallbackContext obj)
     {
+        /*Do przerobienia by reagowało na UI też*/
         if (grabbedCard == null)
         {
             Physics.Raycast(mouseWorldPosition, new Vector3(0f, 0f, 1f), out raycastHit, 10f);

@@ -1,8 +1,8 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+/*Nie mam pojecia co myślałem ale źle myślałem, do przerobienia na fabrykę bez Mono */
 public class CardObject : MonoBehaviour
 {
     Sprite cardImage;

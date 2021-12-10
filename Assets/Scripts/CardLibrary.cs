@@ -1,10 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using UnityEngine;
-
+//Do zrobienia ładowanie kart z xml
 public class CardLibrary : MonoBehaviour
 {
     public Texture2D LoadCardImg(string name)
@@ -61,6 +61,14 @@ public class CardLibrary : MonoBehaviour
         foreach (CardObject item in cards)
         {
             Debug.Log(item.card.name);
+        }
+    }
+    class CardLoader
+    {
+        List<Card> loadedCards;
+        public CardLoader(string pathToCardList)
+        {
+
         }
     }
 }

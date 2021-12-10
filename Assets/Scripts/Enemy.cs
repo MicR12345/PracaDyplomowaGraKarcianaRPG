@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//Do usunięcia wszystkie get sety bo unity ich nie lubi
 public class Enemy
 {
     private int enemyId { get; }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerObject : MonoBehaviour
 {
-    private Player player;
+    Player player;
     Sprite playerSprite;
 
     SpriteRenderer spriteRenderer;

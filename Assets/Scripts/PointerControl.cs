@@ -46,9 +46,6 @@ public class PointerControl : MonoBehaviour
             grabbedCard = null;
         }
     }
-
-
-
     // Update is called once per frame
     void Update()
     {

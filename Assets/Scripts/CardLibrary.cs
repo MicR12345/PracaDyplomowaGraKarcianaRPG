@@ -12,7 +12,7 @@ public class CardLibrary : MonoBehaviour
         Texture2D texture = new Texture2D(320, 480);
         byte[] byteData;
 
-        string path = "./Assets/Graphics/Cards/" + name + ".png";
+        string path = "./Assets/Cards/CardGFX/" + name + ".png";
 
         if (File.Exists(path))
         {
@@ -22,10 +22,10 @@ public class CardLibrary : MonoBehaviour
         return texture;
     }
 
-    public List<CardObject> cards;
+    public List<Card> cards;
     public void LoadAllCards()
     {
-        cards = new List<CardObject>();
+        cards = new List<Card>();
         CreateDebugCard("0_cardTest", 1);
         CreateDebugCard("cardTest2", 1);
         CreateDebugCard("cardTest3", 1);
@@ -39,28 +39,27 @@ public class CardLibrary : MonoBehaviour
     }
     public void AddCardPrototype(Card card,Sprite cardImage,Sprite cardBorder)
     {
-        GameObject cardObject = new GameObject(card.name);
-        CardObject newCard = cardObject.AddComponent<CardObject>();
+        GameObject cardObject = card.CreateCardInstance(true);
         cardObject.transform.parent = this.transform;
         cardObject.tag = "Card";
         cardObject.transform.localPosition = Vector3.zero;
-        newCard.SetupCardPrototype(cardImage, cardBorder, card);
-        cards.Add(newCard);
+        card.SetupCardPrototype(cardImage, cardBorder);
+        cards.Add(card);
     }
-    public CardObject FindCardByName(string name)
+    public Card FindCardByName(string name)
     {
-        foreach (CardObject item in cards)
+        foreach (Card item in cards)
         {
-            Debug.Log("Compared " + item.card.name + " to " + name);
-            if (item.card.name == name) return item;
+            Debug.Log("Compared " + item.name + " to " + name);
+            if (item.name == name) return item;
         }
         return null;
     }
     public void DebugPrintAllCardsNames()
     {
-        foreach (CardObject item in cards)
+        foreach (Card item in cards)
         {
-            Debug.Log(item.card.name);
+            Debug.Log(item.name);
         }
     }
     class CardLoader

@@ -12,8 +12,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public CardLibrary cardLibrary;
 
-    GameObject Player;
-    PlayerObject player;
+    GameObject playerObject;
+    Player player;
     
     void Start()
     {
@@ -25,19 +25,18 @@ public class GameManager : MonoBehaviour
     void OnGameStart()
     {
         CreatePlayerObject();
-        player.AddCardToPlayerHand(cardLibrary.FindCardByName("0_cardTest").card);
-        player.AddCardToPlayerHand(cardLibrary.FindCardByName("cardTest2").card);
-        player.AddCardToPlayerHand(cardLibrary.FindCardByName("cardTest3").card);
+        player.AddCardToPlayerHand(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
+        player.AddCardToPlayerHand(new DeckCard(cardLibrary.FindCardByName("cardTest2")));
+        player.AddCardToPlayerHand(new DeckCard(cardLibrary.FindCardByName("cardTest3")));
         player.RefreshHand();
     }
     void CreatePlayerObject()
     {
-        Player = new GameObject();
-        Player.transform.parent = this.gameObject.transform;
-        Player playerinfo = new Player();
-        Player.transform.localPosition = Vector3.zero;
-        player = Player.AddComponent<PlayerObject>();
-        player.PlayerObjectSetup(this, playerinfo, null, null);
+        playerObject = new GameObject();
+        playerObject.transform.parent = this.gameObject.transform;
+        playerObject.transform.localPosition = Vector3.zero;
+        player = playerObject.AddComponent<Player>();
+        player.PlayerObjectSetup(this, null, null);
     }
     // Update is called once per frame
     void Update()

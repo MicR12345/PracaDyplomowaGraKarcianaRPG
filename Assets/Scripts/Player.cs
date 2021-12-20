@@ -63,6 +63,7 @@ public class Player : MonoBehaviour
     {
         hand.Add(card);
         SetupCardLocation();
+        card.card.cardObject.transform.localScale = new Vector3(0.6f, 0.6f);
     }
     void SetupCardLocation()
     {
@@ -79,7 +80,7 @@ public class Player : MonoBehaviour
         {
             GameObject.Destroy(inHand);
         }
-        foreach (DeckCard item in hand)
+            foreach (DeckCard item in hand)
         {
             if (item.card.cardObject == null)
             {

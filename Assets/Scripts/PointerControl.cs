@@ -37,7 +37,7 @@ public class PointerControl : MonoBehaviour
             if (raycastHit.collider != null && raycastHit.collider.CompareTag("card_sprite"))
             {
                 Debug.Log(mouseWorldPosition);
-                grabbedCard = raycastHit.collider.gameObject;
+                grabbedCard = raycastHit.collider.gameObject.transform.parent.gameObject;
             }
         }
         else

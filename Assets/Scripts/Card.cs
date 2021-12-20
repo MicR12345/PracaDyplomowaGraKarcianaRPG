@@ -20,6 +20,10 @@ public class Card : Action
         cardImage = _cardImage;
         cardBorder = _cardBorder;
 
+        
+    }
+    public void CreateSpriteChildren()
+    {
         CreateSpriteChild();
         //CreateBorderChild();
     }
@@ -84,6 +88,7 @@ public class Card : Action
         card.spriteObject = null;
         card.CreateCardInstance(false);
         card.SetupCardPrototype(this.cardImage, this.cardBorder);
+        card.CreateSpriteChildren();
         return card;
     }
 }

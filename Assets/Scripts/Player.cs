@@ -64,6 +64,7 @@ public class Player : MonoBehaviour
         hand.Add(card);
         SetupCardLocation();
         card.card.cardObject.transform.localScale = new Vector3(0.6f, 0.6f);
+        card.card.cardObject.transform.parent = Hand.transform;
     }
     void SetupCardLocation()
     {

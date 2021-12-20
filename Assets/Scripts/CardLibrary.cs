@@ -39,10 +39,10 @@ public class CardLibrary : MonoBehaviour
     }
     public void AddCardPrototype(Card card,Sprite cardImage,Sprite cardBorder)
     {
-        GameObject cardObject = card.CreateCardInstance(true);
-        cardObject.transform.parent = this.transform;
-        cardObject.tag = "Card";
-        cardObject.transform.localPosition = Vector3.zero;
+        //GameObject cardObject = card.CreateCardInstance(true);
+        //cardObject.transform.parent = this.transform;
+        //cardObject.tag = "Card";
+        //cardObject.transform.localPosition = Vector3.zero;
         card.SetupCardPrototype(cardImage, cardBorder);
         cards.Add(card);
     }

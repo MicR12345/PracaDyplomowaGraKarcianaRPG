@@ -13,7 +13,8 @@ public class GameManager : MonoBehaviour
     public CardLibrary cardLibrary;
 
     GameObject playerObject;
-    Player player;
+    [HideInInspector]
+    public Player player;
     
     void Start()
     {
@@ -25,9 +26,18 @@ public class GameManager : MonoBehaviour
     void OnGameStart()
     {
         CreatePlayerObject();
-        player.AddCardToPlayerHand(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
-        player.AddCardToPlayerHand(new DeckCard(cardLibrary.FindCardByName("cardTest2")));
-        player.AddCardToPlayerHand(new DeckCard(cardLibrary.FindCardByName("cardTest3")));
+        player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
+        player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
+        player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
+        player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
+        player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("cardTest2")));
+        player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("cardTest3")));
+        player.CreateCardStack();  
+        //player.AddCardToPlayerHand();
+        //player.AddCardToPlayerHand();
+        //player.AddDirectCardToPlayerHand(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
+        //player.AddDirectCardToPlayerHand(new DeckCard(cardLibrary.FindCardByName("cardTest2")));
+        //player.AddDirectCardToPlayerHand(new DeckCard(cardLibrary.FindCardByName("cardTest3")));
         player.RefreshHand();
     }
     void CreatePlayerObject()

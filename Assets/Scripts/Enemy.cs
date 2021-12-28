@@ -15,8 +15,8 @@ public class Enemy
     //private List<Tuple<Card, CardState>> deck;
     private int deckSize;
     private List<Card> cardStack;
-    private List<Card> hand;
+    private List<DeckCard> hand;
     private int handSize;
-    private List<Card> abilityCards;
-    private List<Tuple<int, int>> activeEffects;
+    private List<DeckCard> abilityCards;
+    private List<Effect> activeEffects;
 }

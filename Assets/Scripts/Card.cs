@@ -34,7 +34,13 @@ public class Card : Action
             cardObject = new GameObject(name);
             if (prototype)
             {
+                CreateSpriteChildren();
                 cardObject.SetActive(false);
+                return cardObject;
+            }
+            else
+            {
+                CreateSpriteChildren();
                 return cardObject;
             }
         }
@@ -86,14 +92,29 @@ public class Card : Action
         card.cardObject = null;
         card.borderObject = null;
         card.spriteObject = null;
-        card.CreateCardInstance(false);
+        //card.CreateCardInstance(false);
         card.SetupCardPrototype(this.cardImage, this.cardBorder);
-        card.CreateSpriteChildren();
+        //card.cardObject.SetActive(false);
         return card;
+    }
+    public void DestroyCardInstance()
+    {
+        GameObject.Destroy(cardObject);
+        cardObject = null;
+        borderObject = null;
+        spriteObject = null;
+    }
+    public void ResetCard()
+    {
+        DestroyCardInstance();
+        CreateCardInstance(false);
+        //cardObject.SetActive(false);
     }
 }
 public class DeckCard
 {
+    public bool inHand;
+    public bool staysInHand = false;
     public bool discarded;
     public int exhausted;
     public bool destroyed;
@@ -105,6 +126,7 @@ public class DeckCard
         discarded = false;
         exhausted = 0;
         destroyed = false;
+        staysInHand = false;
         usedTimes = 0;
     }
 }

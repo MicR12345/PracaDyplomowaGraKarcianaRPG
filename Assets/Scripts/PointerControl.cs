@@ -16,6 +16,8 @@ public class PointerControl : MonoBehaviour
     RaycastHit raycastHit;
 
     GameObject grabbedCard;
+
+    public GameManager gm;
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -26,6 +28,20 @@ public class PointerControl : MonoBehaviour
         actions.Enable();
 
         actions.UI.Click.performed += OnClickPerformed;
+        actions.UI.Cancel.performed += Cancel_performed;
+    }
+
+    private void Cancel_performed(InputAction.CallbackContext obj)
+    {
+        if (gm.player.hand.Count < 3)
+        {
+            gm.player.AddCardToPlayerHand();
+        }
+        else
+        {
+            gm.player.RemoveAllFromHand();
+            gm.player.Shuffle();
+        }
     }
 
     private void OnClickPerformed(InputAction.CallbackContext obj)
@@ -37,7 +53,12 @@ public class PointerControl : MonoBehaviour
             if (raycastHit.collider != null && raycastHit.collider.CompareTag("card_sprite"))
             {
                 Debug.Log(mouseWorldPosition);
-                grabbedCard = raycastHit.collider.gameObject.transform.parent.gameObject;
+                grabbedCard = raycastHit.collider.gameObject.transform.parent.gameObject;   
+            }
+            else
+            {
+                
+
             }
         }
         else
@@ -47,6 +68,8 @@ public class PointerControl : MonoBehaviour
         }
     }
     // Update is called once per frame
+
+    bool resetPosition = false;
     void Update()
     {
         mousePosition = Mouse.current.position.ReadValue();
@@ -54,7 +77,14 @@ public class PointerControl : MonoBehaviour
         if (grabbedCard != null)
         {
             grabbedCard.transform.position = new Vector3(mouseWorldPosition.x, mouseWorldPosition.y, grabbedCard.transform.position.z);
+            resetPosition = true;
         }
+        else if (resetPosition)
+        {
+            resetPosition = false;
+            gm.player.SetupCardLocation();
+        }
+
     }
     private void OnDrawGizmos()
     {

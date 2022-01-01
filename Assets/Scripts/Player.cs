@@ -63,7 +63,10 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("More cards than possible in deck");
         }
+        card.card.CreateCardInstance();
+        card.card.cardObject.SetActive(false);
         deck.Add(card);
+
     }
     public void CreateCardStack(bool random = true)
     {
@@ -95,8 +98,8 @@ public class Player : MonoBehaviour
                 cardStack[0].exhausted==0
                 )
             {
+                
                 hand.Add(cardStack[0]);
-                if(cardStack[0].card.cardObject==null)cardStack[0].card.CreateCardInstance();
                 cardStack[0].card.cardObject.SetActive(true);
                 cardStack.RemoveAt(0);
                 SetupCardLocation();
@@ -113,10 +116,10 @@ public class Player : MonoBehaviour
             RemoveAllFromHand();
             Shuffle();
         }
-        
     }
     public void Shuffle(bool random = true)
     {
+        cardStack.Clear();
         foreach (DeckCard item in deck)
         {
             item.inHand = false;
@@ -134,7 +137,7 @@ public class Player : MonoBehaviour
         }
         if (random)
         {
-            for (int i = 0; i < cardStack.Count - 1; i++)
+            for (int i = 0; i < cardStack.Count; i++)
             {
 
                 int swapPosition = UnityEngine.Random.Range(0, cardStack.Count - 1);
@@ -173,6 +176,7 @@ public class Player : MonoBehaviour
             else if(item.inHand && !item.staysInHand)
             {
                 item.card.cardObject.SetActive(false);
+                item.inHand = false;
             }
         }
 
@@ -180,12 +184,27 @@ public class Player : MonoBehaviour
     public void SetupCardLocation()
     {
         Vector3 BasePosition = Hand.transform.position;
-        float startPos = -hand.Count * 11f;
-        for (int i = 0; i < hand.Count; i++)
+        float maxSpreadDistance = 50f;
+        float maxAngle = 30f;
+        float maxHeight = 10f;
+        if (hand.Count == 1)
         {
-            hand[i].card.cardObject.transform.position = BasePosition + new Vector3(-startPos + startPos * i, 0f, 0f);
-            hand[i].card.cardObject.transform.localScale = new Vector3(0.6f, 0.6f);
-            hand[i].card.cardObject.transform.parent = Hand.transform;
+            hand[0].card.cardObject.transform.position = BasePosition + new Vector3(0, 0f, 0f);
+            hand[0].card.cardObject.transform.localScale = new Vector3(0.6f, 0.6f);
+            hand[0].card.cardObject.transform.parent = Hand.transform;
+        }
+        else
+        {
+            for (int i = 0; i < hand.Count; i++)
+            {
+                float angleHeightInfluence = -Mathf.Abs (((((maxAngle * 2) / hand.Count) * (i + 0.5f)) - maxAngle)/maxAngle);
+                hand[i].card.cardObject.transform.position = BasePosition + new Vector3((((maxSpreadDistance * 2) / hand.Count) * (i + 0.5f)) - maxSpreadDistance,
+                    angleHeightInfluence*maxHeight, 0f);
+                hand[i].card.cardObject.transform.localScale = new Vector3(0.6f, 0.6f);
+                hand[i].card.cardObject.transform.parent = Hand.transform;
+                hand[i].card.cardObject.transform.rotation = Quaternion.identity;
+                hand[i].card.cardObject.transform.Rotate(Vector3.back, (((maxAngle * 2) / hand.Count) * (i + 0.5f)) - maxAngle);
+            }
         }
     }
     public void RefreshHand()

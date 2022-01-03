@@ -33,7 +33,8 @@ public class PointerControl : MonoBehaviour
 
     private void Cancel_performed(InputAction.CallbackContext obj)
     {
-        if (gm.player.hand.Count < 3)
+        gm.player.AddCardToPlayerHand();
+        /*if (gm.player.hand.Count < 3)
         {
             gm.player.AddCardToPlayerHand();
         }
@@ -41,7 +42,7 @@ public class PointerControl : MonoBehaviour
         {
             gm.player.RemoveAllFromHand();
             gm.player.Shuffle();
-        }
+        }*/
     }
 
     private void OnClickPerformed(InputAction.CallbackContext obj)

@@ -26,12 +26,10 @@ public class GameManager : MonoBehaviour
     void OnGameStart()
     {
         CreatePlayerObject();
-        player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
-        player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
-        player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
-        player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
-        player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("cardTest2")));
-        player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("cardTest3")));
+        for (int i = 0; i < 50; i++)
+        {
+            player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
+        }
         player.CreateCardStack();  
         //player.AddCardToPlayerHand();
         //player.AddCardToPlayerHand();

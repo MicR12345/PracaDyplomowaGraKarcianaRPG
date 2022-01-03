@@ -173,6 +173,7 @@ MonoBehaviour:
   GameCamera: {fileID: 1182194128}
   CardLibrary: {fileID: 493285072}
   cardLibrary: {fileID: 0}
+  player: {fileID: 0}
 --- !u!114 &178269320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,7 +435,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 45
+  orthographic size: 50
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

@@ -7,8 +7,6 @@ public abstract class Action
     public string name;
     public string description;
     public int rarity;
-    public int damage;
-    public int heal;
     public int cost;
     public int upgradeCount;
     public List<Effect> effects;

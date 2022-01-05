@@ -15,7 +15,8 @@ public class Card : Action
     GameObject borderObject;
 
     BoxCollider2D boxCollider;
-    public void SetupCardPrototype(Sprite _cardImage, Sprite _cardBorder)
+
+    public void AddCardGFX(Sprite _cardImage, Sprite _cardBorder)
     {
         cardImage = _cardImage;
         cardBorder = _cardBorder;
@@ -25,7 +26,7 @@ public class Card : Action
     public void CreateSpriteChildren()
     {
         CreateSpriteChild();
-        //CreateBorderChild();
+        CreateBorderChild();
     }
     public GameObject CreateCardInstance(bool prototype = false)
     {
@@ -49,7 +50,6 @@ public class Card : Action
             Debug.LogError("Card alredy exists");
             return cardObject;
         }
-        return null;
     }
     void CreateSpriteChild()
     {
@@ -58,16 +58,29 @@ public class Card : Action
         spriteObject.transform.localPosition = Vector3.zero;
         spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = cardImage;
-        spriteObject.tag = "card_sprite";
-        spriteObject.AddComponent<BoxCollider>();
+        spriteObject.tag = "card";
     }
     void CreateBorderChild()
     {
         borderObject = new GameObject("Border");
         borderObject.transform.parent = cardObject.transform;
         borderObject.transform.localPosition = Vector3.zero;
-        borderRenderer = spriteObject.AddComponent<SpriteRenderer>();
-        borderRenderer.sprite = cardBorder;
+        borderRenderer = borderObject.AddComponent<SpriteRenderer>();
+        //borderRenderer.sprite = cardBorder;
+        borderRenderer.sprite = cardImage;
+        borderObject.tag = "card";
+        borderObject.AddComponent<BoxCollider>();
+    }
+    public Tag FindCardTag(string name)
+    {
+        foreach (Tag item in tags)
+        {
+            if (item.name == name)
+            {
+                return item;
+            }
+        }
+        return null;
     }
     public override void UpdateDescription()
     {
@@ -81,10 +94,11 @@ public class Card : Action
     {
         throw new System.NotImplementedException();
     }
-    public Card(string _name,int _damage)
+    public Card(string _name,List<Effect> _effects,List<Tag> _tags)
     {
         name = _name;
-        damage = _damage;
+        effects = _effects;
+        tags = _tags;
     }
     public Card Clone()
     {
@@ -93,7 +107,7 @@ public class Card : Action
         card.borderObject = null;
         card.spriteObject = null;
         //card.CreateCardInstance(false);
-        card.SetupCardPrototype(this.cardImage, this.cardBorder);
+        card.AddCardGFX(this.cardImage, this.cardBorder);
         //card.cardObject.SetActive(false);
         return card;
     }
@@ -129,4 +143,9 @@ public class DeckCard
         staysInHand = false;
         usedTimes = 0;
     }
+}
+
+public class CardHandle : MonoBehaviour
+{
+    public DeckCard card;
 }

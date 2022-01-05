@@ -17,7 +17,7 @@ public class PointerControl : MonoBehaviour
 
     GameObject grabbedCard;
 
-    public GameManager gm;
+    public GameManager gameManager;
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -33,7 +33,7 @@ public class PointerControl : MonoBehaviour
 
     private void Cancel_performed(InputAction.CallbackContext obj)
     {
-        gm.player.AddCardToPlayerHand();
+        gameManager.player.AddCardToPlayerHand();
         /*if (gm.player.hand.Count < 3)
         {
             gm.player.AddCardToPlayerHand();
@@ -51,21 +51,29 @@ public class PointerControl : MonoBehaviour
         if (grabbedCard == null)
         {
             Physics.Raycast(mouseWorldPosition, new Vector3(0f, 0f, 1f), out raycastHit, 10f);
-            if (raycastHit.collider != null && raycastHit.collider.CompareTag("card_sprite"))
+            if (raycastHit.collider != null && raycastHit.collider.CompareTag("card"))
             {
-                Debug.Log(mouseWorldPosition);
                 grabbedCard = raycastHit.collider.gameObject.transform.parent.gameObject;   
             }
             else
             {
-                
 
             }
         }
         else
         {
             //TODO
-            grabbedCard = null;
+            if (grabbedCard!=null)
+            {
+                Physics.Raycast(grabbedCard.transform.position, new Vector3(0f, 0f, 1f), out raycastHit, 10f);
+                if (raycastHit.collider != null && raycastHit.collider.CompareTag("enemy_sprite"))
+                {
+                    CardHandle cardHandle = grabbedCard.GetComponent<CardHandle>();
+                    EnemyHandle enemyHandle = raycastHit.collider.gameObject.transform.parent.gameObject.GetComponent<EnemyHandle>();
+                    gameManager.CardWasMovedOntoEnemy(cardHandle.card,enemyHandle.enemy);
+                }
+                grabbedCard = null;
+            }
         }
     }
     // Update is called once per frame
@@ -83,7 +91,7 @@ public class PointerControl : MonoBehaviour
         else if (resetPosition)
         {
             resetPosition = false;
-            gm.player.SetupCardLocation();
+            gameManager.player.SetupCardLocation();
         }
 
     }

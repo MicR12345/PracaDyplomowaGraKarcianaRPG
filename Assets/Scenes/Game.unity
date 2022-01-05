@@ -171,9 +171,18 @@ MonoBehaviour:
   Background: {fileID: 0}
   GameLight: {fileID: 0}
   GameCamera: {fileID: 1182194128}
+  pointerControl: {fileID: 178269321}
   CardLibrary: {fileID: 493285072}
   cardLibrary: {fileID: 0}
   player: {fileID: 0}
+  DebugPlayerSprite: {fileID: 21300000, guid: a4eb354e8ad6fcd4e8d95d7a772fcad4, type: 3}
+  playerPosition: {x: -42, y: 0}
+  enemyPositions:
+  - {x: 25, y: 5}
+  - {x: 35, y: -5}
+  - {x: 45, y: 5}
+  - {x: 55, y: -5}
+  isPlayerTurn: 0
 --- !u!114 &178269320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,7 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82ca6ffb921a11949ae59e4c3383cc09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gm: {fileID: 178269319}
+  gameManager: {fileID: 178269319}
 --- !u!1 &200619600
 GameObject:
   m_ObjectHideFlags: 0

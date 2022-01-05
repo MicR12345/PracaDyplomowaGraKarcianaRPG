@@ -32,7 +32,11 @@ public class CardLibrary : MonoBehaviour
     }
     void CreateDebugCard(string name,int damage)
     {
-        Card card = new Card(name, damage);
+        List<Effect> effects = new List<Effect>();
+        effects.Add(new Effect("damage",-1,3,-1,new List<Tag>()));
+        List<Tag> tags = new List<Tag>();
+        tags.Add(new Tag("discard", -1));
+        Card card = new Card(name ,effects,tags);
         Texture2D texture2D = LoadCardImg(card.name);
         Sprite sprite = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);
         AddCardPrototype(card, sprite, null);
@@ -43,7 +47,7 @@ public class CardLibrary : MonoBehaviour
         //cardObject.transform.parent = this.transform;
         //cardObject.tag = "Card";
         //cardObject.transform.localPosition = Vector3.zero;
-        card.SetupCardPrototype(cardImage, cardBorder);
+        card.AddCardGFX(cardImage, cardBorder);
         cards.Add(card);
     }
     public Card FindCardByName(string name)

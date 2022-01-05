@@ -9,4 +9,12 @@ public class Effect
     public float value;
     public float duration;
     public List<Tag> tags;
+    public Effect(string _name,int _level, float _value,float _duration,List<Tag> _tags)
+    {
+        name = _name;
+        level = _level;
+        value = _value;
+        duration = _duration;
+        tags = _tags;
+    }
 }

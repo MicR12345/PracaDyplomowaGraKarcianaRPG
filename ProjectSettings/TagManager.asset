@@ -4,8 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - card_sprite
-  - Card
+  - enemy
+  - enemy_sprite
+  - card
   layers:
   - Default
   - TransparentFX

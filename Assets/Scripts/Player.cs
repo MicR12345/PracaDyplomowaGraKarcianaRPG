@@ -16,28 +16,29 @@ public class Player : MonoBehaviour
     public List<DeckCard> cardStack;
     public int stackKnowledge;
     public List<DeckCard> hand;
-    public int handSize;
+    public int handSize = 5;
     public List<Card> abilityCards;
     public List<Effect> activeEffects;
 
     Sprite playerSprite;
 
     SpriteRenderer spriteRenderer;
-    Material spriteMaterial;
 
     GameManager gm;
 
     public GameObject Hand;
-    public void PlayerObjectSetup(GameManager _gm, Sprite _playerSprite,Material _spriteMaterial)
+    public GameObject PlayerSpriteObject;
+
+    Vector2 playerPosition;
+    public void PlayerObjectSetup(GameManager _gm, Sprite _playerSprite, Vector2 _playerPosition)
     {
         this.name = "Player";
         playerSprite = _playerSprite;
-        spriteMaterial = _spriteMaterial;
 
         gm = _gm;
+        playerPosition = _playerPosition;
 
-        spriteRenderer = this.gameObject.AddComponent<SpriteRenderer>();
-        spriteRenderer.sprite = playerSprite;
+        CreatePlayerSpriteGO();
 
         Hand = new GameObject();
         Hand.name = "Hand";
@@ -47,28 +48,37 @@ public class Player : MonoBehaviour
         deck = new List<DeckCard>();
         hand = new List<DeckCard>();
     }
-    void Start()
+    public void CreatePlayerSpriteGO()
     {
-        
+        PlayerSpriteObject = new GameObject("PlayerSprite");
+        PlayerSpriteObject.transform.parent = this.transform;
+        PlayerSpriteObject.transform.localPosition = playerPosition;
+        spriteRenderer = PlayerSpriteObject.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = playerSprite;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PrepareHandBeforeBattle()
     {
-        
+        CreateNewCardStack();
     }
+
     public void AddToPlayerDeck(DeckCard card)
     {
         if (deck.Count>deckSize)
         {
             Debug.LogError("More cards than possible in deck");
         }
-        card.card.CreateCardInstance();
+        if (card.card.cardObject == null)
+        {
+            card.card.CreateCardInstance();
+        }
         card.card.cardObject.SetActive(false);
+        CardHandle cardHandle = card.card.cardObject.AddComponent<CardHandle>();
+        cardHandle.card = card;
         deck.Add(card);
 
     }
-    public void CreateCardStack(bool random = true)
+    public void CreateNewCardStack(bool random = true)
     {
         cardStack = new List<DeckCard>(deck);
         Debug.Log("Created card stack with " + cardStack.Count + " cards.");
@@ -87,6 +97,21 @@ public class Player : MonoBehaviour
                 }
             }
         }
+    }
+    public void CheckForCardRemoval()
+    {
+        List<DeckCard> newHand = new List<DeckCard>();
+
+        foreach (DeckCard item in hand)
+        {
+            item.card.cardObject.SetActive(false);
+            if (!(item.discarded || item.destroyed || item.exhausted>0))
+            {
+                item.card.cardObject.SetActive(true);
+                newHand.Add(item);
+            }
+        }
+        hand = newHand;
     }
     public void AddCardToPlayerHand()
     {
@@ -113,8 +138,27 @@ public class Player : MonoBehaviour
         }
         else
         {
-            RemoveAllFromHand();
             Shuffle();
+            if (cardStack.Count == 0)
+            {
+                //w to miejsce trafi tylko gdy graczowi calkowicie skoncza sie karty
+                //w tym miejscu jakis efekt ze nie ma wiecej juz kart
+            }
+        }
+    }
+    public void DealAFullHand()
+    {
+        RemoveAllFromHand();
+        for (int i = 0; i < handSize; i++)
+        {
+            if (cardStack.Count==0)
+            {
+                Shuffle();
+            }
+            if (cardStack.Count > 0)
+            {
+                AddCardToPlayerHand();
+            }      
         }
     }
     public void Shuffle(bool random = true)
@@ -130,8 +174,9 @@ public class Player : MonoBehaviour
         }
         foreach (DeckCard item in deck)
         {
-            if (!item.discarded && !item.destroyed && item.exhausted==0 && !item.inHand)
+            if (!item.destroyed && item.exhausted==0 && !item.inHand)
             {
+                item.discarded = false;
                 cardStack.Add(item);
             }
         }
@@ -154,31 +199,21 @@ public class Player : MonoBehaviour
     public void AddDirectCardToPlayerHand(DeckCard card)
     {
         hand.Add(card);
+        if (card.card.cardObject==null)
+        {
+            card.card.CreateCardInstance();
+        }
+        CardHandle cardHandle = card.card.cardObject.AddComponent<CardHandle>();
+        cardHandle.card = card;
         SetupCardLocation();
     }
     public void RemoveAllFromHand()
     {
-        foreach (DeckCard item in deck)
-        {
-            item.inHand = false;
-        }
         foreach (DeckCard item in hand)
         {
-            item.inHand = true;
+            item.discarded = true;
         }
-        hand.Clear();
-        foreach (DeckCard item in deck)
-        {
-            if (item.inHand && item.staysInHand)
-            {
-                hand.Add(item);
-            }
-            else if(item.inHand && !item.staysInHand)
-            {
-                item.card.cardObject.SetActive(false);
-                item.inHand = false;
-            }
-        }
+        CheckForCardRemoval();
 
     }
     public void SetupCardLocation()
@@ -190,6 +225,7 @@ public class Player : MonoBehaviour
         if (hand.Count == 1)
         {
             hand[0].card.cardObject.transform.position = BasePosition + new Vector3(0, 0f, 0f);
+            hand[0].card.cardObject.transform.rotation = Quaternion.identity;
             hand[0].card.cardObject.transform.localScale = new Vector3(0.6f, 0.6f);
             hand[0].card.cardObject.transform.parent = Hand.transform;
         }

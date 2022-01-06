@@ -7,29 +7,16 @@ using UnityEngine;
 //Do zrobienia ładowanie kart z xml
 public class CardLibrary : MonoBehaviour
 {
-    public Texture2D LoadCardImg(string name)
-    {
-        Texture2D texture = new Texture2D(320, 480);
-        byte[] byteData;
-
-        string path = "./Assets/Cards/CardGFX/" + name + ".png";
-
-        if (File.Exists(path))
-        {
-            byteData = File.ReadAllBytes(path);
-            texture.LoadImage(byteData);
-        }
-        return texture;
-    }
 
     public List<Card> cards;
     public void LoadAllCards()
     {
         cards = new List<Card>();
-        CreateDebugCard("0_cardTest", 1);
+       /* CreateDebugCard("0_cardTest", 1);
         CreateDebugCard("cardTest2", 1);
-        CreateDebugCard("cardTest3", 1);
+        CreateDebugCard("cardTest3", 1);*/
     }
+    /*
     void CreateDebugCard(string name,int damage)
     {
         List<Effect> effects = new List<Effect>();
@@ -40,7 +27,7 @@ public class CardLibrary : MonoBehaviour
         Texture2D texture2D = LoadCardImg(card.name);
         Sprite sprite = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);
         AddCardPrototype(card, sprite, null);
-    }
+    }*/
     public void AddCardPrototype(Card card,Sprite cardImage,Sprite cardBorder)
     {
         //GameObject cardObject = card.CreateCardInstance(true);
@@ -73,5 +60,21 @@ public class CardLibrary : MonoBehaviour
         {
 
         }
+        /*
+        public Texture2D LoadCardImg(string name)
+        {
+            Texture2D texture = new Texture2D(320, 480);
+            byte[] byteData;
+
+            string path = "./Assets/Cards/CardGFX/" + name + ".png";
+
+            if (File.Exists(path))
+            {
+                byteData = File.ReadAllBytes(path);
+                texture.LoadImage(byteData);
+            }
+            return texture;
+            
+        }*/
     }
 }

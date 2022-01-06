@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
+<CardList>
 <cards>
 	<card>
 	  <name>cardTest2</name>
-	  <path>./Assets/CardsGFX/</path>
-	  <rarity>1</rarity>
+	  <path>CoreGame/CardsGFX/</path>
+	  <rarity>0</rarity>
 	  <cost>3</cost>
 	  <effects>
 		<effect>
@@ -16,16 +17,12 @@
 		</effect>
 	  </effects>
 	  <tags>
-		<tag>
-		  <name></name>
-		  <value></value>
-		</tag>
 	  </tags>
 	</card>
 	<card>
 	  <name>0_cardTest</name>
-	  <path>./Assets/CardsGFX/</path>
-	  <rarity>1</rarity>
+	  <path>CoreGame/CardsGFX/</path>
+	  <rarity>0</rarity>
 	  <cost>3</cost>
 	  <effects>
 		<effect>
@@ -39,9 +36,10 @@
 	  </effects>
 	  <tags>
 		<tag>
-		  <name></name>
-		  <value></value>
+		  <name>test</name>
+		  <value>1</value>
 		</tag>
 	  </tags>
 	</card>
 </cards>
+</CardList>

@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<cards>
 <card>
   <name>cardTest2</name>
   <path>./Assets/CardsGFX/</path>
@@ -43,3 +44,4 @@
     </tag>
   </tags>
 </card>
+</cards>

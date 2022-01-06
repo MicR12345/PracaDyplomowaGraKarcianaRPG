@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Xml.Linq;
 using UnityEngine;
 //Do zrobienia ładowanie kart z xml
 public class CardLibrary : MonoBehaviour
@@ -12,9 +13,15 @@ public class CardLibrary : MonoBehaviour
     public void LoadAllCards()
     {
         cards = new List<Card>();
-       /* CreateDebugCard("0_cardTest", 1);
-        CreateDebugCard("cardTest2", 1);
-        CreateDebugCard("cardTest3", 1);*/
+        /* CreateDebugCard("0_cardTest", 1);
+         CreateDebugCard("cardTest2", 1);
+         CreateDebugCard("cardTest3", 1);*/
+        CardLoader cardLoader = new CardLoader("./Assets/Cards/");
+        cards = new List<Card>(cardLoader.cards);
+        foreach (Card card in cards)
+        {
+            Debug.Log(card.name);
+        }
     }
     /*
     void CreateDebugCard(string name,int damage)
@@ -53,28 +60,87 @@ public class CardLibrary : MonoBehaviour
             Debug.Log(item.name);
         }
     }
+    public class Cards
+    {
+        [XmlArray("cards"), XmlArrayItem("card")]
+        public List<CardData> cards;
+        public Cards()
+        {
+            cards=new List<CardData>();
+        }
+    }
+
+    public class CardData
+    {
+        [XmlElement("name")]
+        public string name;
+        [XmlElement("path")]
+        public string path;
+        [XmlElement("rarity")]
+        public int rarity;
+        [XmlElement("cost")]
+        public int cost;
+        [XmlArray("effects"), XmlArrayItem("effect")]
+        public List<Effect> effect;
+        [XmlArray("tags"), XmlArrayItem("tag")]
+        public List<Tag> tag;
+
+        public CardData()
+        {
+            name = "";
+            path = "";
+            rarity = 0;
+            cost = 0;
+            effect = new List<Effect>();
+            tag = new List<Tag>();
+        }
+    }
     class CardLoader
     {
-        List<Card> loadedCards;
+        List<CardData> loadedCards;
+        public List<Card> cards;
+        List<Sprite> borders;
+        public void BordersRarityLoad(string pathToCardBorders)
+        {
+            borders = new List<Sprite>();
+            Texture2D texture2D = LoadImg("0_cardTest", "./Assets/CardsGFX/");
+            borders.Add(Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f));
+        }
         public CardLoader(string pathToCardList)
         {
-
+            XmlRootAttribute xRoot = new XmlRootAttribute();
+            // Set a new Namespace and ElementName for the root element.
+            xRoot.Namespace = "";
+            xRoot.ElementName = "cards";
+            BordersRarityLoad("");
+            loadedCards = new List<CardData>();
+            cards = new List<Card>();
+            XmlSerializer reader  = new XmlSerializer(typeof(Cards), xRoot);
+            TextReader card = new StreamReader(pathToCardList + "cards.xml");
+            Cards loaded = (Cards)reader.Deserialize(card);
+            card.Close();
+            foreach(CardData i in loaded.cards)
+            {
+                Card karta = new Card(i.name, i.effect, i.tag);
+                Texture2D cardTexture = LoadImg(i.name, i.path);
+                karta.AddCardGFX(Sprite.Create(cardTexture, new Rect(0.0f, 0.0f, cardTexture.width, cardTexture.height), new Vector2(0.5f, 0.5f), 15f),borders[i.rarity]);
+                cards.Add(karta);
+            }
         }
-        /*
-        public Texture2D LoadCardImg(string name)
+
+        public Texture2D LoadImg(string name, string pathToImage)
         {
             Texture2D texture = new Texture2D(320, 480);
             byte[] byteData;
 
-            string path = "./Assets/Cards/CardGFX/" + name + ".png";
+            string path = pathToImage + name + ".png";
 
             if (File.Exists(path))
             {
                 byteData = File.ReadAllBytes(path);
                 texture.LoadImage(byteData);
             }
-            return texture;
-            
-        }*/
+            return texture; 
+        }
     }
 }

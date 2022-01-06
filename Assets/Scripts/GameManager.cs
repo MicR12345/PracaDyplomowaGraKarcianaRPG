@@ -150,13 +150,9 @@ public class GameManager : MonoBehaviour
         {
             enemy.ApplyCardEffect(item);
         }
-        Tag discardTag = card.card.FindCardTag("discard");
         Tag destroyTag = card.card.FindCardTag("destroy");
         Tag exhaustTag = card.card.FindCardTag("exhaust");
-        if (discardTag != null)
-        {
-            card.discarded = true;
-        }
+        card.discarded = true;
         if (destroyTag != null)
         {
             card.destroyed = true;

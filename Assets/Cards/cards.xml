@@ -3,7 +3,7 @@
 <cards>
 	<card>
 	  <name>cardTest2</name>
-	  <path>CoreGame/CardsGFX/</path>
+	  <path>CoreGame/CardGFX/</path>
 	  <rarity>0</rarity>
 	  <cost>3</cost>
 	  <effects>
@@ -21,7 +21,7 @@
 	</card>
 	<card>
 	  <name>0_cardTest</name>
-	  <path>CoreGame/CardsGFX/</path>
+	  <path>CoreGame/CardGFX/</path>
 	  <rarity>0</rarity>
 	  <cost>3</cost>
 	  <effects>

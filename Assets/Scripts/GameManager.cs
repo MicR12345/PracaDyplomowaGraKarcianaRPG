@@ -1,197 +1,308 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject Background;
-    public GameObject GameLight;
-    public Camera GameCamera;
-    public PointerControl pointerControl;
-    //shared card library
-    public GameObject CardLibrary;
-    [HideInInspector]
-    public CardLibrary cardLibrary;
+    static int worldMapSize = 30;
 
-    GameObject playerObject;
-    [HideInInspector]
-    public Player player;
+    static int villageChance = 30;
+    static int cityChance = 20;
+    static int fortressChance = 5;
+    static int acientRuinsChance = 5;
 
-    public Sprite debugPlayerSprite;
+    static int maxConnectionCount = 5;
+    static int maxConnectAttempts = 10;
 
-    public Vector2 playerPosition;
+    static float worldMapLocationPullForce = 0.2f;
+    static float smoothingCount = 3;
 
-    List<Enemy> enemies;
-    public List<Vector2> enemyPositions;
-    
-    [HideInInspector]
-    public List<Tuple<int,int>> battleQueue;
-    public bool inBattle;
-    void Start()
+    static float minSmoothingDistance = 8f;
+
+    static Vector3 worldBoundsStart = new Vector3(-30f,-25f,0f);
+    static Vector3 worldBoundsEnd = new Vector3(30f, 25f, 0f);
+
+    List<WorldMapNode> worldMap;
+    string playerPosition;
+
+    public Sprite enemyCastleSprite;
+    public Sprite capitolSprite;
+    public Sprite citySprite;
+    public Sprite villageSprite;
+    public Sprite fortressSprite;
+    public Sprite ruinsSprite;
+    void StartSiege(string nodeName)
     {
-        CardLibrary = GameObject.Find("CARD LIBRARY");
-        if (CardLibrary == null)
-        {
-            Debug.LogError("Card library object not found");
-        }
 
-        cardLibrary = CardLibrary.GetComponent<CardLibrary>();
-        cardLibrary.LoadAllCards();
-        cardLibrary.DebugPrintAllCardsNames();
-
-        enemies = new List<Enemy>();
-
-        OnBattleStart();
     }
-    void OnBattleStart()
+    void MovePlayer(string nodeName)
     {
-        inBattle = true;
-        if (player==null)
-        {
-            CreatePlayerObject();
-        }
-        enemies = new List<Enemy>();
-        CheatSpawnDebugEnemies(4);
-        PlaceEnemies();
-        CreateBattleQueue();
 
-        CheatGiveDebugCardsToDeck(10);
-        player.PrepareHandBeforeBattle();
     }
-    void CreateBattleQueue()
+    void LaunchEvent(string eventName)
     {
-        battleQueue = new List<Tuple<int, int>>();
 
-        battleQueue.Add(new Tuple<int, int>(-1, player.initiative));
-        for (int i = 0; i < enemies.Count && i< enemyPositions.Count; i++)
+    }
+    void BeginCombat(List<Enemy> enemies,PlayerData playerData/*,location?*/)
+    {
+
+    }
+    void GenerateWorldMap(int nodeCount)
+    {
+        worldMap = new List<WorldMapNode>();
+
+        worldMap.Add(new WorldMapNode(this,"EnemyCastle", "EnemyCastle"));
+        worldMap[0].SetPosition(worldBoundsEnd);
+        worldMap.Add(new WorldMapNode(this, "Capitol", "Capitol"));
+
+        int maxChance = villageChance + cityChance + fortressChance + acientRuinsChance;
+        for (int i = 1; i < nodeCount; i++)
         {
-            bool added = false;
-            for (int j = 0; j < battleQueue.Count; j++)
+            int roll = UnityEngine.Random.Range(0, maxChance);
+            if (roll < villageChance)
             {
-                if (enemies[i].initiative>battleQueue[j].Item2)
+                worldMap.Add(new WorldMapNode(this, "Village", "Village"));
+            }
+            else if (roll >= villageChance && roll<villageChance + cityChance)
+            {
+                worldMap.Add(new WorldMapNode(this, "City", "City"));
+            }
+            else if (roll >= villageChance + cityChance && roll < villageChance + cityChance + fortressChance)
+            {
+                worldMap.Add(new WorldMapNode(this, "Fortress", "Fortress"));
+            }
+            else if (roll >= villageChance + cityChance + fortressChance && roll < villageChance + cityChance + fortressChance + acientRuinsChance)
+            {
+                worldMap.Add(new WorldMapNode(this, "Ruins", "AcientRuins"));
+            }
+        }
+        int fortressCountNearEnemy = UnityEngine.Random.Range(3, maxConnectionCount);
+        for (int i = 0; i < fortressCountNearEnemy; i++)
+        {
+            int worldNodeCount = worldMap.Count;
+
+            worldMap.Add(new WorldMapNode(this, "BorderFortress", "Fortress"));
+            worldMap[0].connections.Add(worldMap[worldNodeCount]);
+            worldMap[worldNodeCount].connections.Add(worldMap[0]);
+        }
+        for (int i = 1; i < worldMap.Count; i++)
+        {
+            //Do zrobienia polaczenia z najlbizszymi od 1 do n nodow zamiast tego
+            ConnectToRandomNodes(worldMap[i]);
+            worldMap[i].PlaceRandomlyWithinBounds(worldBoundsStart, worldBoundsEnd);
+        }
+        SmoothLocationPositions();
+    }
+    void DrawWorldMap()
+    {
+
+    }
+    void ConnectToRandomNodes(WorldMapNode node)
+    {
+        for (int i = 0; i < maxConnectAttempts && node.connections.Count<maxConnectionCount; i++)
+        {
+            int randomNodeNumber = UnityEngine.Random.Range(1, worldMap.Count);
+            if (randomNodeNumber != i && worldMap[randomNodeNumber].connections.Count<maxConnectionCount)
+            {
+                node.connections.Add(worldMap[randomNodeNumber]);
+                worldMap[randomNodeNumber].connections.Add(node);
+            }
+        }
+    }
+    void SmoothLocationPositions()
+    {
+        for (int i = 0; i < smoothingCount-1; i++)
+        {
+            List<Vector3> positions = PrepareListOfNewPositions();
+            for (int j = 0; j < worldMap.Count; j++)
+            {
+                worldMap[j].SetPosition(positions[j]);
+            }
+            NormalizeNodesToBounds();
+        }
+        List<Vector3> positionsFinal = PrepareListOfNewPositions();
+        for (int j = 0; j < worldMap.Count; j++)
+        {
+            worldMap[j].SetPosition(positionsFinal[j]);
+        }
+    }
+    void NormalizeNodesToBounds()
+    {
+        float minX = worldBoundsEnd.x;
+        float minY = worldBoundsEnd.y;
+        float maxX = worldBoundsStart.x;
+        float maxY = worldBoundsStart.y;
+        for (int i = 0; i < worldMap.Count; i++)
+        {
+            float x = worldMap[i].gameObject.transform.position.x;
+            float y = worldMap[i].gameObject.transform.position.y;
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
+        }
+        for (int i = 0; i < worldMap.Count; i++)
+        {
+            float x = worldMap[i].gameObject.transform.position.x;
+            float y = worldMap[i].gameObject.transform.position.y;
+            if (x>0)
+            {
+                x = (x / maxX) * worldBoundsEnd.x;
+            }
+            else
+            {
+                x = (x / minX) * worldBoundsStart.x;
+            }
+
+            if (y > 0)
+            {
+                y = (y / maxY) * worldBoundsEnd.y;
+            }
+            else
+            {
+                y = (y / minY) * worldBoundsStart.y;
+            }
+            Vector3 normalizedPosition = new Vector3(x,y,0f);
+            worldMap[i].SetPosition(normalizedPosition);
+        }
+    }
+    List<Vector3> PrepareListOfNewPositions()
+    {
+        List<Vector3> newPositions = new List<Vector3>();
+        for (int i = 0; i < worldMap.Count; i++)
+        {
+            newPositions.Add(CalculateNodePosition(worldMap[i], worldMapLocationPullForce));
+        }
+        return newPositions;
+    }
+    Vector3 CalculateNodePosition(WorldMapNode node,float pullForce)
+    {
+        Vector3 averageOfConnections = CalculateAveragePositionBetweenConnections(node);
+        float xDistance = averageOfConnections.x - node.gameObject.transform.localPosition.x;
+        float yDistance = averageOfConnections.y - node.gameObject.transform.localPosition.y;
+        return node.gameObject.transform.localPosition + new Vector3(xDistance * pullForce, yDistance * pullForce, 0f);
+    }
+    Vector3 CalculateAveragePositionBetweenConnections(WorldMapNode node)
+    {
+        float averageX = 0;
+        float averageY = 0;
+        float weightSum = 0;
+        foreach (WorldMapNode item in node.connections)
+        {
+            float distance = Vector3.Distance(node.gameObject.transform.localPosition, item.gameObject.transform.localPosition);
+            if (Vector3.Distance(node.gameObject.transform.localPosition, item.gameObject.transform.localPosition) >minSmoothingDistance)
+            {
+                averageX = averageX + item.gameObject.transform.localPosition.x * distance;
+                averageY = averageY + item.gameObject.transform.localPosition.y * distance;
+            }
+            else
+            {
+                averageX = averageX - item.gameObject.transform.localPosition.x * distance;
+                averageY = averageY - item.gameObject.transform.localPosition.y * distance;
+            }
+            weightSum = weightSum + distance;
+        }
+        return new Vector3(averageX / weightSum, averageY / weightSum, 0f);
+    }
+
+    private void Start()
+    {
+        if (worldMap == null)
+        {
+            GenerateWorldMap(worldMapSize);
+        }
+    }
+    private void OnDrawGizmos()
+    {
+        if (worldMap !=null)
+        {
+            foreach (WorldMapNode item in worldMap)
+            {
+                foreach (WorldMapNode connection in item.connections)
                 {
-                    battleQueue.Insert(j, new Tuple<int, int>(i, enemies[i].initiative));
-                    added = true;
-                    break;
+                    Gizmos.DrawLine(item.gameObject.transform.position, connection.gameObject.transform.position);
                 }
             }
-            if (!added)
-            {
-                battleQueue.Add(new Tuple<int, int>(i, enemies[i].initiative));
-            }
         }
     }
-    public bool IsPlayerTurn()
+}
+public class WorldMapNode
+{
+    GameManager gameManager;
+
+    public string name;
+    public string type;
+    public List<WorldMapNode> connections;
+    public string state;
+
+    public GameObject gameObject;
+
+    GameObject spriteObject;
+    SpriteRenderer spriteRenderer;
+
+    int siegeTime;
+    public WorldMapNode(GameManager _gameManager,string _name,string _type)
     {
-        if (battleQueue!=null && battleQueue[0]!=null)
-        {
-            if (battleQueue[0].Item1 == -1)
-            {
-                return true;
-            }
-            else return false;
-        }
-        else
-        {
-            Debug.LogError("Tried to check if it's player turn while there is no battle queue");
-            return false;
-        }
-    }
-    void CreatePlayerObject()
-    {
-        playerObject = new GameObject();
-        playerObject.transform.parent = this.gameObject.transform;
-        playerObject.transform.localPosition = Vector3.zero;
-        player = playerObject.AddComponent<Player>();
-        player.PlayerObjectSetup(this, debugPlayerSprite,playerPosition);
+        gameManager = _gameManager;
+
+        name = _name;
+        type = _type;
+        connections = new List<WorldMapNode>();
+        state = "normal";
+        siegeTime = 0;
+
+        gameObject = new GameObject(name);
+        gameObject.transform.parent = gameManager.gameObject.transform;
+        gameObject.transform.localPosition = Vector3.zero;
+
+        spriteObject = new GameObject("Sprite");
+        spriteObject.transform.parent = gameObject.transform;
+        spriteObject.transform.localPosition = Vector3.zero;
+
+        spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
+        
+
+        SetSprite();
     }
 
-    void PlaceEnemies()
+    void SetSprite()
     {
-        for (int i = 0; i < enemies.Count; i++)
+        if (type == "EnemyCastle")
         {
-            if (i<enemyPositions.Count)
-            {
-                enemies[i].SetPosition(enemyPositions[i]);
-            }
-            else
-            {
-                Debug.LogError("More enemies than aviable slots");
-            }
+            spriteRenderer.sprite = gameManager.enemyCastleSprite;
+        }
+        else if (type == "Capitol")
+        {
+            spriteRenderer.sprite = gameManager.capitolSprite;
+        }
+        else if (type == "City")
+        {
+            spriteRenderer.sprite = gameManager.citySprite;
+        }
+        else if (type == "Village")
+        {
+            spriteRenderer.sprite = gameManager.villageSprite;
+        }
+        else if (type == "Fortress")
+        {
+            spriteRenderer.sprite = gameManager.fortressSprite;
+        }
+        else if (type == "AcientRuins")
+        {
+            spriteRenderer.sprite = gameManager.ruinsSprite;
         }
     }
-    public void CardWasMovedOntoEnemy(DeckCard card,Enemy enemy)
+    public void PlaceRandomlyWithinBounds(Vector3 boundsStart,Vector3 boundsEnd)
     {
-        if (IsPlayerTurn())
-        {
-            if (!enemy.isDead)
-            {
-                Debug.Log(enemy.health);
-                ApplyCard(card, enemy);
-                player.CheckForCardRemoval();
-                PlayerMadeMove();
-            }
-            else
-            {
-                player.SetupCardLocation();
-            }
-        }
+        gameObject.transform.localPosition =
+            new Vector3(
+                UnityEngine.Random.Range(boundsStart.x,boundsEnd.x),
+                UnityEngine.Random.Range(boundsStart.y, boundsEnd.y),
+                0f
+            );
     }
-    void PlayerMadeMove()
+    public void SetPosition(Vector3 position)
     {
-        Tuple<int, int> player;
-        player = battleQueue[0];
-        battleQueue.RemoveAt(0);
-        battleQueue.Add(player);
-    }
-    void ApplyCard(DeckCard card, Enemy enemy)
-    {
-        foreach (Effect item in card.card.effects)
-        {
-            enemy.ApplyCardEffect(item);
-        }
-        Tag destroyTag = card.card.FindCardTag("destroy");
-        Tag exhaustTag = card.card.FindCardTag("exhaust");
-        card.discarded = true;
-        if (destroyTag != null)
-        {
-            card.destroyed = true;
-        }
-        if (exhaustTag != null)
-        {
-            card.exhausted = Mathf.FloorToInt(exhaustTag.value);
-        }
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        if (inBattle)
-        {
-            if (battleQueue[0].Item1 != -1)
-            {
-                enemies[battleQueue[0].Item1].MakeAMove();
-                Tuple<int, int> enemy;
-                enemy = battleQueue[0];
-                battleQueue.RemoveAt(0);
-                battleQueue.Add(enemy);
-            }
-        }
-    }
-
-    //DEBUGGING FUNCTIONS
-
-    void CheatGiveDebugCardsToDeck(int count)
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
-        }
-    }
-    void CheatSpawnDebugEnemies(int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            enemies.Add(new Enemy(this, "debugEnemy", 10, 10, 10, 1, debugPlayerSprite));
-        }
+        gameObject.transform.localPosition = position;
     }
 }

@@ -17,7 +17,7 @@ public class PointerControl : MonoBehaviour
 
     GameObject grabbedCard;
 
-    public GameManager gameManager;
+    public BattleManager battleManager;
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -33,7 +33,7 @@ public class PointerControl : MonoBehaviour
 
     private void Cancel_performed(InputAction.CallbackContext obj)
     {
-        gameManager.player.AddCardToPlayerHand();
+        battleManager.player.AddCardToPlayerHand();
         /*if (gm.player.hand.Count < 3)
         {
             gm.player.AddCardToPlayerHand();
@@ -70,7 +70,7 @@ public class PointerControl : MonoBehaviour
                 {
                     CardHandle cardHandle = grabbedCard.GetComponent<CardHandle>();
                     EnemyHandle enemyHandle = raycastHit.collider.gameObject.transform.parent.gameObject.GetComponent<EnemyHandle>();
-                    gameManager.CardWasMovedOntoEnemy(cardHandle.card,enemyHandle.enemy);
+                    battleManager.CardWasMovedOntoEnemy(cardHandle.card,enemyHandle.enemy);
                 }
                 grabbedCard = null;
             }
@@ -91,7 +91,7 @@ public class PointerControl : MonoBehaviour
         else if (resetPosition)
         {
             resetPosition = false;
-            gameManager.player.SetupCardLocation();
+            battleManager.player.SetupCardLocation();
         }
 
     }

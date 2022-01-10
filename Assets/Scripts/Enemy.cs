@@ -24,7 +24,7 @@ public class Enemy
 
     public Sprite enemySprite;
 
-    public GameManager gameManager;
+    public BattleManager battleManager;
 
     public Enemy Clone()
     {
@@ -39,7 +39,7 @@ public class Enemy
         if (enemyObject==null)
         {
             enemyObject = new GameObject(name);
-            enemyObject.transform.parent = gameManager.transform;
+            enemyObject.transform.parent = battleManager.transform;
             enemyObject.transform.localPosition = Vector3.zero;
             EnemyHandle enemyHandle = enemyObject.AddComponent<EnemyHandle>();
             enemyHandle.enemy = this;
@@ -64,9 +64,9 @@ public class Enemy
         spriteObject.tag = "enemy_sprite";
         return spriteObject;
     }
-    public Enemy(GameManager _gameManager,string _name,float _healthMax,int _movesMax,int _initiative,int _size,Sprite sprite)
+    public Enemy(BattleManager _gameManager,string _name,float _healthMax,int _movesMax,int _initiative,int _size,Sprite sprite)
     {
-        gameManager = _gameManager;
+        battleManager = _gameManager;
 
         name = _name;
         health = _healthMax;

@@ -17,20 +17,20 @@ public class Player : MonoBehaviour
 
     SpriteRenderer spriteRenderer;
 
-    GameManager gm;
+    BattleManager battleManager;
 
     public GameObject Hand;
     public GameObject PlayerSpriteObject;
 
     Vector2 playerPosition;
-    public void PlayerObjectSetup(GameManager _gm, Sprite _playerSprite, Vector2 _playerPosition)
+    public void PlayerObjectSetup(BattleManager _gm, Sprite _playerSprite, Vector2 _playerPosition)
     {
         data = new PlayerData();
 
         this.name = "Player";
         playerSprite = _playerSprite;
 
-        gm = _gm;
+        battleManager = _gm;
         playerPosition = _playerPosition;
 
         CreatePlayerSpriteGO();

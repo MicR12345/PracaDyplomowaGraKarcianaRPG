@@ -175,7 +175,7 @@ MonoBehaviour:
   CardLibrary: {fileID: 493285072}
   cardLibrary: {fileID: 0}
   player: {fileID: 0}
-  DebugPlayerSprite: {fileID: 21300000, guid: a4eb354e8ad6fcd4e8d95d7a772fcad4, type: 3}
+  debugPlayerSprite: {fileID: 21300000, guid: a4eb354e8ad6fcd4e8d95d7a772fcad4, type: 3}
   playerPosition: {x: -42, y: 0}
   enemyPositions:
   - {x: 25, y: 5}

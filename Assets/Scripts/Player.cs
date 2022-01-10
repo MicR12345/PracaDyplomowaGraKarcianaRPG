@@ -4,21 +4,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public int charcterId;
-    public int petId;
-    public int healthMax;
     public int health;
-    public int actionPointsMax;
     public int actionPoints;
     public int initiative;
-    public List<DeckCard> deck;
-    public int deckSize = 30;
     public List<DeckCard> cardStack;
-    public int stackKnowledge;
     public List<DeckCard> hand;
-    public int handSize = 5;
-    public List<Card> abilityCards;
     public List<Effect> activeEffects;
+
+    public PlayerData data;
 
     Sprite playerSprite;
 
@@ -32,6 +25,8 @@ public class Player : MonoBehaviour
     Vector2 playerPosition;
     public void PlayerObjectSetup(GameManager _gm, Sprite _playerSprite, Vector2 _playerPosition)
     {
+        data = new PlayerData();
+
         this.name = "Player";
         playerSprite = _playerSprite;
 
@@ -45,7 +40,7 @@ public class Player : MonoBehaviour
         Hand.transform.parent = this.gameObject.transform;
         Hand.transform.localPosition = new Vector3(0f, -30f, -1f);
 
-        deck = new List<DeckCard>();
+        data.deck = new List<DeckCard>();
         hand = new List<DeckCard>();
     }
     public void CreatePlayerSpriteGO()
@@ -64,7 +59,7 @@ public class Player : MonoBehaviour
 
     public void AddToPlayerDeck(DeckCard card)
     {
-        if (deck.Count>deckSize)
+        if (data.deck.Count>data.deckSize)
         {
             Debug.LogError("More cards than possible in deck");
         }
@@ -75,12 +70,12 @@ public class Player : MonoBehaviour
         card.card.cardObject.SetActive(false);
         CardHandle cardHandle = card.card.cardObject.AddComponent<CardHandle>();
         cardHandle.card = card;
-        deck.Add(card);
+        data.deck.Add(card);
 
     }
     public void CreateNewCardStack(bool random = true)
     {
-        cardStack = new List<DeckCard>(deck);
+        cardStack = new List<DeckCard>(data.deck);
         Debug.Log("Created card stack with " + cardStack.Count + " cards.");
         if (random)
         {
@@ -149,7 +144,7 @@ public class Player : MonoBehaviour
     public void DealAFullHand()
     {
         RemoveAllFromHand();
-        for (int i = 0; i < handSize; i++)
+        for (int i = 0; i < data.handSize; i++)
         {
             if (cardStack.Count==0)
             {
@@ -164,7 +159,7 @@ public class Player : MonoBehaviour
     public void Shuffle(bool random = true)
     {
         cardStack.Clear();
-        foreach (DeckCard item in deck)
+        foreach (DeckCard item in data.deck)
         {
             item.inHand = false;
         }
@@ -172,7 +167,7 @@ public class Player : MonoBehaviour
         {
             item.inHand = true;
         }
-        foreach (DeckCard item in deck)
+        foreach (DeckCard item in data.deck)
         {
             if (!item.destroyed && item.exhausted==0 && !item.inHand)
             {

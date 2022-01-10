@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +17,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public Player player;
 
-    public Sprite DebugPlayerSprite;
+    public Sprite debugPlayerSprite;
 
     public Vector2 playerPosition;
 
@@ -30,18 +29,19 @@ public class GameManager : MonoBehaviour
     public bool inBattle;
     void Start()
     {
+        CardLibrary = GameObject.Find("CARD LIBRARY");
+        if (CardLibrary == null)
+        {
+            Debug.LogError("Card library object not found");
+        }
+
         cardLibrary = CardLibrary.GetComponent<CardLibrary>();
         cardLibrary.LoadAllCards();
         cardLibrary.DebugPrintAllCardsNames();
 
         enemies = new List<Enemy>();
 
-        OnGameStart();
-    }
-    void OnGameStart()
-    {
         OnBattleStart();
-        
     }
     void OnBattleStart()
     {
@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
         playerObject.transform.parent = this.gameObject.transform;
         playerObject.transform.localPosition = Vector3.zero;
         player = playerObject.AddComponent<Player>();
-        player.PlayerObjectSetup(this, DebugPlayerSprite,playerPosition);
+        player.PlayerObjectSetup(this, debugPlayerSprite,playerPosition);
     }
 
     void PlaceEnemies()
@@ -191,7 +191,7 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            enemies.Add(new Enemy(this, "debugEnemy", 10, 10, 10, 1, DebugPlayerSprite));
+            enemies.Add(new Enemy(this, "debugEnemy", 10, 10, 10, 1, debugPlayerSprite));
         }
     }
 }

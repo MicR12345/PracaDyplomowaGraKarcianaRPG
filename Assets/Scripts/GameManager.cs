@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,12 +13,14 @@ public class GameManager : MonoBehaviour
     static int acientRuinsChance = 5;
 
     static int maxConnectionCount = 5;
+    static int minConnectionCount = 2;
     static int maxConnectAttempts = 10;
+    static float maxLocationConnectionDistance = 8f;
 
-    static float worldMapLocationPullForce = 0.2f;
+    static float worldMapLocationPullForce = 0.1f;
     static float smoothingCount = 3;
 
-    static float minSmoothingDistance = 8f;
+    static float minSmoothingDistance = 3f;
 
     static Vector3 worldBoundsStart = new Vector3(-30f,-25f,0f);
     static Vector3 worldBoundsEnd = new Vector3(30f, 25f, 0f);
@@ -51,7 +54,7 @@ public class GameManager : MonoBehaviour
     {
         worldMap = new List<WorldMapNode>();
 
-        worldMap.Add(new WorldMapNode(this,"EnemyCastle", "EnemyCastle"));
+        worldMap.Add(new WorldMapNode(this,"EnemyCastle", "EnemyCastle",false));
         worldMap[0].SetPosition(worldBoundsEnd);
         worldMap.Add(new WorldMapNode(this, "Capitol", "Capitol"));
 
@@ -81,21 +84,58 @@ public class GameManager : MonoBehaviour
         {
             int worldNodeCount = worldMap.Count;
 
-            worldMap.Add(new WorldMapNode(this, "BorderFortress", "Fortress"));
+            worldMap.Add(new WorldMapNode(this, "BorderFortress", "Fortress",false));
             worldMap[0].connections.Add(worldMap[worldNodeCount]);
             worldMap[worldNodeCount].connections.Add(worldMap[0]);
+            worldMap[worldNodeCount].PlaceRandomlyFortress(worldBoundsEnd);
         }
-        for (int i = 1; i < worldMap.Count; i++)
+        for (int i = 1; i < worldMap.Count-fortressCountNearEnemy; i++)
         {
             //Do zrobienia polaczenia z najlbizszymi od 1 do n nodow zamiast tego
-            ConnectToRandomNodes(worldMap[i]);
+            //ConnectToRandomNodes(worldMap[i]);
             worldMap[i].PlaceRandomlyWithinBounds(worldBoundsStart, worldBoundsEnd);
+        }
+        ConnectNodesToTheirClosestNodes();
+        for (int i = 1; i < worldMap.Count; i++)
+        {
+            ConnectIfNotConnected(worldMap[i]);
         }
         SmoothLocationPositions();
     }
     void DrawWorldMap()
     {
 
+    }
+    void ConnectNodesToTheirClosestNodes()
+    {
+        for (int i = 1; i < worldMap.Count; i++)
+        {
+            List<Tuple<WorldMapNode, float>> distanceToNode = new List<Tuple<WorldMapNode, float>>();
+            for (int j = 1; j < worldMap.Count; j++)
+            {
+                if (i!=j)
+                {
+                    distanceToNode.Add(new Tuple<WorldMapNode, float>(
+                        worldMap[j],
+                        Vector3.Distance(worldMap[i].gameObject.transform.localPosition,
+                                        worldMap[j].gameObject.transform.localPosition
+                                        )
+                        ));
+                }
+            }
+            distanceToNode.Sort((x, y) => x.Item2.CompareTo(y.Item2));
+            int k = 0;
+            while(distanceToNode[k].Item2 < maxLocationConnectionDistance
+                || (distanceToNode[k].Item2 >= maxLocationConnectionDistance && worldMap[i].connections.Count < minConnectionCount))
+            {
+                if (!worldMap[i].connections.Contains(distanceToNode[k].Item1))
+                {
+                    worldMap[i].connections.Add(distanceToNode[k].Item1);
+                    distanceToNode[k].Item1.connections.Add(worldMap[i]);
+                }
+                k++;
+            }
+        }
     }
     void ConnectToRandomNodes(WorldMapNode node)
     {
@@ -116,14 +156,20 @@ public class GameManager : MonoBehaviour
             List<Vector3> positions = PrepareListOfNewPositions();
             for (int j = 0; j < worldMap.Count; j++)
             {
-                worldMap[j].SetPosition(positions[j]);
+                if (worldMap[j].affectedBySmoothing)
+                {
+                    worldMap[j].SetPosition(positions[j]);
+                }
             }
             NormalizeNodesToBounds();
         }
         List<Vector3> positionsFinal = PrepareListOfNewPositions();
         for (int j = 0; j < worldMap.Count; j++)
         {
-            worldMap[j].SetPosition(positionsFinal[j]);
+            if (worldMap[j].affectedBySmoothing)
+            {
+                worldMap[j].SetPosition(positionsFinal[j]);
+            }
         }
     }
     void NormalizeNodesToBounds()
@@ -132,7 +178,7 @@ public class GameManager : MonoBehaviour
         float minY = worldBoundsEnd.y;
         float maxX = worldBoundsStart.x;
         float maxY = worldBoundsStart.y;
-        for (int i = 0; i < worldMap.Count; i++)
+        for (int i = 1; i < worldMap.Count; i++)
         {
             float x = worldMap[i].gameObject.transform.position.x;
             float y = worldMap[i].gameObject.transform.position.y;
@@ -141,7 +187,7 @@ public class GameManager : MonoBehaviour
             if (x > maxX) maxX = x;
             if (y > maxY) maxY = y;
         }
-        for (int i = 0; i < worldMap.Count; i++)
+        for (int i = 1; i < worldMap.Count; i++)
         {
             float x = worldMap[i].gameObject.transform.position.x;
             float y = worldMap[i].gameObject.transform.position.y;
@@ -194,17 +240,78 @@ public class GameManager : MonoBehaviour
             {
                 averageX = averageX + item.gameObject.transform.localPosition.x * distance;
                 averageY = averageY + item.gameObject.transform.localPosition.y * distance;
+                weightSum = weightSum + distance;
             }
             else
             {
-                averageX = averageX - item.gameObject.transform.localPosition.x * distance;
-                averageY = averageY - item.gameObject.transform.localPosition.y * distance;
+                averageX = averageX - item.gameObject.transform.localPosition.x * 5f;
+                averageY = averageY - item.gameObject.transform.localPosition.y * 5f;
+                weightSum = weightSum + 5f;
             }
-            weightSum = weightSum + distance;
         }
         return new Vector3(averageX / weightSum, averageY / weightSum, 0f);
     }
-
+    void ConnectIfNotConnected(WorldMapNode node)
+    {
+        if (node.type == "EnemyCastle")
+        {
+            return;
+        }
+        List<WorldMapNode> toBeVisited = new List<WorldMapNode>();
+        List<WorldMapNode> visitedNodes = new List<WorldMapNode>();
+        List<Tuple<WorldMapNode, float>> visitedNodesDistance = new List<Tuple<WorldMapNode, float>>();
+        visitedNodes.Add(node);
+        foreach (WorldMapNode item in node.connections)
+        {
+            toBeVisited.Add(item);
+        }
+        while (toBeVisited.Count>0)
+        {
+            if (toBeVisited[0].type!="EnemyCastle")
+            {
+                foreach (WorldMapNode item in toBeVisited[0].connections)
+                {
+                    if (!visitedNodes.Contains(item))
+                    {
+                        toBeVisited.Add(item);
+                    }
+                }
+                visitedNodes.Add(toBeVisited[0]);
+                visitedNodesDistance.Add(new Tuple<WorldMapNode, float>(toBeVisited[0], Vector3.Distance(toBeVisited[0].gameObject.transform.localPosition, worldMap[0].gameObject.transform.localPosition)));
+                toBeVisited.RemoveAt(0);
+            }
+            else
+            {
+                return;
+            }
+        }
+        visitedNodesDistance.Sort((x, y) => x.Item2.CompareTo(y.Item2));
+        WorldMapNode closestUnconnectedNode = null;
+        float minDistance = 0;
+        foreach (WorldMapNode item in worldMap)
+        {
+            if (!visitedNodes.Contains(item))
+            {
+                if (closestUnconnectedNode==null)
+                {
+                    closestUnconnectedNode = item;
+                    minDistance = Vector3.Distance(item.gameObject.transform.localPosition, visitedNodesDistance[0].Item1.gameObject.transform.localPosition);
+                }
+                else
+                {
+                    float distance = Vector3.Distance(item.gameObject.transform.localPosition, visitedNodesDistance[0].Item1.gameObject.transform.localPosition);
+                    if (distance < minDistance && item.type != "EnemyCastle")
+                    {
+                        closestUnconnectedNode = item;
+                        minDistance = distance;
+                    }
+                }
+            }
+        }
+        visitedNodesDistance[0].Item1.connections.Add(closestUnconnectedNode);
+        closestUnconnectedNode.connections.Add(visitedNodesDistance[0].Item1);
+        return;
+    }
     private void Start()
     {
         if (worldMap == null)
@@ -241,15 +348,17 @@ public class WorldMapNode
     SpriteRenderer spriteRenderer;
 
     int siegeTime;
-    public WorldMapNode(GameManager _gameManager,string _name,string _type)
+
+    public bool affectedBySmoothing = true;
+    public WorldMapNode(GameManager _gameManager,string _name,string _type,bool smoothing = true)
     {
         gameManager = _gameManager;
-
         name = _name;
         type = _type;
         connections = new List<WorldMapNode>();
         state = "normal";
         siegeTime = 0;
+        affectedBySmoothing = smoothing;
 
         gameObject = new GameObject(name);
         gameObject.transform.parent = gameManager.gameObject.transform;
@@ -298,6 +407,15 @@ public class WorldMapNode
             new Vector3(
                 UnityEngine.Random.Range(boundsStart.x,boundsEnd.x),
                 UnityEngine.Random.Range(boundsStart.y, boundsEnd.y),
+                0f
+            );
+    }
+    public void PlaceRandomlyFortress(Vector3 boundsEnd)
+    {
+        gameObject.transform.localPosition =
+            new Vector3(
+                boundsEnd.x + UnityEngine.Random.Range(-3f, -7f),
+                boundsEnd.y + UnityEngine.Random.Range(-3f, -7f),
                 0f
             );
     }

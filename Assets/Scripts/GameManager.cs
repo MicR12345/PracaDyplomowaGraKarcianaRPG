@@ -12,18 +12,26 @@ public class GameManager : MonoBehaviour
     static int fortressChance = 5;
     static int acientRuinsChance = 5;
 
-    static int maxConnectionCount = 5;
+    static int maxConnectionCount = 3;
     static int minConnectionCount = 2;
     static int maxConnectAttempts = 10;
-    static float maxLocationConnectionDistance = 8f;
+    static float maxLocationConnectionDistance = 10f;
 
-    static float worldMapLocationPullForce = 0.1f;
-    static float smoothingCount = 3;
+    static float minDistanceBetweenLocations = 5f;
 
-    static float minSmoothingDistance = 3f;
+    static float worldMapLocationPullForce = 0.5f;
+    static float smoothingCount = 2;
 
-    static Vector3 worldBoundsStart = new Vector3(-30f,-25f,0f);
-    static Vector3 worldBoundsEnd = new Vector3(30f, 25f, 0f);
+    static float minSmoothingDistance = 5f;
+
+    static Vector3 worldBoundsStart = new Vector3(-30f,-20f,0f);
+    static Vector3 worldBoundsEnd = new Vector3(30f, 20f, 0f);
+
+    static Vector3 enemyCastleLocation = new Vector3(0f, 23f, 0f);
+    static Vector3 capitolLocation = new Vector3(0f, -21f, 0f);
+
+    static Vector3 fortress1Location = new Vector3(-3f, 20f, 0f);
+    static Vector3 fortress2Location = new Vector3(3f, 20f, 0f);
 
     List<WorldMapNode> worldMap;
     string playerPosition;
@@ -55,12 +63,13 @@ public class GameManager : MonoBehaviour
         worldMap = new List<WorldMapNode>();
 
         worldMap.Add(new WorldMapNode(this,"EnemyCastle", "EnemyCastle",false));
-        worldMap[0].SetPosition(worldBoundsEnd);
+        worldMap[0].SetPosition(enemyCastleLocation);
         worldMap.Add(new WorldMapNode(this, "Capitol", "Capitol"));
-
+        worldMap[1].SetPosition(capitolLocation);
         int maxChance = villageChance + cityChance + fortressChance + acientRuinsChance;
         for (int i = 1; i < nodeCount; i++)
         {
+            int newNodeNumber = worldMap.Count;
             int roll = UnityEngine.Random.Range(0, maxChance);
             if (roll < villageChance)
             {
@@ -78,33 +87,43 @@ public class GameManager : MonoBehaviour
             {
                 worldMap.Add(new WorldMapNode(this, "Ruins", "AcientRuins"));
             }
+            worldMap[newNodeNumber].PlaceRandomlyWithinBounds(worldBoundsStart, worldBoundsEnd);
+            while (CheckIfIsLocationAtNewPosition(worldMap[newNodeNumber].gameObject.transform.localPosition))
+            {
+                worldMap[newNodeNumber].PlaceRandomlyWithinBounds(worldBoundsStart, worldBoundsEnd);
+            }
         }
-        int fortressCountNearEnemy = UnityEngine.Random.Range(3, maxConnectionCount);
-        for (int i = 0; i < fortressCountNearEnemy; i++)
-        {
-            int worldNodeCount = worldMap.Count;
+        int worldNodeCount = worldMap.Count;
 
-            worldMap.Add(new WorldMapNode(this, "BorderFortress", "Fortress",false));
-            worldMap[0].connections.Add(worldMap[worldNodeCount]);
-            worldMap[worldNodeCount].connections.Add(worldMap[0]);
-            worldMap[worldNodeCount].PlaceRandomlyFortress(worldBoundsEnd);
-        }
-        for (int i = 1; i < worldMap.Count-fortressCountNearEnemy; i++)
-        {
-            //Do zrobienia polaczenia z najlbizszymi od 1 do n nodow zamiast tego
-            //ConnectToRandomNodes(worldMap[i]);
-            worldMap[i].PlaceRandomlyWithinBounds(worldBoundsStart, worldBoundsEnd);
-        }
+        worldMap.Add(new WorldMapNode(this, "BorderFortress", "Fortress", false));
+        worldMap.Add(new WorldMapNode(this, "BorderFortress", "Fortress", false));
+        worldMap[0].connections.Add(worldMap[worldNodeCount]);
+        worldMap[worldNodeCount].connections.Add(worldMap[0]);
+        worldMap[0].connections.Add(worldMap[worldNodeCount+1]);
+        worldMap[worldNodeCount+1].connections.Add(worldMap[0]);
+        worldMap[worldNodeCount].SetPosition(fortress1Location);
+        worldMap[worldNodeCount+1].SetPosition(fortress2Location);
         ConnectNodesToTheirClosestNodes();
         for (int i = 1; i < worldMap.Count; i++)
         {
             ConnectIfNotConnected(worldMap[i]);
         }
-        SmoothLocationPositions();
+        //SmoothLocationPositions();
     }
     void DrawWorldMap()
     {
 
+    }
+    bool CheckIfIsLocationAtNewPosition(Vector3 position)
+    {
+        for (int i = 0; i < worldMap.Count-1; i++)
+        {
+            if (Vector3.Distance(position,worldMap[i].gameObject.transform.localPosition)<minDistanceBetweenLocations)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     void ConnectNodesToTheirClosestNodes()
     {
@@ -151,7 +170,7 @@ public class GameManager : MonoBehaviour
     }
     void SmoothLocationPositions()
     {
-        for (int i = 0; i < smoothingCount-1; i++)
+        for (int i = 0; i < smoothingCount; i++)
         {
             List<Vector3> positions = PrepareListOfNewPositions();
             for (int j = 0; j < worldMap.Count; j++)
@@ -163,14 +182,7 @@ public class GameManager : MonoBehaviour
             }
             NormalizeNodesToBounds();
         }
-        List<Vector3> positionsFinal = PrepareListOfNewPositions();
-        for (int j = 0; j < worldMap.Count; j++)
-        {
-            if (worldMap[j].affectedBySmoothing)
-            {
-                worldMap[j].SetPosition(positionsFinal[j]);
-            }
-        }
+        NormalizeNodesToBounds();
     }
     void NormalizeNodesToBounds()
     {
@@ -410,17 +422,17 @@ public class WorldMapNode
                 0f
             );
     }
-    public void PlaceRandomlyFortress(Vector3 boundsEnd)
+    public void PlaceRandomlyFortress(Vector3 location)
     {
         gameObject.transform.localPosition =
             new Vector3(
-                boundsEnd.x + UnityEngine.Random.Range(-3f, -7f),
-                boundsEnd.y + UnityEngine.Random.Range(-3f, -7f),
+                location.x + UnityEngine.Random.Range(-7f, 7f),
+                location.y + -3,
                 0f
             );
     }
     public void SetPosition(Vector3 position)
     {
-        gameObject.transform.localPosition = position;
+        gameObject.transform.localPosition = new Vector3(position.x,position.y,-5f);
     }
 }

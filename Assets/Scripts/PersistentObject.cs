@@ -6,6 +6,6 @@ public class PersistentObject : MonoBehaviour
 {
     void Awake()
     {
-        Object.DontDestroyOnLoad(this);
+        DontDestroyOnLoad(this.gameObject);
     }
 }

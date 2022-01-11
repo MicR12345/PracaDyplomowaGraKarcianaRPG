@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
@@ -33,8 +34,10 @@ public class BattleManager : MonoBehaviour
         gameManager = GameObject.Find("World").GetComponent<GameManager>();
         cardLibrary = GameObject.Find("CARD LIBRARY").GetComponent<CardLibrary>();
         enemies = new List<Enemy>();
-
+        
         OnBattleStart();
+        gameManager.worldMapObject.SetActive(true);
+        SceneManager.LoadScene("World");
     }
     void OnBattleStart()
     {

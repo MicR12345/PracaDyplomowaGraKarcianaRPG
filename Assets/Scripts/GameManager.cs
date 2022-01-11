@@ -441,22 +441,12 @@ public class GameManager : MonoBehaviour
             worldMapObject = new GameObject("WorldMap");
             worldMapObject.transform.parent = this.gameObject.transform;
             worldMapObject.transform.localPosition = Vector3.zero;
+
             GenerateWorldMap(worldMapSize);
         }
         playerPosition = worldMap[1];
-    }
-    private void OnDrawGizmos()
-    {
-        if (worldMap !=null)
-        {
-            foreach (WorldMapNode item in worldMap)
-            {
-                foreach (WorldMapNode connection in item.connections)
-                {
-                    Gizmos.DrawLine(item.gameObject.transform.position, connection.gameObject.transform.position);
-                }
-            }
-        }
+
+        SceneManager.LoadScene("World");
     }
 }
 public class WorldMapNode

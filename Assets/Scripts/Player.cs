@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    public int health;
+    public float health;
     public int actionPoints;
     public int initiative;
     public List<DeckCard> cardStack;
@@ -17,20 +18,23 @@ public class Player : MonoBehaviour
 
     SpriteRenderer spriteRenderer;
 
+    GameManager gameManager; 
     BattleManager battleManager;
 
     public GameObject Hand;
     public GameObject PlayerSpriteObject;
 
     Vector2 playerPosition;
-    public void PlayerObjectSetup(BattleManager _gm, Sprite _playerSprite, Vector2 _playerPosition)
+    public void PlayerObjectSetup(BattleManager _battleManager,GameManager _gameManager, Sprite _playerSprite, Vector2 _playerPosition)
     {
         data = new PlayerData();
 
         this.name = "Player";
         playerSprite = _playerSprite;
 
-        battleManager = _gm;
+        battleManager = _battleManager;
+        gameManager = _gameManager;
+
         playerPosition = _playerPosition;
 
         CreatePlayerSpriteGO();
@@ -253,5 +257,30 @@ public class Player : MonoBehaviour
             item.card.cardObject.SetActive(true);
         }
         SetupCardLocation();
+    }
+    public void ApplyCardEffect(Effect effect)
+    {
+        if (effect.name == "damage")
+        {
+            health = health - effect.value;
+        }
+        CheckForDeath();
+    }
+
+    public void TakeDamageDirect()
+    {
+
+    }
+
+    public void TickEffects()
+    {
+
+    }
+    public void CheckForDeath()
+    {
+        if (health <= 0)
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 }

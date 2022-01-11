@@ -99,7 +99,7 @@ public class BattleManager : MonoBehaviour
         playerObject.transform.parent = this.gameObject.transform;
         playerObject.transform.localPosition = Vector3.zero;
         player = playerObject.AddComponent<Player>();
-        player.PlayerObjectSetup(this, debugPlayerSprite,playerPosition);
+        player.PlayerObjectSetup(this,gameManager, debugPlayerSprite,playerPosition);
     }
 
     void PlaceEnemies()
@@ -145,6 +145,24 @@ public class BattleManager : MonoBehaviour
         foreach (Effect item in card.card.effects)
         {
             enemy.ApplyCardEffect(item);
+        }
+        Tag destroyTag = card.card.FindCardTag("destroy");
+        Tag exhaustTag = card.card.FindCardTag("exhaust");
+        card.discarded = true;
+        if (destroyTag != null)
+        {
+            card.destroyed = true;
+        }
+        if (exhaustTag != null)
+        {
+            card.exhausted = Mathf.FloorToInt(exhaustTag.value);
+        }
+    }
+    void ApplyCardToPlayer(DeckCard card, Player player)
+    {
+        foreach (Effect item in card.card.effects)
+        {
+            player.ApplyCardEffect(item);
         }
         Tag destroyTag = card.card.FindCardTag("destroy");
         Tag exhaustTag = card.card.FindCardTag("exhaust");

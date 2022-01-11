@@ -27,7 +27,6 @@ public class CardLibrary : MonoBehaviour
     {
         foreach (Card item in cards)
         {
-            Debug.Log("Compared " + item.name + " to " + name);
             if (item.name == name) return item;
         }
         return null;

@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
     static int ruinsEventChance = 40;
 
     static Vector3 worldBoundsStart = new Vector3(-30f,-20f,0f);
-    static Vector3 worldBoundsEnd = new Vector3(30f, 20f, 0f);
+    static Vector3 worldBoundsEnd = new Vector3(30f, 19f, 0f);
 
     static Vector3 enemyCastleLocation = new Vector3(0f, 23f, 0f);
     static Vector3 capitolLocation = new Vector3(0f, -21f, 0f);
@@ -61,8 +61,8 @@ public class GameManager : MonoBehaviour
     public Sprite fortressSprite;
     public Sprite ruinsSprite;
 
-    public Sprite road;
-
+    public Texture2D road;
+    public Material roadMaterial;
     GameObject cardLibraryGO;
     CardLibrary cardLibrary;
 
@@ -186,9 +186,11 @@ public class GameManager : MonoBehaviour
         worldMap[0].connections.Add(worldMap[worldNodeCount]);
         worldMap[worldNodeCount].connections.Add(worldMap[0]);
         worldMap[0].connections.Add(worldMap[worldNodeCount+1]);
-        worldMap[worldNodeCount+1].connections.Add(worldMap[0]);
+        worldMap[worldNodeCount+1].connections.Add(worldMap[0]);  
         worldMap[worldNodeCount].SetPosition(fortress1Location);
         worldMap[worldNodeCount+1].SetPosition(fortress2Location);
+        DrawRoad(worldMap[0].gameObject.transform.position, worldMap[worldNodeCount].gameObject.transform.position);
+        DrawRoad(worldMap[0].gameObject.transform.position, worldMap[worldNodeCount + 1].gameObject.transform.position);
         ConnectNodesToTheirClosestNodes();
         for (int i = 1; i < worldMap.Count; i++)
         {
@@ -196,9 +198,42 @@ public class GameManager : MonoBehaviour
         }
         //SmoothLocationPositions();
     }
-    void DrawWorldMap()
+    void DrawRoad(Vector3 start,Vector3 end)
     {
+        GameObject roadObject = new GameObject("Road");
+        roadObject.transform.parent = worldMapObject.transform;
+        MeshFilter meshFilter = roadObject.AddComponent<MeshFilter>();
+        MeshRenderer meshRenderer = roadObject.AddComponent<MeshRenderer>();
+        float distance = Vector3.Distance(start, end);
+        Mesh mesh = new Mesh();
+        List<Vector3> verts = new List<Vector3>();
+        verts.Add(new Vector3(-0.3f, -distance / 2f, -1f));
+        verts.Add(new Vector3(0.3f, -distance / 2f, -1f));
+        verts.Add(new Vector3(0.3f, distance / 2f, -1f));
+        verts.Add(new Vector3(-0.3f, distance / 2f, -1f));
+        int[] triangles = { 0, 3, 1, 1, 3, 2 };
+        Vector2[] uvs =
+        {
+            new Vector2(0f,0f),
+            new Vector2(1f,0f),
+            new Vector2(1f,1f),
+            new Vector2(0f,1f)
+        };
+        mesh.vertices = verts.ToArray();
+        mesh.triangles = triangles;
+        mesh.uv = uvs;
 
+        meshFilter.mesh = mesh;
+        meshRenderer.material = roadMaterial;
+        roadObject.transform.localPosition = Vector3.zero;
+        Vector3 vectorToEnd = start - end;
+        float angle = Mathf.Atan2(vectorToEnd.y, vectorToEnd.x) * Mathf.Rad2Deg;
+        roadObject.transform.LookAt(end);
+        roadObject.transform.rotation = Quaternion.Euler(new Vector3(0f,0f,angle+90f));
+
+
+        roadObject.transform.localPosition = (start + end) / 2f + new Vector3(0f,0f,5f);
+        
     }
     bool CheckIfIsLocationAtNewPosition(Vector3 position)
     {
@@ -237,6 +272,7 @@ public class GameManager : MonoBehaviour
                 {
                     worldMap[i].connections.Add(distanceToNode[k].Item1);
                     distanceToNode[k].Item1.connections.Add(worldMap[i]);
+                    DrawRoad(worldMap[i].gameObject.transform.position, distanceToNode[k].Item1.gameObject.transform.position);
                 }
                 k++;
             }
@@ -408,6 +444,7 @@ public class GameManager : MonoBehaviour
         }
         visitedNodesDistance[0].Item1.connections.Add(closestUnconnectedNode);
         closestUnconnectedNode.connections.Add(visitedNodesDistance[0].Item1);
+        DrawRoad(visitedNodesDistance[0].Item1.gameObject.transform.position, closestUnconnectedNode.gameObject.transform.position);
         return;
     }
     private void Start()
@@ -546,7 +583,7 @@ public class WorldMapNode
     }
     public void SetPosition(Vector3 position)
     {
-        gameObject.transform.localPosition = new Vector3(position.x,position.y,-5f);
+        gameObject.transform.localPosition = new Vector3(position.x,position.y,0f);
     }
 
 }

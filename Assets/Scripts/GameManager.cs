@@ -42,14 +42,14 @@ public class GameManager : MonoBehaviour
     static int ruinsBattleChance = 40;
     static int ruinsEventChance = 40;
 
-    static Vector3 worldBoundsStart = new Vector3(-30f,-20f,0f);
-    static Vector3 worldBoundsEnd = new Vector3(30f, 19f, 0f);
+    static Vector3 worldBoundsStart = new Vector3(-30f,-23f,0f);
+    static Vector3 worldBoundsEnd = new Vector3(30f, 15f, 0f);
 
-    static Vector3 enemyCastleLocation = new Vector3(0f, 23f, 0f);
+    static Vector3 enemyCastleLocation = new Vector3(0f, 20f, 0f);
     static Vector3 capitolLocation = new Vector3(0f, -21f, 0f);
 
-    static Vector3 fortress1Location = new Vector3(-3f, 20f, 0f);
-    static Vector3 fortress2Location = new Vector3(3f, 20f, 0f);
+    static Vector3 fortress1Location = new Vector3(-3f, 17f, 0f);
+    static Vector3 fortress2Location = new Vector3(3f, 17f, 0f);
 
     List<WorldMapNode> worldMap;
     public WorldMapNode playerPosition;
@@ -499,6 +499,7 @@ public class WorldMapNode
 
     GameObject spriteObject;
     SpriteRenderer spriteRenderer;
+    GameObject spriteShadowObject;
 
     int siegeTime;
 
@@ -523,7 +524,7 @@ public class WorldMapNode
 
         spriteObject = new GameObject("Sprite");
         spriteObject.transform.parent = gameObject.transform;
-        spriteObject.transform.localPosition = Vector3.zero;
+        spriteObject.transform.localPosition = Vector3.zero + new Vector3(0f, 0.6f);
 
         spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
 

@@ -8,13 +8,9 @@ using UnityEngine;
 [System.Serializable]
 public class Effect
 {
-    //[XmlElement("name")]
     public string name;
-    //[XmlElement("level")]
     public int level;
-    //[XmlElement("vale")]
     public float value;
-    //[XmlElement("duration")]
     public float duration;
     [XmlArray("tags"), XmlArrayItem("tag")]
     public List<Tag> tags;

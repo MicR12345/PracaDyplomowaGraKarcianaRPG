@@ -9,7 +9,6 @@ public class BattleManager : MonoBehaviour
     public Camera GameCamera;
     public PointerControl pointerControl;
     //shared card library
-    public GameObject CardLibrary;
     [HideInInspector]
     public CardLibrary cardLibrary;
 
@@ -27,18 +26,12 @@ public class BattleManager : MonoBehaviour
     [HideInInspector]
     public List<Tuple<int,int>> battleQueue;
     public bool inBattle;
+
+    GameManager gameManager;
     void Start()
     {
-        CardLibrary = GameObject.Find("CARD LIBRARY");
-        if (CardLibrary == null)
-        {
-            Debug.LogError("Card library object not found");
-        }
-
-        cardLibrary = CardLibrary.GetComponent<CardLibrary>();
-        cardLibrary.LoadAllCards();
-        cardLibrary.DebugPrintAllCardsNames();
-
+        gameManager = GameObject.Find("World").GetComponent<GameManager>();
+        cardLibrary = GameObject.Find("CARD LIBRARY").GetComponent<CardLibrary>();
         enemies = new List<Enemy>();
 
         OnBattleStart();

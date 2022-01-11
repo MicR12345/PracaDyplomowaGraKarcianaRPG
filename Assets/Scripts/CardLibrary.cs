@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using System.Xml.Linq;
 using UnityEngine;
-//Do zrobienia ładowanie kart z xml
 public class CardLibrary : MonoBehaviour
 {
 
@@ -13,9 +11,6 @@ public class CardLibrary : MonoBehaviour
     public void LoadAllCards()
     {
         cards = new List<Card>();
-        /* CreateDebugCard("0_cardTest", 1);
-         CreateDebugCard("cardTest2", 1);
-         CreateDebugCard("cardTest3", 1);*/
         CardLoader cardLoader = new CardLoader("./Assets/Cards/");
         cards = new List<Card>(cardLoader.cards);
         foreach (Card card in cards)
@@ -23,24 +18,8 @@ public class CardLibrary : MonoBehaviour
             Debug.Log(card.name);
         }
     }
-    /*
-    void CreateDebugCard(string name,int damage)
-    {
-        List<Effect> effects = new List<Effect>();
-        effects.Add(new Effect("damage",-1,3,-1,new List<Tag>()));
-        List<Tag> tags = new List<Tag>();
-        tags.Add(new Tag("discard", -1));
-        Card card = new Card(name ,effects,tags);
-        Texture2D texture2D = LoadCardImg(card.name);
-        Sprite sprite = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);
-        AddCardPrototype(card, sprite, null);
-    }*/
     public void AddCardPrototype(Card card,Sprite cardImage,Sprite cardBorder)
     {
-        //GameObject cardObject = card.CreateCardInstance(true);
-        //cardObject.transform.parent = this.transform;
-        //cardObject.tag = "Card";
-        //cardObject.transform.localPosition = Vector3.zero;
         card.AddCardGFX(cardImage, cardBorder);
         cards.Add(card);
     }
@@ -73,13 +52,9 @@ public class CardLibrary : MonoBehaviour
 
     public class CardData
     {
-        //[XmlElement("name")]
         public string name;
-        //[XmlElement("path")]
         public string path;
-        //[XmlElement("rarity")]
         public int rarity;
-        //[XmlElement("cost")]
         public int cost;
         [XmlArray("effects"), XmlArrayItem("effect")]
         public List<Effect> effect;

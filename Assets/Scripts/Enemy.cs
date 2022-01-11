@@ -64,9 +64,9 @@ public class Enemy
         spriteObject.tag = "enemy_sprite";
         return spriteObject;
     }
-    public Enemy(BattleManager _gameManager,string _name,float _healthMax,int _movesMax,int _initiative,int _size,Sprite sprite)
+    public Enemy(BattleManager _battleManager,string _name,float _healthMax,int _movesMax,int _initiative,int _size,Sprite sprite)
     {
-        battleManager = _gameManager;
+        battleManager = _battleManager;
 
         name = _name;
         health = _healthMax;

@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,6 +27,21 @@ public class GameManager : MonoBehaviour
 
     static float minSmoothingDistance = 5f;
 
+    static int defaultBattleChance = 40;
+    static int defaultEventChance = 40;
+
+    static int villageBattleChance = 40;
+    static int villageEventChance = 40;
+
+    static int cityBattleChance = 40;
+    static int cityEventChance = 40;
+
+    static int fortressBattleChance = 40;
+    static int fortressEventChance = 40;
+
+    static int ruinsBattleChance = 40;
+    static int ruinsEventChance = 40;
+
     static Vector3 worldBoundsStart = new Vector3(-30f,-20f,0f);
     static Vector3 worldBoundsEnd = new Vector3(30f, 20f, 0f);
 
@@ -34,7 +52,7 @@ public class GameManager : MonoBehaviour
     static Vector3 fortress2Location = new Vector3(3f, 20f, 0f);
 
     List<WorldMapNode> worldMap;
-    string playerPosition;
+    public WorldMapNode playerPosition;
 
     public Sprite enemyCastleSprite;
     public Sprite capitolSprite;
@@ -42,21 +60,89 @@ public class GameManager : MonoBehaviour
     public Sprite villageSprite;
     public Sprite fortressSprite;
     public Sprite ruinsSprite;
+
+    public Sprite road;
+
+    GameObject cardLibraryGO;
+    CardLibrary cardLibrary;
+
+    public List<Enemy> enemiesInBattle;
+    public PlayerData player;
+
+    public GameObject worldMapObject;
     void StartSiege(string nodeName)
     {
 
     }
-    void MovePlayer(string nodeName)
+    public void MovePlayer(WorldMapNode node)
+    {
+        playerPosition = node;
+        if (playerPosition.type!="EnemyCastle")
+        {
+            if (!playerPosition.visited)
+            {
+                int maxRoll = 0;
+                int battleChance = 0;
+                int eventChance = 0;
+                if (playerPosition.type == "Village")
+                {
+                    maxRoll = villageBattleChance + villageEventChance;
+                    battleChance = villageBattleChance;
+                    eventChance = villageEventChance;
+                }
+                else if (playerPosition.type == "City")
+                {
+                    maxRoll = cityBattleChance + cityEventChance;
+                    battleChance = cityBattleChance;
+                    eventChance = cityEventChance;
+                }
+                else if (playerPosition.type == "AcientRuins")
+                {
+                    maxRoll = ruinsBattleChance + ruinsEventChance;
+                    battleChance = ruinsBattleChance;
+                    eventChance = ruinsEventChance;
+                }
+                else if (playerPosition.type == "Fortress")
+                {
+                    maxRoll = fortressBattleChance + fortressEventChance;
+                    battleChance = fortressBattleChance;
+                    eventChance = fortressEventChance;
+                }
+                else
+                {
+                    maxRoll = defaultBattleChance + defaultEventChance;
+                    battleChance = defaultBattleChance;
+                    eventChance = defaultEventChance;
+                }
+                int roll = UnityEngine.Random.Range(0, maxRoll);
+                if (roll < battleChance)
+                {
+                    BeginCombat();
+                }
+                else if (roll < battleChance + eventChance && roll >= battleChance)
+                {
+                    //LaunchEvent();
+                }
+                else
+                {
+                    //LaunchEvent();
+                }
+            }
+            else
+            {
+
+            }
+        }
+        
+    }
+    void LaunchEvent(Event gameEvent)
     {
 
     }
-    void LaunchEvent(string eventName)
+    void BeginCombat()
     {
-
-    }
-    void BeginCombat(List<Enemy> enemies,PlayerData playerData/*,location?*/)
-    {
-
+        worldMapObject.SetActive(false);
+        SceneManager.LoadScene("Game");
     }
     void GenerateWorldMap(int nodeCount)
     {
@@ -326,10 +412,38 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
+        //https://answers.unity.com/questions/1736611/onmouse-events-eg-onmouseenter-not-working-with-ne.html
+        PhysicsRaycaster physicsRaycaster = GameObject.FindObjectOfType<PhysicsRaycaster>();
+        if (physicsRaycaster == null)
+        {
+            Camera.main.gameObject.AddComponent<PhysicsRaycaster>();
+        }
+
+        if (cardLibraryGO==null)
+        {
+            cardLibraryGO = GameObject.Find("CARD LIBRARY");
+            if (cardLibraryGO == null)
+            {
+                Debug.LogError("Card library object not found");
+            }
+            else
+            {
+                if (cardLibrary == null)
+                {
+                    cardLibrary = cardLibraryGO.GetComponent<CardLibrary>();
+                }
+                cardLibrary.LoadAllCards();
+                Debug.Log("Card library found with " + cardLibrary.cards.Count + " cards.");
+            }
+        }
         if (worldMap == null)
         {
+            worldMapObject = new GameObject("WorldMap");
+            worldMapObject.transform.parent = this.gameObject.transform;
+            worldMapObject.transform.localPosition = Vector3.zero;
             GenerateWorldMap(worldMapSize);
         }
+        playerPosition = worldMap[1];
     }
     private void OnDrawGizmos()
     {
@@ -362,6 +476,8 @@ public class WorldMapNode
     int siegeTime;
 
     public bool affectedBySmoothing = true;
+    public bool visited = false;
+
     public WorldMapNode(GameManager _gameManager,string _name,string _type,bool smoothing = true)
     {
         gameManager = _gameManager;
@@ -373,17 +489,24 @@ public class WorldMapNode
         affectedBySmoothing = smoothing;
 
         gameObject = new GameObject(name);
-        gameObject.transform.parent = gameManager.gameObject.transform;
+        gameObject.transform.parent = gameManager.worldMapObject.transform;
         gameObject.transform.localPosition = Vector3.zero;
+        WorldMapNodeHandle handle = gameObject.AddComponent<WorldMapNodeHandle>();
+        handle.SetWorldMapNodeHandle(this,gameManager);
 
         spriteObject = new GameObject("Sprite");
         spriteObject.transform.parent = gameObject.transform;
         spriteObject.transform.localPosition = Vector3.zero;
 
         spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
-        
 
         SetSprite();
+
+        BoxCollider collider = gameObject.AddComponent<BoxCollider>();
+        collider.size = new Vector3(spriteRenderer.sprite.texture.width / spriteRenderer.sprite.pixelsPerUnit,
+            spriteRenderer.sprite.texture.height / spriteRenderer.sprite.pixelsPerUnit,0.2f);
+        
+
     }
 
     void SetSprite()
@@ -434,5 +557,41 @@ public class WorldMapNode
     public void SetPosition(Vector3 position)
     {
         gameObject.transform.localPosition = new Vector3(position.x,position.y,-5f);
+    }
+
+}
+public class WorldMapNodeHandle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler ,IPointerDownHandler, IPointerUpHandler
+{
+    public WorldMapNode worldMapNode;
+    GameManager gameManager;
+    public void SetWorldMapNodeHandle(WorldMapNode _worldMapNode,GameManager _gameManager)
+    {
+        worldMapNode = _worldMapNode;
+        gameManager = _gameManager;
+    }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (gameManager.playerPosition.connections.Contains(worldMapNode))
+        {
+            worldMapNode.gameObject.transform.localScale = new Vector3(1.4f, 1.4f, 1f);
+        }
+    }
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (gameManager.playerPosition.connections.Contains(worldMapNode))
+        {
+            worldMapNode.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+    }
+    public void OnPointerDown(PointerEventData eventData)
+    {
+    }
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (gameManager.playerPosition.connections.Contains(worldMapNode))
+        {
+            gameManager.MovePlayer(worldMapNode);
+            worldMapNode.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+        }
     }
 }

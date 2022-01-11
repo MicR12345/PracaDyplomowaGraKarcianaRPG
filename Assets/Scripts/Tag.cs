@@ -6,9 +6,7 @@ using UnityEngine;
 
 public class Tag
 {
-    //[XmlElement("name")]
     public string name;
-    //[XmlElement("value")]
     public float value;
     public Tag(string _name,float _value)
     {

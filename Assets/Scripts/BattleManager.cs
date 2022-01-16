@@ -9,9 +9,11 @@ public class BattleManager : MonoBehaviour
     public GameObject GameLight;
     public Camera GameCamera;
     public PointerControl pointerControl;
+    public List<float> enenmyTimers;
     //shared card library
     [HideInInspector]
     public CardLibrary cardLibrary;
+    public EnemyLibrary enemyLibrary;
 
     GameObject playerObject;
     [HideInInspector]
@@ -33,11 +35,12 @@ public class BattleManager : MonoBehaviour
     {
         gameManager = GameObject.Find("World").GetComponent<GameManager>();
         cardLibrary = GameObject.Find("CARD LIBRARY").GetComponent<CardLibrary>();
-        enemies = new List<Enemy>();
+        enemyLibrary = GameObject.Find("ENEMY LIBRARY").GetComponent<EnemyLibrary>();
+        enemies = enemyLibrary.enemyList;
         
         OnBattleStart();
         gameManager.worldMapObject.SetActive(true);
-        SceneManager.LoadScene("World");
+        //SceneManager.LoadScene("World");
     }
     void OnBattleStart()
     {
@@ -47,14 +50,19 @@ public class BattleManager : MonoBehaviour
             CreatePlayerObject();
         }
         enemies = new List<Enemy>();
-        CheatSpawnDebugEnemies(4);
+        //CheatSpawnDebugEnemies(4);
+        enemies = gameManager.enemiesInBattle;
+        foreach(Enemy enemy in enemies)
+        {
+            enemy.CreateFightingEnemy(this);
+        }
         PlaceEnemies();
-        CreateBattleQueue();
+        //CreateBattleQueue();
 
         CheatGiveDebugCardsToDeck(10);
         player.PrepareHandBeforeBattle();
     }
-    void CreateBattleQueue()
+/*    void CreateBattleQueue()
     {
         battleQueue = new List<Tuple<int, int>>();
 
@@ -76,8 +84,8 @@ public class BattleManager : MonoBehaviour
                 battleQueue.Add(new Tuple<int, int>(i, enemies[i].initiative));
             }
         }
-    }
-    public bool IsPlayerTurn()
+    }*/
+    /*public bool IsPlayerTurn()
     {
         if (battleQueue!=null && battleQueue[0]!=null)
         {
@@ -92,7 +100,7 @@ public class BattleManager : MonoBehaviour
             Debug.LogError("Tried to check if it's player turn while there is no battle queue");
             return false;
         }
-    }
+    }*/
     void CreatePlayerObject()
     {
         playerObject = new GameObject();
@@ -118,20 +126,20 @@ public class BattleManager : MonoBehaviour
     }
     public void CardWasMovedOntoEnemy(DeckCard card,Enemy enemy)
     {
-        if (IsPlayerTurn())
-        {
-            if (!enemy.isDead)
-            {
+       // if (IsPlayerTurn())
+       // {
+       //     if (!enemy.isDead)
+       //     {
                 Debug.Log(enemy.health);
                 ApplyCard(card, enemy);
                 player.CheckForCardRemoval();
                 PlayerMadeMove();
-            }
-            else
-            {
-                player.SetupCardLocation();
-            }
-        }
+       //     }
+       //     else
+       //    {
+       //         player.SetupCardLocation();
+       //    }
+       // }
     }
     void PlayerMadeMove()
     {
@@ -181,14 +189,12 @@ public class BattleManager : MonoBehaviour
     {
         if (inBattle)
         {
-            if (battleQueue[0].Item1 != -1)
-            {
-                enemies[battleQueue[0].Item1].MakeAMove();
-                Tuple<int, int> enemy;
-                enemy = battleQueue[0];
-                battleQueue.RemoveAt(0);
-                battleQueue.Add(enemy);
-            }
+           // if (battleQueue[0].Item1 != -1)
+           // {
+           //    enemies[0].MakeAMove();
+                
+                
+           // }
         }
     }
 
@@ -201,11 +207,11 @@ public class BattleManager : MonoBehaviour
             player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
         }
     }
-    void CheatSpawnDebugEnemies(int count)
+    /*void CheatSpawnDebugEnemies(int count)
     {
         for (int i = 0; i < count; i++)
         {
             enemies.Add(new Enemy(this, "debugEnemy", 10, 10, 10, 1, debugPlayerSprite));
         }
-    }
+    }*/
 }

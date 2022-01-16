@@ -2,7 +2,7 @@
 <CardList>
 <cards>
 	<card>
-	  <name>Przeciwnik1</name>
+	  <name>cardTest2</name>
 	  <path>CoreGame/CardGFX/</path>
 	  <rarity>0</rarity>
 	  <cost>3</cost>
@@ -20,7 +20,7 @@
 	  </tags>
 	</card>
 	<card>
-	  <name>Przeciwnik1</name>
+	  <name>0_cardTest</name>
 	  <path>CoreGame/CardGFX/</path>
 	  <rarity>0</rarity>
 	  <cost>3</cost>

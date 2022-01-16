@@ -11,7 +11,7 @@ public class CardLibrary : MonoBehaviour
     public void LoadAllCards()
     {
         cards = new List<Card>();
-        CardLoader cardLoader = new CardLoader("./Assets/Cards/");
+        CardLoader cardLoader = new CardLoader("./Assets/Resources/CoreGame/XmlFiles/");
         cards = new List<Card>(cardLoader.cards);
         foreach (Card card in cards)
         {
@@ -95,8 +95,6 @@ public class CardLibrary : MonoBehaviour
                 Card karta = new Card(i.name, i.effect, i.tag);
                 Texture2D texture2D = new Texture2D(1, 1);
                 texture2D = Resources.Load(i.path + i.name, typeof(Texture2D)) as Texture2D;
-                Object stary = Resources.Load(i.path + i.name);
-                Object nowy = stary;
                 Sprite cardImage = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);
                 karta.AddCardGFX(cardImage, borders[i.rarity]);
                 Debug.Log(i.path + i.name + ".png");

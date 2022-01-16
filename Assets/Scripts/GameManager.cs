@@ -65,6 +65,8 @@ public class GameManager : MonoBehaviour
     public Material roadMaterial;
     GameObject cardLibraryGO;
     CardLibrary cardLibrary;
+    GameObject enemyLibraryGO;
+    EnemyLibrary enemyLibrary;
 
     public List<Enemy> enemiesInBattle;
     public PlayerData player;
@@ -117,6 +119,9 @@ public class GameManager : MonoBehaviour
                 int roll = UnityEngine.Random.Range(0, maxRoll);
                 if (roll < battleChance)
                 {
+                    enemiesInBattle = new List<Enemy>();
+                    int rollEnemy = UnityEngine.Random.Range(0, enemyLibrary.enemyList.Count);
+                    enemiesInBattle.Add(enemyLibrary.enemyList[rollEnemy].Clone());
                     BeginCombat();
                 }
                 else if (roll < battleChance + eventChance && roll >= battleChance)
@@ -471,6 +476,23 @@ public class GameManager : MonoBehaviour
                 }
                 cardLibrary.LoadAllCards();
                 Debug.Log("Card library found with " + cardLibrary.cards.Count + " cards.");
+            }
+        }
+        if (enemyLibraryGO == null)
+        {
+            enemyLibraryGO = GameObject.Find("ENEMY LIBRARY");
+            if (enemyLibraryGO == null)
+            {
+                Debug.LogError("Enemy library object not found");
+            }
+            else
+            {
+                if(enemyLibrary == null)
+                {
+                    enemyLibrary = enemyLibraryGO.GetComponent<EnemyLibrary>();
+                }
+                enemyLibrary.LoadAllEnemies();
+                Debug.Log("Enemy library found with " + enemyLibrary.enemyList.Count + "enemies");
             }
         }
         if (worldMap == null)

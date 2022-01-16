@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<EnemyList>
+<enemies>
+	<ememy>
+		<name>Orc</name>
+		<healthMax>100</healthMax>
+		<spellDuration>5</spellDuration>
+		<cardSkills>
+			<card></card>
+		</cardSkills>
+		<path>CoreGame/EnemyGFX/</path>
+	</enemy>
+</enemies>
+</EnemyList>

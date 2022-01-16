@@ -13,7 +13,6 @@ public class Enemy
     public bool isDead = false;
 
     public List<DeckCard> deck;
-    public List<DeckCard> abilityCards;
     public List<Effect> activeEffects;
 
     public GameObject enemyObject;

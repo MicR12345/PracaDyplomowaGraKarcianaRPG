@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    static int worldMapSize = 30;
+    static int worldNodeCount = 30;
 
     static int villageChance = 30;
     static int cityChance = 20;
@@ -52,6 +52,11 @@ public class GameManager : MonoBehaviour
     static Vector3 fortress2Location = new Vector3(3f, 17f, 0f);
 
     List<WorldMapNode> worldMap;
+
+    static int worldDecoratorMultiplier = 1;
+    int[,] worldDecoratorArray;
+    static int decoratorArraySmoothingCount = 4;
+
     public WorldMapNode playerPosition;
 
     public Sprite enemyCastleSprite;
@@ -63,6 +68,16 @@ public class GameManager : MonoBehaviour
 
     public Texture2D road;
     public Material roadMaterial;
+
+    public Sprite waterWaveDecoSprite;
+    public Sprite waterSimpleDecoSprite;
+    public Sprite mountainDecoSprite;
+    public Sprite treeDecoSprite;
+    public Sprite plainDecoSprite;
+
+    public List<Sprite> mapDecoBorders;
+
+    public Sprite worldMapSprite;
     GameObject cardLibraryGO;
     CardLibrary cardLibrary;
     GameObject enemyLibraryGO;
@@ -201,7 +216,158 @@ public class GameManager : MonoBehaviour
         {
             ConnectIfNotConnected(worldMap[i]);
         }
+        CreateWorldDecorationsArray();
+        for (int i = 0; i < decoratorArraySmoothingCount; i++)
+        {
+            SmoothWorldDecorationArray();
+        }
+        DrawDecorators();
         //SmoothLocationPositions();
+    }
+    void CreateWorldDecorationsArray()
+    {
+        worldDecoratorArray = new int[worldDecoratorMultiplier * Mathf.FloorToInt(Mathf.Abs(worldBoundsStart.x) + worldBoundsEnd.x),
+                                      worldDecoratorMultiplier * Mathf.FloorToInt(Mathf.Abs(worldBoundsStart.y) + enemyCastleLocation.y + 1)];
+        int sizeX = worldDecoratorArray.GetLength(0);
+        int sizeY = worldDecoratorArray.GetLength(1);
+        for (int i = 0; i < sizeX; i++)
+        {
+            for (int j = 0; j < sizeY; j++)
+            {
+               worldDecoratorArray[i, j] = UnityEngine.Random.Range(-40, 40);
+            }
+        }
+        foreach (WorldMapNode item in worldMap)
+        {
+            worldDecoratorArray[Mathf.FloorToInt(worldDecoratorMultiplier * (item.gameObject.transform.localPosition.x + Mathf.Abs(worldBoundsStart.x))),
+                                Mathf.FloorToInt(worldDecoratorMultiplier * (item.gameObject.transform.localPosition.y + Mathf.Abs(worldBoundsStart.y)))]
+                                = 50;
+        }
+    }
+    void SmoothWorldDecorationArray()
+    {
+        int sizeX = worldDecoratorArray.GetLength(0);
+        int sizeY = worldDecoratorArray.GetLength(1);
+        int[,] newDecoArray = new int[sizeX, sizeY];
+        for (int i = 0; i < sizeX; i++)
+        {
+            for (int j = 0; j < sizeY; j++)
+            {
+                newDecoArray[i, j] = worldDecoratorArray[i, j];
+            }
+        }
+        for (int i = 0; i < sizeX; i++)
+        {
+            for (int j = 0; j < sizeY; j++)
+            {
+                if (worldDecoratorArray[i,j] == 50)
+                {
+                    newDecoArray[i, j] = 50;
+                }
+                else
+                {
+                    int sum = 0;
+                    int count = 0;
+                    for (int n = i-1; n < i+1; n++)
+                    {
+                        if (n < 0) continue;
+                        else if (n >= sizeX) continue;
+                        for (int m = j-1; m < j+1; m++)
+                        {
+                            if (m < 0) continue;
+                            else if (m >= sizeY) continue;
+                            if (worldDecoratorArray[n,m] == 50)
+                            {
+                                sum = sum + 50;
+                                count++;
+                            }
+                            else
+                            {
+                                sum = sum + worldDecoratorArray[n, m];
+                                count++;
+                            }
+                        }
+                    }
+                    newDecoArray[i, j] = Mathf.FloorToInt(sum / count);
+
+                }
+            }
+        }
+        worldDecoratorArray = newDecoArray;
+    }
+    void DrawDecorators()
+    {
+        int sizeX = worldDecoratorArray.GetLength(0);
+        int sizeY = worldDecoratorArray.GetLength(1);
+        for (int i = 1; i < sizeX-1; i++)
+        {
+            for (int j = 1; j < sizeY-1; j++)
+            {
+                GameObject deco = new GameObject("mapDecoration");
+                deco.transform.parent = worldMapObject.transform;
+                deco.transform.localPosition = new Vector3((i / (worldDecoratorMultiplier * 1f)) + worldBoundsStart.x, (j / (worldDecoratorMultiplier * 1f)) + worldBoundsStart.y, 0f);
+
+                SpriteRenderer spriteRenderer = deco.AddComponent<SpriteRenderer>();
+                if (worldDecoratorArray[i,j] <0)
+                {
+                    /*if (worldDecoratorArray[i,j]<-20)
+                    {
+                        spriteRenderer.sprite = waterWaveDecoSprite;
+                        //deco.transform.localPosition += new Vector3(UnityEngine.Random.Range(-0.2f, 0.2f), UnityEngine.Random.Range(-0.2f, 0.2f), 0f);
+                    }
+                    else */spriteRenderer.sprite = waterSimpleDecoSprite;
+                }
+                else
+                {
+                    int border = CheckForBorder(i, j);
+                    if (border>0)
+                    {
+                        spriteRenderer.sprite = mapDecoBorders[border-1];
+                    }
+                    else
+                    {
+                        if (worldDecoratorArray[i, j] >= 0 && worldDecoratorArray[i, j] < 10)
+                        {
+                            spriteRenderer.sprite = plainDecoSprite;
+                        }
+                        else if (worldDecoratorArray[i, j] >= 10 && worldDecoratorArray[i, j] < 20)
+                        {
+                            spriteRenderer.sprite = treeDecoSprite;
+                        }
+                        else if (worldDecoratorArray[i, j] >= 20 && worldDecoratorArray[i, j] < 30)
+                        {
+                            spriteRenderer.sprite = mountainDecoSprite;
+                        }
+                    }
+                }
+
+                Debug.Log(worldDecoratorArray[i, j]);
+                spriteRenderer.sortingOrder = -1;
+            }
+        }
+    }
+    int CheckForBorder(int x,int y)
+    {
+        int sizeX = worldDecoratorArray.GetLength(0);
+        int sizeY = worldDecoratorArray.GetLength(1);
+        int output = 0;
+        if (x-1>0 && worldDecoratorArray[x-1,y]<0)
+        {
+            output += 1;
+        }
+        if (x + 1 < sizeX && worldDecoratorArray[x + 1, y] < 0)
+        {
+            output += 2;
+        }
+        if (y - 1 > 0 && worldDecoratorArray[x, y - 1] < 0)
+        {
+            output += 8;
+        }
+        if (y + 1 < sizeY && worldDecoratorArray[x, y + 1] < 0)
+        {
+            output += 4;
+        }
+        return output;
     }
     void DrawRoad(Vector3 start,Vector3 end)
     {
@@ -237,7 +403,7 @@ public class GameManager : MonoBehaviour
         roadObject.transform.rotation = Quaternion.Euler(new Vector3(0f,0f,angle+90f));
 
 
-        roadObject.transform.localPosition = (start + end) / 2f + new Vector3(0f,0f,5f);
+        roadObject.transform.localPosition = (start + end) / 2f + new Vector3(0f,0f,2f);
         
     }
     bool CheckIfIsLocationAtNewPosition(Vector3 position)
@@ -454,6 +620,7 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
+        
         //https://answers.unity.com/questions/1736611/onmouse-events-eg-onmouseenter-not-working-with-ne.html
         PhysicsRaycaster physicsRaycaster = GameObject.FindObjectOfType<PhysicsRaycaster>();
         if (physicsRaycaster == null)
@@ -501,7 +668,11 @@ public class GameManager : MonoBehaviour
             worldMapObject.transform.parent = this.gameObject.transform;
             worldMapObject.transform.localPosition = Vector3.zero;
 
-            GenerateWorldMap(worldMapSize);
+            SpriteRenderer spriteRenderer = worldMapObject.AddComponent<SpriteRenderer>();
+            spriteRenderer.sprite = worldMapSprite;
+            spriteRenderer.sortingOrder = -50;
+
+            GenerateWorldMap(worldNodeCount);
         }
         playerPosition = worldMap[1];
 
@@ -590,9 +761,9 @@ public class WorldMapNode
     {
         gameObject.transform.localPosition =
             new Vector3(
-                UnityEngine.Random.Range(boundsStart.x,boundsEnd.x),
-                UnityEngine.Random.Range(boundsStart.y, boundsEnd.y),
-                0f
+                UnityEngine.Random.Range(boundsStart.x+3f,boundsEnd.x-3f),
+                UnityEngine.Random.Range(boundsStart.y+3f, boundsEnd.y-3f),
+                -5f
             );
     }
     public void PlaceRandomlyFortress(Vector3 location)
@@ -601,12 +772,12 @@ public class WorldMapNode
             new Vector3(
                 location.x + UnityEngine.Random.Range(-7f, 7f),
                 location.y + -3,
-                0f
+                -5f
             );
     }
     public void SetPosition(Vector3 position)
     {
-        gameObject.transform.localPosition = new Vector3(position.x,position.y,0f);
+        gameObject.transform.localPosition = new Vector3(position.x,position.y,-5f);
     }
 
 }

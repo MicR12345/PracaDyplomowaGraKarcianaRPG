@@ -360,12 +360,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyCastleSprite: {fileID: 21300000, guid: 891900b1a7dae9543887c31c8756458e, type: 3}
   capitolSprite: {fileID: 21300000, guid: 0a0df7769a1f79448b30724096adfecf, type: 3}
-  citySprite: {fileID: 21300000, guid: ed07ffeb9ebd0514eaaff4c1898f5526, type: 3}
+  citySprite: {fileID: 21300000, guid: a946088035d648c49b7f0daa152e65a3, type: 3}
   villageSprite: {fileID: 21300000, guid: bf7e86bc98994824fb165742cf546f56, type: 3}
   fortressSprite: {fileID: 21300000, guid: a11ee4e181453164486d2819bf151f6a, type: 3}
   ruinsSprite: {fileID: 21300000, guid: c2294a3cc5eaf7240bc00b26b8614360, type: 3}
   road: {fileID: 2800000, guid: 840ae9cc1c4ac25418b762fe374d8f5a, type: 3}
   roadMaterial: {fileID: 2100000, guid: 0f5bf3b3aa55ae9498e06339ce4ddfd0, type: 2}
+  waterWaveDecoSprite: {fileID: 21300000, guid: 91044a0a37a365b49ae0a2955ab28787, type: 3}
+  waterSimpleDecoSprite: {fileID: 21300000, guid: 994059c814bde07448a84745526ab38c, type: 3}
+  mountainDecoSprite: {fileID: 21300000, guid: bcec4a03145eb604eb9edc7945bc5828, type: 3}
+  treeDecoSprite: {fileID: 21300000, guid: 31234c2afb3c71e4382fda269fdf04f8, type: 3}
+  plainDecoSprite: {fileID: 21300000, guid: 2eb9c7afb94c18341b5b3377abd3522a, type: 3}
+  mapDecoBorders:
+  - {fileID: 21300000, guid: 2998dcd618cb07d42bee81dce1b22387, type: 3}
+  - {fileID: 21300000, guid: 9049922c0dda867419b146804d7e4e93, type: 3}
+  - {fileID: 21300000, guid: 783a0ce3f8f8018448ce6c5ab8024dba, type: 3}
+  - {fileID: 21300000, guid: e9247f2a647d74d4d86a30b87a051cb7, type: 3}
+  - {fileID: 21300000, guid: 7f09db4f6cc34074595db00fa2207e5b, type: 3}
+  - {fileID: 21300000, guid: adc99e11635fd3f43a376e7aed402112, type: 3}
+  - {fileID: 21300000, guid: acd95085548d46449a186e90efcb4bf7, type: 3}
+  - {fileID: 21300000, guid: 234c5a23a4001c9439681ebf695e5ad6, type: 3}
+  - {fileID: 21300000, guid: 9ddc8fb8b9040fd46ba7cfa46cdaaf1a, type: 3}
+  - {fileID: 21300000, guid: 314740469519f8b499c570b19ab387bd, type: 3}
+  - {fileID: 21300000, guid: 1d81b5440faa44a46b023577fc1a7412, type: 3}
+  - {fileID: 21300000, guid: 5e38a4dd6d07cbd4c93088d25059ddb6, type: 3}
+  - {fileID: 21300000, guid: 86b34e6f732619f4abc70f739b747f95, type: 3}
+  - {fileID: 21300000, guid: ef02dab9027ebee429a87231c6feacaa, type: 3}
+  - {fileID: 21300000, guid: 4d4d2dd570ed6d346be68b804bbc206a, type: 3}
+  worldMapSprite: {fileID: 21300000, guid: 00002355957fd7c4e98ed9f7e0956076, type: 3}
   worldMapObject: {fileID: 0}
 --- !u!114 &932929285
 MonoBehaviour:

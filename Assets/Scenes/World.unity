@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 55042367}
   - component: {fileID: 55042366}
   m_Layer: 5
-  m_Name: EventPopup
+  m_Name: EventPopupCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -215,8 +215,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 2064983144}
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_Father: {fileID: 221835567}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -423,6 +423,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 137431597}
   m_CullTransparentMesh: 1
+--- !u!1 &221835566
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 221835567}
+  - component: {fileID: 221835568}
+  m_Layer: 0
+  m_Name: EventPopup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &221835567
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221835566}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.6696997, y: 21.213306, z: 106.556656}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 55042369}
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &221835568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221835566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32adb78195a6d1f49aee63183340b9e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventPopupCanvas: {fileID: 55042365}
+  eventBackgroundImage: {fileID: 615656562}
+  descriptionText: {fileID: 320546256}
+  button1: {fileID: 137431597}
+  button2: {fileID: 1532309907}
+  button3: {fileID: 1713066548}
+  button4: {fileID: 265680297}
+  button1Text: {fileID: 128562695}
+  button2Text: {fileID: 1023779120}
+  button3Text: {fileID: 1469347498}
+  button4Text: {fileID: 1125952687}
 --- !u!1 &265680297
 GameObject:
   m_ObjectHideFlags: 0
@@ -556,7 +611,7 @@ GameObject:
   - component: {fileID: 320546257}
   - component: {fileID: 320546256}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -578,8 +633,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5871429, y: 0.017142856}
   m_AnchorMax: {x: 0.9942857, y: 0.98285717}
-  m_AnchoredPosition: {x: -159.5, y: 0}
-  m_SizeDelta: {x: 3, y: 0}
+  m_AnchoredPosition: {x: -79, y: 0}
+  m_SizeDelta: {x: -158, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &320546256
 MonoBehaviour:
@@ -664,7 +719,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 161.7854, y: 0, z: -158.07782, w: 0}
+  m_margin: {x: -1.1271763, y: 0, z: -158.07782, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

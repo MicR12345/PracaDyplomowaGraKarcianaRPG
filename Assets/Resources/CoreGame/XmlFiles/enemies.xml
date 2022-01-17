@@ -6,7 +6,7 @@
 		<healthMax>100</healthMax>
 		<spellDuration>5</spellDuration>
 		<cardSkills>
-			<card></card>
+			<card>cardTest2</card>
 		</cardSkills>
 		<path>CoreGame/EnemyGFX/</path>
 	</enemy>

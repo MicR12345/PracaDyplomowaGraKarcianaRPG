@@ -7,7 +7,6 @@ public class Player : MonoBehaviour
 {
     public float health;
     public int actionPoints;
-    public int initiative;
     public List<DeckCard> cardStack;
     public List<DeckCard> hand;
     public List<Effect> activeEffects;
@@ -46,6 +45,7 @@ public class Player : MonoBehaviour
 
         data.deck = new List<DeckCard>();
         hand = new List<DeckCard>();
+        activeEffects = new List<Effect>();
     }
     public void CreatePlayerSpriteGO()
     {
@@ -262,12 +262,27 @@ public class Player : MonoBehaviour
     {
         if (effect.name == "damage")
         {
-            health = health - effect.value;
+            float damage = effect.value;
+            Effect activeShield = CheckForEffect("shield");
+            if (activeShield != null)
+            {
+                if (damage>=activeShield.value)
+                {
+                    damage = damage - activeShield.value;
+                    RemoveEffect(activeShield);
+                }
+                else
+                {
+                    activeShield.value = activeShield.value - damage;
+                    damage = 0;
+                }
+            }
+            health = health - damage;
         }
         CheckForDeath();
     }
 
-    public void TakeDamageDirect()
+    public void TakeDamageDirect(float damage)
     {
 
     }
@@ -281,6 +296,24 @@ public class Player : MonoBehaviour
         if (health <= 0)
         {
             SceneManager.LoadScene("MainMenu");
+        }
+    }
+    public Effect CheckForEffect(string name)
+    {
+        foreach (Effect item in activeEffects)
+        {
+            if (item.name == name)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+    public void RemoveEffect(Effect effect)
+    {
+        if (activeEffects.Contains(effect))
+        {
+            activeEffects.Remove(effect);
         }
     }
 }

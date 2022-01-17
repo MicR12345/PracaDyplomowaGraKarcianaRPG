@@ -8,10 +8,30 @@ using UnityEngine;
 public class EnemyLibrary : MonoBehaviour
 {
     public List<Enemy> enemyList;
+    GameObject cardLibraryGO;
+    CardLibrary cardLibrary;
     public void LoadAllEnemies()
     {
+        if (cardLibraryGO == null)
+        {
+            cardLibraryGO = GameObject.Find("CARD LIBRARY");
+            if (cardLibraryGO == null)
+            {
+                Debug.LogError("Card library object not found");
+            }
+            else
+            {
+                if (cardLibrary == null)
+                {
+                    cardLibrary = cardLibraryGO.GetComponent<CardLibrary>();
+                }
+                cardLibrary.LoadAllCards();
+                Debug.Log("Card library found with " + cardLibrary.cards.Count + " cards.");
+            }
+        }
+
         enemyList = new List<Enemy>();
-        EnemyLoader enemyLoader = new EnemyLoader("./Assets/Resources/CoreGame/XmlFiles/");
+        EnemyLoader enemyLoader = new EnemyLoader("./Assets/Resources/CoreGame/XmlFiles/",cardLibrary);
         enemyList = new List<Enemy>(enemyLoader.enemies);
 
     }
@@ -48,7 +68,7 @@ public class EnemyLibrary : MonoBehaviour
         List<EnemyData> loadedEnemies;
         public List<Enemy> enemies;
         
-        public EnemyLoader(string pathtoEnemiesList)
+        public EnemyLoader(string pathtoEnemiesList,CardLibrary cardLibrary)
         {
             loadedEnemies = new List<EnemyData>();
             enemies = new List<Enemy>();
@@ -63,6 +83,14 @@ public class EnemyLibrary : MonoBehaviour
                 texture2D = Resources.Load(i.path + i.name, typeof(Texture2D)) as Texture2D;
                 Sprite enemySprite = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);
                 Enemy przeciwnik = new Enemy(i.name, i.healthMax, i.spellDuration, i.cardSkills, enemySprite);
+                foreach (string item in i.cardSkills)
+                {
+                    DeckCard deckCard = new DeckCard(cardLibrary.FindCardByName(item));
+                    if (deckCard!=null)
+                    {
+                        przeciwnik.deck.Add(deckCard);
+                    }
+                }
                 enemies.Add(przeciwnik);
             }
         }

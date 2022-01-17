@@ -340,8 +340,6 @@ public class GameManager : MonoBehaviour
                         }
                     }
                 }
-
-                Debug.Log(worldDecoratorArray[i, j]);
                 spriteRenderer.sortingOrder = -1;
             }
         }

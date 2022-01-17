@@ -5,6 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
+    static float playerCardGiveTime = 5f;
+    float playerCardGiveTimer;
+
+    static float playerResourceGiveTime = 3f;
+    float playerResourceGiveTimer;
+
+    List<float> enemyTimers;
+
     public GameObject Background;
     public GameObject GameLight;
     public Camera GameCamera;
@@ -27,7 +35,6 @@ public class BattleManager : MonoBehaviour
     public List<Vector2> enemyPositions;
     
     [HideInInspector]
-    public List<Tuple<int,int>> battleQueue;
     public bool inBattle;
 
     GameManager gameManager;
@@ -39,7 +46,7 @@ public class BattleManager : MonoBehaviour
         enemies = enemyLibrary.enemyList;
         
         OnBattleStart();
-        gameManager.worldMapObject.SetActive(true);
+        //gameManager.worldMapObject.SetActive(true);
         //SceneManager.LoadScene("World");
     }
     void OnBattleStart()
@@ -52,55 +59,20 @@ public class BattleManager : MonoBehaviour
         enemies = new List<Enemy>();
         //CheatSpawnDebugEnemies(4);
         enemies = gameManager.enemiesInBattle;
-        foreach(Enemy enemy in enemies)
+        enemyTimers = new List<float>();
+        foreach (Enemy enemy in enemies)
         {
             enemy.CreateFightingEnemy(this);
+            enemyTimers.Add(enemy.spellDuration);
         }
         PlaceEnemies();
-        //CreateBattleQueue();
+
+        player.actionPoints = player.data.actionPointsMax;
 
         CheatGiveDebugCardsToDeck(10);
         player.PrepareHandBeforeBattle();
+        player.DealAFullHand();
     }
-/*    void CreateBattleQueue()
-    {
-        battleQueue = new List<Tuple<int, int>>();
-
-        battleQueue.Add(new Tuple<int, int>(-1, player.initiative));
-        for (int i = 0; i < enemies.Count && i< enemyPositions.Count; i++)
-        {
-            bool added = false;
-            for (int j = 0; j < battleQueue.Count; j++)
-            {
-                if (enemies[i].initiative>battleQueue[j].Item2)
-                {
-                    battleQueue.Insert(j, new Tuple<int, int>(i, enemies[i].initiative));
-                    added = true;
-                    break;
-                }
-            }
-            if (!added)
-            {
-                battleQueue.Add(new Tuple<int, int>(i, enemies[i].initiative));
-            }
-        }
-    }*/
-    /*public bool IsPlayerTurn()
-    {
-        if (battleQueue!=null && battleQueue[0]!=null)
-        {
-            if (battleQueue[0].Item1 == -1)
-            {
-                return true;
-            }
-            else return false;
-        }
-        else
-        {
-            Debug.LogError("Tried to check if it's player turn while there is no battle queue");
-            return false;
-        }
-    }*/
     void CreatePlayerObject()
     {
         playerObject = new GameObject();
@@ -108,6 +80,9 @@ public class BattleManager : MonoBehaviour
         playerObject.transform.localPosition = Vector3.zero;
         player = playerObject.AddComponent<Player>();
         player.PlayerObjectSetup(this,gameManager, debugPlayerSprite,playerPosition);
+
+        player.health = player.data.healthMax;
+        player.actionPoints = player.data.actionPointsMax;
     }
 
     void PlaceEnemies()
@@ -126,29 +101,18 @@ public class BattleManager : MonoBehaviour
     }
     public void CardWasMovedOntoEnemy(DeckCard card,Enemy enemy)
     {
-       // if (IsPlayerTurn())
-       // {
-       //     if (!enemy.isDead)
-       //     {
-                Debug.Log(enemy.health);
-                ApplyCard(card, enemy);
-                player.CheckForCardRemoval();
-                PlayerMadeMove();
-       //     }
-       //     else
-       //    {
-       //         player.SetupCardLocation();
-       //    }
-       // }
+        if (!enemy.isDead)
+        {
+            Debug.Log(enemy.health);
+            ApplyCard(card, enemy);
+            player.CheckForCardRemoval();
+        }
+        else
+        {
+            player.SetupCardLocation();
+        }
     }
-    void PlayerMadeMove()
-    {
-        Tuple<int, int> player;
-        player = battleQueue[0];
-        battleQueue.RemoveAt(0);
-        battleQueue.Add(player);
-    }
-    void ApplyCard(DeckCard card, Enemy enemy)
+    public void ApplyCard(DeckCard card, Enemy enemy)
     {
         foreach (Effect item in card.card.effects)
         {
@@ -166,7 +130,7 @@ public class BattleManager : MonoBehaviour
             card.exhausted = Mathf.FloorToInt(exhaustTag.value);
         }
     }
-    void ApplyCardToPlayer(DeckCard card, Player player)
+    public void ApplyCardToPlayer(DeckCard card)
     {
         foreach (Effect item in card.card.effects)
         {
@@ -183,19 +147,53 @@ public class BattleManager : MonoBehaviour
         {
             card.exhausted = Mathf.FloorToInt(exhaustTag.value);
         }
+        Debug.Log("Player have " + player.health + " hp");
     }
     // Update is called once per frame
     void Update()
     {
         if (inBattle)
         {
-           // if (battleQueue[0].Item1 != -1)
-           // {
-           //    enemies[0].MakeAMove();
-                
-                
-           // }
+            if (playerCardGiveTimer<=0f)
+            {
+                if (player.hand.Count<=player.data.handSize)
+                {
+                    player.AddCardToPlayerHand();
+                    playerCardGiveTimer = playerCardGiveTime;
+                }
+            }
+            else
+            {
+                playerCardGiveTimer = playerCardGiveTimer - Time.deltaTime;
+            }
+            if (playerResourceGiveTimer <= 0f)
+            {
+                player.actionPoints = player.actionPoints + 1;
+                playerResourceGiveTimer = playerResourceGiveTime;
+                if (player.actionPoints >player.data.actionPointsMax)
+                {
+                    player.actionPoints = player.data.actionPointsMax;
+                }
+            }
+            else
+            {
+                playerResourceGiveTimer = playerResourceGiveTimer - Time.deltaTime;
+            }
+            for (int i = 0; i < enemyTimers.Count; i++)
+            {
+                if (enemyTimers[i]<=0)
+                {
+                    enemies[i].MakeAMove();
+                    enemyTimers[i] = enemies[i].spellDuration;
+                }
+                else
+                {
+                    enemyTimers[i] = enemyTimers[i] - Time.deltaTime;
+                }
+            }
+
         }
+
     }
 
     //DEBUGGING FUNCTIONS

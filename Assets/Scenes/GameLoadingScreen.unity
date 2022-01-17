@@ -359,8 +359,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyCastleSprite: {fileID: 21300000, guid: 891900b1a7dae9543887c31c8756458e, type: 3}
-  capitolSprite: {fileID: 21300000, guid: 0a0df7769a1f79448b30724096adfecf, type: 3}
-  citySprite: {fileID: 21300000, guid: a946088035d648c49b7f0daa152e65a3, type: 3}
+  capitolSprite: {fileID: 21300000, guid: a946088035d648c49b7f0daa152e65a3, type: 3}
+  citySprite: {fileID: 21300000, guid: ed07ffeb9ebd0514eaaff4c1898f5526, type: 3}
   villageSprite: {fileID: 21300000, guid: bf7e86bc98994824fb165742cf546f56, type: 3}
   fortressSprite: {fileID: 21300000, guid: a11ee4e181453164486d2819bf151f6a, type: 3}
   ruinsSprite: {fileID: 21300000, guid: c2294a3cc5eaf7240bc00b26b8614360, type: 3}

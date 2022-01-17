@@ -74,19 +74,35 @@ public class Enemy
         cardSkills = _cardSkills;
 
         enemySprite = sprite;
-
+        deck = new List<DeckCard>();
+        activeEffects = new List<Effect>();
     }
 
     public void ApplyCardEffect(Effect effect)
     {
         if (effect.name == "damage")
         {
-            health = health - effect.value;
+            float damage = effect.value;
+            Effect activeShield = CheckForEffect("shield");
+            if (activeShield != null)
+            {
+                if (damage >= activeShield.value)
+                {
+                    damage = damage - activeShield.value;
+                    RemoveEffect(activeShield);
+                }
+                else
+                {
+                    activeShield.value = activeShield.value - damage;
+                    damage = 0;
+                }
+            }
+            health = health - damage;
         }
         CheckForDeath();
     }
 
-    public void TakeDamageDirect()
+    public void TakeDamageDirect(float damage)
     {
 
     }
@@ -110,8 +126,43 @@ public class Enemy
     }
     public void MakeAMove()
     {
-        //TODO
-        //AI
+        List<DeckCard> possibleCard = new List<DeckCard>();
+        for (int i = 0; i < deck.Count; i++)
+        {
+            if (!deck[0].destroyed &&
+                deck[0].exhausted == 0)
+            {
+                possibleCard.Add(deck[0]);
+            }
+        }
+        int pickRandom = UnityEngine.Random.Range(0, possibleCard.Count);
+        Tag selfTag = possibleCard[pickRandom].card.FindCardTag("self");
+        if (selfTag!=null)
+        {
+            battleManager.ApplyCard(possibleCard[pickRandom], this);
+        }
+        else
+        {
+            battleManager.ApplyCardToPlayer(possibleCard[pickRandom]);
+        }
+    }
+    public Effect CheckForEffect(string name)
+    {
+        foreach (Effect item in activeEffects)
+        {
+            if (item.name == name)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+    public void RemoveEffect(Effect effect)
+    {
+        if (activeEffects.Contains(effect))
+        {
+            activeEffects.Remove(effect);
+        }
     }
 }
 public class EnemyHandle : MonoBehaviour

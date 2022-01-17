@@ -6,10 +6,13 @@ using UnityEngine.SceneManagement;
 public class BattleManager : MonoBehaviour
 {
     static float playerCardGiveTime = 5f;
-    float playerCardGiveTimer;
+    float playerCardGiveTimer = playerCardGiveTime;
 
     static float playerResourceGiveTime = 3f;
-    float playerResourceGiveTimer;
+    float playerResourceGiveTimer = playerResourceGiveTime;
+
+    static float effectsTime = 10f;
+    float effectsTimer = effectsTime;
 
     List<float> enemyTimers;
 
@@ -149,11 +152,28 @@ public class BattleManager : MonoBehaviour
         }
         Debug.Log("Player have " + player.health + " hp");
     }
+    void OnBattleWon()
+    {
+        gameManager.worldMapObject.SetActive(true);
+        SceneManager.LoadScene("World");
+    }
     // Update is called once per frame
     void Update()
     {
         if (inBattle)
         {
+            bool isBattleWon = true;
+            foreach (Enemy item in enemies)
+            {
+                if (!item.isDead)
+                {
+                    isBattleWon = false;
+                }
+            }
+            if (isBattleWon)
+            {
+                OnBattleWon();
+            }
             if (playerCardGiveTimer<=0f)
             {
                 if (player.hand.Count<=player.data.handSize)
@@ -191,7 +211,19 @@ public class BattleManager : MonoBehaviour
                     enemyTimers[i] = enemyTimers[i] - Time.deltaTime;
                 }
             }
-
+            if (effectsTimer <= 0f)
+            {
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    enemies[i].TickEffects();
+                }
+                player.TickEffects();
+                effectsTimer = effectsTime;
+            }
+            else
+            {
+                effectsTimer = effectsTimer - Time.deltaTime;
+            }
         }
 
     }

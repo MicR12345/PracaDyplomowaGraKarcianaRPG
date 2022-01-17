@@ -48,8 +48,8 @@ public class GameManager : MonoBehaviour
     static Vector3 enemyCastleLocation = new Vector3(0f, 20f, 0f);
     static Vector3 capitolLocation = new Vector3(0f, -21f, 0f);
 
-    static Vector3 fortress1Location = new Vector3(-3f, 17f, 0f);
-    static Vector3 fortress2Location = new Vector3(3f, 17f, 0f);
+    static Vector3 fortress1Location = new Vector3(-3f, 15f, 0f);
+    static Vector3 fortress2Location = new Vector3(3f, 15f, 0f);
 
     List<WorldMapNode> worldMap;
 
@@ -66,10 +66,8 @@ public class GameManager : MonoBehaviour
     public Sprite fortressSprite;
     public Sprite ruinsSprite;
 
-    public Texture2D road;
     public Material roadMaterial;
 
-    public Sprite waterWaveDecoSprite;
     public Sprite waterSimpleDecoSprite;
     public Sprite mountainDecoSprite;
     public Sprite treeDecoSprite;
@@ -78,6 +76,9 @@ public class GameManager : MonoBehaviour
     public List<Sprite> mapDecoBorders;
 
     public Sprite worldMapSprite;
+
+    public Sprite siegedIcon;
+    public Sprite defeatedIcon;
     GameObject cardLibraryGO;
     CardLibrary cardLibrary;
     GameObject enemyLibraryGO;
@@ -86,10 +87,15 @@ public class GameManager : MonoBehaviour
     public List<Enemy> enemiesInBattle;
     public PlayerData player;
 
-    public GameObject worldMapObject;
-    void StartSiege(string nodeName)
-    {
+    List<WorldMapNode> siegedLocations;
 
+    public GameObject worldMapObject;
+    void StartSiege(WorldMapNode node)
+    {
+        if (!siegedLocations.Contains(node))
+        {
+            siegedLocations.Add(node);
+        }
     }
     public void MovePlayer(WorldMapNode node)
     {
@@ -148,12 +154,8 @@ public class GameManager : MonoBehaviour
                     //LaunchEvent();
                 }
             }
-            else
-            {
-
-            }
         }
-        
+        ProgressSieges();
     }
     void LaunchEvent(Event gameEvent)
     {
@@ -616,15 +618,34 @@ public class GameManager : MonoBehaviour
         DrawRoad(visitedNodesDistance[0].Item1.gameObject.transform.position, closestUnconnectedNode.gameObject.transform.position);
         return;
     }
+    void ProgressSieges()
+    {
+        List<WorldMapNode> previouslySiegedLocations = new List<WorldMapNode>(siegedLocations);
+        foreach (WorldMapNode item in previouslySiegedLocations)
+        {
+            if (item.siegeTime>0)
+            {
+                item.siegeTime--;
+            }
+            else
+            {
+                foreach (WorldMapNode connected in item.connections)
+                {
+                    StartSiege(connected);
+                    Debug.Log(siegedLocations.Count);
+                }
+            }
+        }
+    }
     private void Start()
     {
         
         //https://answers.unity.com/questions/1736611/onmouse-events-eg-onmouseenter-not-working-with-ne.html
-        PhysicsRaycaster physicsRaycaster = GameObject.FindObjectOfType<PhysicsRaycaster>();
+        /*PhysicsRaycaster physicsRaycaster = GameObject.FindObjectOfType<PhysicsRaycaster>();
         if (physicsRaycaster == null)
         {
             Camera.main.gameObject.AddComponent<PhysicsRaycaster>();
-        }
+        }*/
 
         if (cardLibraryGO==null)
         {
@@ -674,6 +695,9 @@ public class GameManager : MonoBehaviour
         }
         playerPosition = worldMap[1];
 
+        siegedLocations = new List<WorldMapNode>();
+        StartSiege(worldMap[0]);
+
         SceneManager.LoadScene("World");
     }
 }
@@ -684,15 +708,15 @@ public class WorldMapNode
     public string name;
     public string type;
     public List<WorldMapNode> connections;
-    public string state;
 
     public GameObject gameObject;
 
     GameObject spriteObject;
     SpriteRenderer spriteRenderer;
-    GameObject spriteShadowObject;
+    GameObject siegeIconObject;
+    SpriteRenderer siegeIconRenderer;
 
-    int siegeTime;
+    public int siegeTime;
 
     public bool affectedBySmoothing = true;
     public bool visited = false;
@@ -703,8 +727,34 @@ public class WorldMapNode
         name = _name;
         type = _type;
         connections = new List<WorldMapNode>();
-        state = "normal";
-        siegeTime = 0;
+        if (type == "EnemyCastle")
+        {
+            siegeTime = 0;
+        }
+        else if (type == "Capitol")
+        {
+            siegeTime = 5;
+        }
+        else if (type == "City")
+        {
+            siegeTime = 3;
+        }
+        else if (type == "Village")
+        {
+            siegeTime = 1;
+        }
+        else if (type == "Fortress")
+        {
+            siegeTime = 5;
+        }
+        else if (type == "AcientRuins")
+        {
+            siegeTime = 1;
+        }
+        else
+        {
+            siegeTime = 0;
+        }
         affectedBySmoothing = smoothing;
 
         gameObject = new GameObject(name);
@@ -724,8 +774,11 @@ public class WorldMapNode
         BoxCollider collider = gameObject.AddComponent<BoxCollider>();
         collider.size = new Vector3(spriteRenderer.sprite.texture.width / spriteRenderer.sprite.pixelsPerUnit,
             spriteRenderer.sprite.texture.height / spriteRenderer.sprite.pixelsPerUnit,0.2f);
-        
 
+        siegeIconObject = new GameObject("SiegeIcon");
+        siegeIconObject.transform.parent = gameObject.transform;
+        siegeIconObject.transform.localPosition = new Vector3(0f, 0f, 0f);
+        siegeIconRenderer = siegeIconObject.AddComponent<SpriteRenderer>();
     }
 
     void SetSprite()
@@ -777,7 +830,17 @@ public class WorldMapNode
     {
         gameObject.transform.localPosition = new Vector3(position.x,position.y,-5f);
     }
-
+    public void StartSiege()
+    {
+        siegeIconRenderer.sprite = gameManager.siegedIcon;
+    }
+    public void UpdateSiegeComponents()
+    {
+        if (siegeTime<1)
+        {
+            siegeIconRenderer.sprite = gameManager.defeatedIcon;
+        }
+    }
 }
 public class WorldMapNodeHandle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler ,IPointerDownHandler, IPointerUpHandler
 {

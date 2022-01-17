@@ -3,7 +3,7 @@
 <enemies>
 	<enemy>
 		<name>Orc</name>
-		<healthMax>100</healthMax>
+		<healthMax>1</healthMax>
 		<spellDuration>5</spellDuration>
 		<cardSkills>
 			<card>cardTest2</card>

@@ -85,6 +85,8 @@ public class GameManager : MonoBehaviour
     EnemyLibrary enemyLibrary;
 
     public List<Enemy> enemiesInBattle;
+    Event currentEvent;
+
     public PlayerData player;
 
     List<WorldMapNode> siegedLocations;
@@ -147,19 +149,59 @@ public class GameManager : MonoBehaviour
                 }
                 else if (roll < battleChance + eventChance && roll >= battleChance)
                 {
-                    //LaunchEvent();
+                    LaunchEvent();
                 }
                 else
                 {
-                    //LaunchEvent();
+                    LaunchEvent();
                 }
             }
         }
         ProgressSieges();
     }
-    void LaunchEvent(Event gameEvent)
+    void LaunchEvent()
     {
-
+        GameObject eventPopupGO = GameObject.Find("EventPopup");
+        if (eventPopupGO == null)
+        {
+            Debug.LogError("Event popup object not found");
+        }
+        EventPopupHandle eventPopupHandle = eventPopupGO.GetComponent<EventPopupHandle>();
+        eventPopupHandle.eventPopupCanvas.SetActive(true);
+        eventPopupHandle.eventBackgroundImage.sprite = currentEvent.eventBackground;
+        eventPopupHandle.descriptionText.text = currentEvent.description;
+        if (currentEvent.choices.Count>=1)
+        {
+            eventPopupHandle.button1.SetActive(true);
+            eventPopupHandle.button1Text.text = currentEvent.choices[0].text; 
+        }
+        if (currentEvent.choices.Count >= 2)
+        {
+            eventPopupHandle.button2.SetActive(true);
+            eventPopupHandle.button2Text.text = currentEvent.choices[1].text;
+        }
+        else
+        {
+            eventPopupHandle.button2.SetActive(false);
+        }
+        if (currentEvent.choices.Count >= 3)
+        {
+            eventPopupHandle.button3.SetActive(true);
+            eventPopupHandle.button3Text.text = currentEvent.choices[2].text;
+        }
+        else
+        {
+            eventPopupHandle.button3.SetActive(false);
+        }
+        if (currentEvent.choices.Count >= 4)
+        {
+            eventPopupHandle.button4.SetActive(true);
+            eventPopupHandle.button4Text.text = currentEvent.choices[3].text;
+        }
+        else
+        {
+            eventPopupHandle.button4.SetActive(false);
+        }
     }
     void BeginCombat()
     {
@@ -698,6 +740,14 @@ public class GameManager : MonoBehaviour
         siegedLocations = new List<WorldMapNode>();
         StartSiege(worldMap[0]);
 
+        currentEvent = new Event();
+        currentEvent.description = "Test event";
+        currentEvent.name = "debug";
+        currentEvent.choices = new List<ChoiceOption>();
+        ChoiceOption choiceOption = new ChoiceOption();
+        choiceOption.text = "awawawa";
+        currentEvent.choices.Add(choiceOption);
+        currentEvent.choices.Add(choiceOption);
         SceneManager.LoadScene("World");
     }
 }

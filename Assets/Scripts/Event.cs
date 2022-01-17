@@ -8,6 +8,7 @@ public class Event
     public string description;
     public string type;
     public List<ChoiceOption> choices;
+    public Sprite eventBackground;
 }
 public class ChoiceOption
 {

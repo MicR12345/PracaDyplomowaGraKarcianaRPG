@@ -31,4 +31,10 @@ public class ChoiceOption
         addCards = _addCards;
         tags = _tags;
     }
+    public ChoiceOption()
+    {
+        text = "";
+        addCards = new List<string>();
+        tags = new List<Tag>();
+    }
 }

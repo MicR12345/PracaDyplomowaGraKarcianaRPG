@@ -26,6 +26,85 @@
 					<value></value>
 				</tags>
 			</choice>
+		</choices>
+	</event>
+		<event>
+		<name>Daleki Przyjaciel</name>
+		<description>Spotykasz nieznanego Ci przyjaciela, może ma on coś dla Ciebie?</description>
+		<type>Fortress</type>
+		<choices>
+			<choice>
+				<text>Popros o jakies wsparcie.</text>
+				<addCards>
+					<card></card>
+				</addCards>
+				<tags>
+					<name></name>
+					<value></value>
+				</tags>
+			</choice>
+			<choice>
+				<text></text>
+				<addCards>
+					<card></card>
+				</addCards>
+				<tags>
+					<name></name>
+					<value></value>
+				</tags>
+			</choice>
+		</choices>
+	</event>
+		<event>
+		<name>Daleki Przyjaciel</name>
+		<description>Spotykasz nieznanego Ci przyjaciela, może ma on coś dla Ciebie?</description>
+		<type>City</type>
+		<choices>
+			<choice>
+				<text>Popros o jakies wsparcie.</text>
+				<addCards>
+					<card></card>
+				</addCards>
+				<tags>
+					<name></name>
+					<value></value>
+				</tags>
+			</choice>
+			<choice>
+				<text></text>
+				<addCards>
+					<card></card>
+				</addCards>
+				<tags>
+					<name></name>
+					<value></value>
+				</tags>
+			</choice>
+		</choices>
+	</event>
+		<event>
+		<name>Daleki Przyjaciel</name>
+		<description>Spotykasz nieznanego Ci przyjaciela, może ma on coś dla Ciebie?</description>
+		<type>AcientRuins</type>
+		<choices>
+			<choice>
+				<text>Popros o jakies wsparcie.</text>
+				<addCards>
+					<card></card>
+				</addCards>
+				<tags>
+					<name></name>
+					<value></value>
+				</tags>
+			</choice>
+			<choice>
+				<text></text>
+				<addCards>
+					<card></card>
+				</addCards>
+				<tags>
+					<name></name>
+					<value></value>
 				</tags>
 			</choice>
 		</choices>

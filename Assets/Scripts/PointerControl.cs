@@ -76,8 +76,9 @@ public class PointerControl : MonoBehaviour
         mouseWorldPosition = mainCamera.ScreenToWorldPoint(mousePosition);
         if (grabbedCard != null)
         {
-            grabbedCard.transform.position = new Vector3(mouseWorldPosition.x, mouseWorldPosition.y, grabbedCard.transform.position.z);
-            grabbedCard.transform.localRotation = Quaternion.identity;
+            FancyCardMover fancyCardMover = grabbedCard.GetComponent<FancyCardMover>();
+            fancyCardMover.moveCardTo = new Vector3(mouseWorldPosition.x, mouseWorldPosition.y, grabbedCard.transform.position.z);
+            fancyCardMover.rotateTo = Vector3.zero;
             grabbedCard.transform.localScale = new Vector3(0.8f,0.8f,1f);
             resetPosition = true;
         }

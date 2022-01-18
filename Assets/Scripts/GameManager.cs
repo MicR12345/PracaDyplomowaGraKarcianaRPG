@@ -746,7 +746,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Enemy library found with " + enemyLibrary.enemyList.Count + "enemies");
             }
         }
-        if(eventLibraryGO != null)
+        if(eventLibraryGO == null)
         {
             eventLibraryGO = GameObject.Find("EVENT LIBRARY");
             if(eventLibraryGO == null)

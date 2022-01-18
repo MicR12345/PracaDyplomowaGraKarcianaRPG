@@ -76,6 +76,7 @@ public class BattleManager : MonoBehaviour
         CheatGiveDebugCardsToDeck(10);
         player.PrepareHandBeforeBattle();
         player.DealAFullHand();
+        player.SetupCardLocation();
     }
     void CreatePlayerObject()
     {

@@ -31,7 +31,7 @@ public class EnemyLibrary : MonoBehaviour
         }
 
         enemyList = new List<Enemy>();
-        EnemyLoader enemyLoader = new EnemyLoader("./Assets/Resources/CoreGame/XmlFiles/",cardLibrary);
+        EnemyLoader enemyLoader = new EnemyLoader("CoreGame/XmlFiles/enemies",cardLibrary);
         enemyList = new List<Enemy>(enemyLoader.enemies);
 
     }
@@ -68,12 +68,13 @@ public class EnemyLibrary : MonoBehaviour
         List<EnemyData> loadedEnemies;
         public List<Enemy> enemies;
         
-        public EnemyLoader(string pathtoEnemiesList,CardLibrary cardLibrary)
+        public EnemyLoader(string pathToEnemiesList,CardLibrary cardLibrary)
         {
             loadedEnemies = new List<EnemyData>();
             enemies = new List<Enemy>();
             XmlSerializer reader = new XmlSerializer(typeof(Enemies));
-            TextReader enemy = new StreamReader(pathtoEnemiesList + "enemies.xml");
+            TextAsset enemyXml = Resources.Load(pathToEnemiesList, typeof(TextAsset)) as TextAsset;
+            TextReader enemy = new StringReader(enemyXml.text);
             Enemies loaded = (Enemies)reader.Deserialize(enemy);
             enemy.Close();
             

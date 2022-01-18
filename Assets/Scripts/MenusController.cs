@@ -7,16 +7,20 @@ using TMPro;
 
 public class MenusController : MonoBehaviour
 {
-    [Header("Volume Setting")]
+    [Header("Game Settings")]
+    public float mainSensitivity = 30;
     [SerializeField] private TMP_Text volumeValue = null;
     [SerializeField] private Slider volumeSlider = null;
+    [SerializeField] private TMP_Text sensitivityValue = null;
+    [SerializeField] private Slider sensitivitySlider = null;
 
-    [SerializeField] private GameObject comfirmPrompt = null;
+    [SerializeField] private float defaultVolumeSettings = 0.5f;
+    [SerializeField] private float defaultSensitivitySettings = 30f;
 
     [Header("SavedGames")]
     public string _newGameSave;
     private string _currentGameSave;
-    [SerializeField] private  GameObject NoSavedGameDialog = null;
+    [SerializeField] private GameObject NoSavedGameDialog = null;
     public void NewGameDialogYes()
     {
         SceneManager.LoadScene(_newGameSave);
@@ -44,16 +48,25 @@ public class MenusController : MonoBehaviour
         AudioListener.volume = Volume;
         volumeValue.text = Volume.ToString("0.0");
     }
-
+    public void SetSensiviti(float Sensivity)
+    {
+        mainSensitivity = Sensivity;
+        sensitivityValue.text = Sensivity.ToString("0");
+    }
+    public void DefaultButton()
+    {
+        AudioListener.volume = defaultVolumeSettings;
+        volumeSlider.value = defaultVolumeSettings;
+        volumeValue.text = defaultVolumeSettings.ToString("0.5");
+        SetVolume(defaultVolumeSettings);
+        mainSensitivity = defaultSensitivitySettings;
+        sensitivitySlider.value = defaultSensitivitySettings;
+        sensitivityValue.text = defaultSensitivitySettings.ToString("0");
+    }
     public void Save()
     {
         PlayerPrefs.SetFloat("dzwiek", AudioListener.volume);
-        StartCoroutine(Confirm());
-    }
-    public IEnumerator Confirm()
-    {
-        comfirmPrompt.SetActive(true);
-        yield return new WaitForSeconds(3);
-        comfirmPrompt.SetActive(false);
+        PlayerPrefs.SetFloat("czulosc", mainSensitivity);
     }
 }
+

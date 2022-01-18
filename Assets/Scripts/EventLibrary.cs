@@ -12,7 +12,7 @@ public class EventLibrary : MonoBehaviour
     public void LoadAllEvents()
     {
         eventList = new List<Event>();
-        EventLoader eventLoader = new EventLoader("./Assets/Resources/CoreGame/XmlFiles/");
+        EventLoader eventLoader = new EventLoader("CoreGame/XmlFiles/events");
         eventList = new List<Event>(eventLoader.events);
     }
     [XmlRoot(ElementName = "EventList")]
@@ -45,12 +45,13 @@ public class EventLibrary : MonoBehaviour
         public List<Event> events;
         List<EventData> loadedEvents;
         
-        public EventLoader(string pathtoEventList)
+        public EventLoader(string pathToEventList)
         {
             loadedEvents = new List<EventData>();
             events = new List<Event>();
             XmlSerializer reader = new XmlSerializer(typeof(Events));
-            TextReader eventReader = new StreamReader(pathtoEventList + "events.xml");
+            TextAsset eventXml = Resources.Load(pathToEventList, typeof(TextAsset)) as TextAsset;
+            TextReader eventReader = new StringReader(eventXml.text);
             Events loaded = (Events)reader.Deserialize(eventReader);
             eventReader.Close();
 

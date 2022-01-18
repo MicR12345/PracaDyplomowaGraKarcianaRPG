@@ -25,8 +25,8 @@ public class Card : Action
     }
     public void CreateSpriteChildren()
     {
-        CreateSpriteChild();
         CreateBorderChild();
+        CreateSpriteChild(); 
     }
     public GameObject CreateCardInstance(bool prototype = false)
     {
@@ -55,7 +55,7 @@ public class Card : Action
     {
         spriteObject = new GameObject("Sprite");
         spriteObject.transform.parent = cardObject.transform;
-        spriteObject.transform.localPosition = Vector3.zero;
+        spriteObject.transform.localPosition = new Vector3(0f,0.5f,0.5f);
         spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = cardImage;
         spriteObject.tag = "card";
@@ -66,9 +66,9 @@ public class Card : Action
         borderObject.transform.parent = cardObject.transform;
         borderObject.transform.localPosition = Vector3.zero;
         borderRenderer = borderObject.AddComponent<SpriteRenderer>();
-        //borderRenderer.sprite = cardBorder;
-        borderRenderer.sprite = cardImage;
+        borderRenderer.sprite = cardBorder;
         borderObject.tag = "card";
+        //borderRenderer.sortingOrder = 1;
         borderObject.AddComponent<BoxCollider>();
     }
     public Tag FindCardTag(string name)

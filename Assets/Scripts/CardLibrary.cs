@@ -11,7 +11,7 @@ public class CardLibrary : MonoBehaviour
     public void LoadAllCards()
     {
         cards = new List<Card>();
-        CardLoader cardLoader = new CardLoader("./Assets/Resources/CoreGame/XmlFiles/");
+        CardLoader cardLoader = new CardLoader("CoreGame/XmlFiles/cards");
         cards = new List<Card>(cardLoader.cards);
         foreach (Card card in cards)
         {
@@ -77,16 +77,23 @@ public class CardLibrary : MonoBehaviour
         List<Sprite> borders;
         public void BordersRarityLoad(string pathToCardBorders)
         {
+            List<Texture2D> borderTextures = new List<Texture2D>(Resources.LoadAll<Texture2D>(pathToCardBorders));
             borders = new List<Sprite>();
-            borders.Add(Resources.Load<Sprite>("./CardsGFX/0_cardTest"));
+            foreach (Texture2D item in borderTextures)
+            {
+                item.filterMode = FilterMode.Point;
+                Sprite border = Sprite.Create(item, new Rect(0.0f, 0.0f, item.width, item.height), new Vector2(0.5f, 0.5f), 5f);
+                borders.Add(border);
+            }
         }
         public CardLoader(string pathToCardList)
         {
-            BordersRarityLoad("");
+            TextAsset cardXml = Resources.Load(pathToCardList, typeof(TextAsset)) as TextAsset;
+            BordersRarityLoad("CoreGame/BordersGFX");
             loadedCards = new List<CardData>();
             cards = new List<Card>();
             XmlSerializer reader  = new XmlSerializer(typeof(Cards));
-            TextReader card = new StreamReader(pathToCardList + "cards.xml");
+            TextReader card = new StringReader(cardXml.text);
             Cards loaded = (Cards)reader.Deserialize(card);
 
             card.Close();
@@ -95,6 +102,7 @@ public class CardLibrary : MonoBehaviour
                 Card karta = new Card(i.name, i.effect, i.tag);
                 Texture2D texture2D = new Texture2D(1, 1);
                 texture2D = Resources.Load(i.path + i.name, typeof(Texture2D)) as Texture2D;
+                texture2D.filterMode = FilterMode.Point;
                 Sprite cardImage = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);
                 karta.AddCardGFX(cardImage, borders[i.rarity]);
                 Debug.Log(i.path + i.name + ".png");

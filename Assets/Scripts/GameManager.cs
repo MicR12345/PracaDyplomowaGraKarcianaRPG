@@ -203,6 +203,17 @@ public class GameManager : MonoBehaviour
             eventPopupHandle.button4.SetActive(false);
         }
     }
+    public void HandleEvent(int choice)
+    {
+        ChoiceOption choiceOption = currentEvent.choices[choice];
+        if (choiceOption.addCards!=null && choiceOption.addCards.Count>0)
+        {
+            foreach (string item in choiceOption.addCards)
+            {
+                player.deck.Add(new DeckCard(cardLibrary.FindCardByName(item)));
+            }
+        }
+    }
     void BeginCombat()
     {
         worldMapObject.SetActive(false);

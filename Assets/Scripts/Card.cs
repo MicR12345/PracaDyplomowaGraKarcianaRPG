@@ -4,6 +4,7 @@ using UnityEngine;
 public class Card : Action
 {
     public GameObject cardObject;
+    public FancyCardMover cardMover;
 
     Sprite cardImage;
     Sprite cardBorder;
@@ -33,6 +34,7 @@ public class Card : Action
         if (cardObject==null)
         {
             cardObject = new GameObject(name);
+            cardMover = cardObject.AddComponent<FancyCardMover>();
             if (prototype)
             {
                 CreateSpriteChildren();

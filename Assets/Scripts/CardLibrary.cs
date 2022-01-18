@@ -13,10 +13,6 @@ public class CardLibrary : MonoBehaviour
         cards = new List<Card>();
         CardLoader cardLoader = new CardLoader("CoreGame/XmlFiles/cards");
         cards = new List<Card>(cardLoader.cards);
-        foreach (Card card in cards)
-        {
-            Debug.Log(card.name);
-        }
     }
     public void AddCardPrototype(Card card,Sprite cardImage,Sprite cardBorder)
     {
@@ -105,7 +101,6 @@ public class CardLibrary : MonoBehaviour
                 texture2D.filterMode = FilterMode.Point;
                 Sprite cardImage = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);
                 karta.AddCardGFX(cardImage, borders[i.rarity]);
-                Debug.Log(i.path + i.name + ".png");
                 cards.Add(karta);
 
             }

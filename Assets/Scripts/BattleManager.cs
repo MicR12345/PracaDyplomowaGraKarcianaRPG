@@ -221,6 +221,10 @@ public class BattleManager : MonoBehaviour
             {
                 effectsTimer = effectsTimer - Time.deltaTime;
             }
+            foreach (Enemy item in enemies)
+            {
+                item.UpdateHpBar();
+            }
         }
 
     }

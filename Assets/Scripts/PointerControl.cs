@@ -33,16 +33,7 @@ public class PointerControl : MonoBehaviour
 
     private void Cancel_performed(InputAction.CallbackContext obj)
     {
-        battleManager.player.AddCardToPlayerHand();
-        /*if (gm.player.hand.Count < 3)
-        {
-            gm.player.AddCardToPlayerHand();
-        }
-        else
-        {
-            gm.player.RemoveAllFromHand();
-            gm.player.Shuffle();
-        }*/
+        grabbedCard = null;
     }
 
     private void OnClickPerformed(InputAction.CallbackContext obj)
@@ -86,6 +77,8 @@ public class PointerControl : MonoBehaviour
         if (grabbedCard != null)
         {
             grabbedCard.transform.position = new Vector3(mouseWorldPosition.x, mouseWorldPosition.y, grabbedCard.transform.position.z);
+            grabbedCard.transform.localRotation = Quaternion.identity;
+            grabbedCard.transform.localScale = new Vector3(0.8f,0.8f,1f);
             resetPosition = true;
         }
         else if (resetPosition)

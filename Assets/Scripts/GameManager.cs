@@ -158,6 +158,7 @@ public class GameManager : MonoBehaviour
             }
         }
         ProgressSieges();
+        //Pinezka gdzie gracz
     }
     void LaunchEvent()
     {

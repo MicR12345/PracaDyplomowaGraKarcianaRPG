@@ -224,7 +224,7 @@ public class Player : MonoBehaviour
         {
             hand[0].card.cardObject.transform.position = BasePosition + new Vector3(0, 0f, 0f);
             hand[0].card.cardObject.transform.rotation = Quaternion.identity;
-            hand[0].card.cardObject.transform.localScale = new Vector3(1f, 1f);
+            hand[0].card.cardObject.transform.localScale = new Vector3(0.5f, 0.5f);
             hand[0].card.cardObject.transform.parent = Hand.transform;
         }
         else
@@ -234,7 +234,7 @@ public class Player : MonoBehaviour
                 float angleHeightInfluence = -Mathf.Abs (((((maxAngle * 2) / hand.Count) * (i + 0.5f)) - maxAngle)/maxAngle);
                 hand[i].card.cardObject.transform.position = BasePosition + new Vector3((((maxSpreadDistance * 2) / hand.Count) * (i + 0.5f)) - maxSpreadDistance,
                     angleHeightInfluence*maxHeight, 0f);
-                hand[i].card.cardObject.transform.localScale = new Vector3(1f, 1f);
+                hand[i].card.cardObject.transform.localScale = new Vector3(0.5f, 0.5f);
                 hand[i].card.cardObject.transform.parent = Hand.transform;
                 hand[i].card.cardObject.transform.rotation = Quaternion.identity;
                 hand[i].card.cardObject.transform.Rotate(Vector3.back, (((maxAngle * 2) / hand.Count) * (i + 0.5f)) - maxAngle);

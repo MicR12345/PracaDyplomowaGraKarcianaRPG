@@ -68,7 +68,7 @@ public class Card : Action
         borderRenderer = borderObject.AddComponent<SpriteRenderer>();
         borderRenderer.sprite = cardBorder;
         borderObject.tag = "card";
-        //borderRenderer.sortingOrder = 1;
+        borderRenderer.sortingOrder = 1;
         borderObject.AddComponent<BoxCollider>();
     }
     public Tag FindCardTag(string name)

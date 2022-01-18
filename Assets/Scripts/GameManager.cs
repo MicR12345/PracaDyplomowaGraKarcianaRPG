@@ -83,6 +83,8 @@ public class GameManager : MonoBehaviour
     CardLibrary cardLibrary;
     GameObject enemyLibraryGO;
     EnemyLibrary enemyLibrary;
+    EventLibrary eventLibrary;
+    GameObject eventLibraryGO;
 
     public List<Enemy> enemiesInBattle;
     Event currentEvent;
@@ -162,11 +164,21 @@ public class GameManager : MonoBehaviour
     }
     void LaunchEvent()
     {
+        List<Event> acceptableEvents = new List<Event>();
+        foreach(Event i in eventLibrary.eventList)
+        {
+            if(i.type == playerPosition.type)
+            {
+                acceptableEvents.Add(i);
+            }
+        }
+        int rollEvent = UnityEngine.Random.Range(0, acceptableEvents.Count);
         GameObject eventPopupGO = GameObject.Find("EventPopup");
         if (eventPopupGO == null)
         {
             Debug.LogError("Event popup object not found");
         }
+        currentEvent = acceptableEvents[rollEvent];
         EventPopupHandle eventPopupHandle = eventPopupGO.GetComponent<EventPopupHandle>();
         eventPopupHandle.eventPopupCanvas.SetActive(true);
         eventPopupHandle.eventBackgroundImage.sprite = currentEvent.eventBackground;
@@ -734,6 +746,23 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Enemy library found with " + enemyLibrary.enemyList.Count + "enemies");
             }
         }
+        if(eventLibraryGO != null)
+        {
+            eventLibraryGO = GameObject.Find("EVENT LIBRARY");
+            if(eventLibraryGO == null)
+            {
+                Debug.LogError("Event library object not found");
+            }
+            else
+            {
+                if(eventLibrary == null)
+                {
+                    eventLibrary = eventLibraryGO.GetComponent<EventLibrary>();
+                }
+                eventLibrary.LoadAllEvents();
+                Debug.Log("Event library found with " + eventLibrary.eventList.Count + "events");
+            }
+        }
         if (worldMap == null)
         {
             worldMapObject = new GameObject("WorldMap");
@@ -751,15 +780,8 @@ public class GameManager : MonoBehaviour
         siegedLocations = new List<WorldMapNode>();
         StartSiege(worldMap[0]);
 
-        currentEvent = new Event();
-        currentEvent.description = "Test event";
-        currentEvent.name = "debug";
-        currentEvent.choices = new List<ChoiceOption>();
-        ChoiceOption choiceOption = new ChoiceOption();
-        choiceOption.text = "awawawa";
-        currentEvent.choices.Add(choiceOption);
-        currentEvent.choices.Add(choiceOption);
         SceneManager.LoadScene("World");
+
     }
 }
 public class WorldMapNode

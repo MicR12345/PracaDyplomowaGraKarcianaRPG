@@ -83,12 +83,32 @@ public class Enemy
         hpTextGameObject.transform.parent = uiGameObject.transform;
         hpTextGameObject.transform.localPosition = new Vector3(0f,-10f,0f);
         hpText = hpTextGameObject.AddComponent<TextMeshPro>();
+        hpText.horizontalAlignment = HorizontalAlignmentOptions.Center;
+        hpText.verticalAlignment = VerticalAlignmentOptions.Middle;
         hpText.text = "0/0";
         return hpTextGameObject;
     }
     GameObject CreateInitiativeBar()
     {
         initiativeBar = new GameObject("Initiative Bar");
+        initiativeBar.transform.parent = enemyObject.transform;
+        initiativeBar.transform.localPosition = new Vector3(0f,10f);
+        initiativeBar.AddComponent<Canvas>();
+        RectTransform rectTransformSize = initiativeBar.GetComponent<RectTransform>();
+        rectTransformSize.sizeDelta = new Vector2(10f, 1f);
+        GameObject sliderObject = new GameObject("Slider");
+        sliderObject.transform.parent = initiativeBar.transform;
+        initiativeSlider = sliderObject.AddComponent<Slider>();
+        GameObject sliderBar = new GameObject("Slider Bar");
+        sliderBar.transform.parent = initiativeBar.transform;
+        Image image = sliderBar.AddComponent<Image>();
+        RectTransform rectTransform = sliderBar.GetComponent<RectTransform>();
+        
+        initiativeSlider.fillRect = rectTransform;
+        rectTransform.sizeDelta = new Vector2(0f, 0f);
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
+
         return initiativeBar;
     }
     void CreateUIElements()
@@ -168,6 +188,10 @@ public class Enemy
     public void UpdateHpBar()
     {
         hpText.text = health + "/" + healthMax;
+    }
+    public void UpdateInitiativeBar(float amount)
+    {
+        initiativeSlider.value = 1 - (amount / spellDuration);
     }
     public void MakeAMove()
     {

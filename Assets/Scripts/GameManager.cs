@@ -686,7 +686,6 @@ public class GameManager : MonoBehaviour
                 foreach (WorldMapNode connected in item.connections)
                 {
                     StartSiege(connected);
-                    Debug.Log(siegedLocations.Count);
                 }
             }
         }

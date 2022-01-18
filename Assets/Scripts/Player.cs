@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
@@ -22,6 +24,15 @@ public class Player : MonoBehaviour
 
     public GameObject Hand;
     public GameObject PlayerSpriteObject;
+
+    public GameObject uiGameObject;
+    public GameObject hpTextGameObject;
+
+    public TextMeshPro hpText;
+
+    public GameObject initiativeBar;
+
+    public Slider initiativeSlider;
 
     Vector2 playerPosition;
     public void PlayerObjectSetup(BattleManager _battleManager,GameManager _gameManager, Sprite _playerSprite, Vector2 _playerPosition)
@@ -45,6 +56,7 @@ public class Player : MonoBehaviour
 
         hand = new List<DeckCard>();
         activeEffects = new List<Effect>();
+        CreateUIElements();
     }
     public void CreatePlayerSpriteGO()
     {
@@ -54,7 +66,56 @@ public class Player : MonoBehaviour
         spriteRenderer = PlayerSpriteObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = playerSprite;
     }
+    GameObject CreateUIObject()
+    {
+        uiGameObject = new GameObject("UI Canvas");
+        uiGameObject.transform.parent = PlayerSpriteObject.transform;
+        uiGameObject.transform.localPosition = Vector3.zero;
+        uiGameObject.AddComponent<Canvas>();
+        RectTransform canvasRT = uiGameObject.GetComponent<RectTransform>();
+        canvasRT.sizeDelta = new Vector2(2.30f, 0.25f);
+        return uiGameObject;
+    }
+    GameObject CreateHPText()
+    {
+        hpTextGameObject = new GameObject("HP Text");
+        hpTextGameObject.transform.parent = uiGameObject.transform;
+        hpTextGameObject.transform.localPosition = new Vector3(0f, -10f, 0f);
+        hpText = hpTextGameObject.AddComponent<TextMeshPro>();
+        hpText.horizontalAlignment = HorizontalAlignmentOptions.Center;
+        hpText.verticalAlignment = VerticalAlignmentOptions.Middle;
+        hpText.text = "0/0";
+        return hpTextGameObject;
+    }
+    GameObject CreateCardBar()
+    {
+        initiativeBar = new GameObject("Card Bar");
+        initiativeBar.transform.parent = Hand.transform;
+        initiativeBar.transform.localPosition = new Vector3(0f, -20f);
+        initiativeBar.AddComponent<Canvas>();
+        RectTransform rectTransformSize = initiativeBar.GetComponent<RectTransform>();
+        rectTransformSize.sizeDelta = new Vector2(20f, 1f);
+        GameObject sliderObject = new GameObject("Slider");
+        sliderObject.transform.parent = initiativeBar.transform;
+        initiativeSlider = sliderObject.AddComponent<Slider>();
+        GameObject sliderBar = new GameObject("Slider Bar");
+        sliderBar.transform.parent = initiativeBar.transform;
+        Image image = sliderBar.AddComponent<Image>();
+        RectTransform rectTransform = sliderBar.GetComponent<RectTransform>();
 
+        initiativeSlider.fillRect = rectTransform;
+        rectTransform.sizeDelta = new Vector2(0f, 0f);
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
+
+        return initiativeBar;
+    }
+    void CreateUIElements()
+    {
+        CreateUIObject();
+        CreateHPText();
+        CreateCardBar();
+    }
     public void PrepareHandBeforeBattle()
     {
         CreateNewCardStack();
@@ -314,5 +375,13 @@ public class Player : MonoBehaviour
         {
             activeEffects.Remove(effect);
         }
+    }
+    public void UpdateHpBar()
+    {
+        hpText.text = health + "/" + data.healthMax;
+    }
+    public void UpdateCardBar(float amount)
+    {
+        initiativeSlider.value = 1 - (amount / BattleManager.playerCardGiveTime);
     }
 }

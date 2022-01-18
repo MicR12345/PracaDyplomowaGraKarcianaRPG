@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<EventList>
+<events>
+	<event>
+		<name>Daleki Przyjaciel</name>
+		<description>Spotykasz nieznanego Ci przyjaciela, może ma on coś dla Ciebie?</description>
+		<type>Village</type>
+		<choices>
+			<choice>
+				<text>Popros o jakies wsparcie.</text>
+				<addCards>
+					<card></card>
+				</addCards>
+				<tags>
+					<name></name>
+					<value></value>
+				</tags>
+			</choice>
+			<choice>
+				<text></text>
+				<addCards>
+					<card></card>
+				</addCards>
+				<tags>
+					<name></name>
+					<value></value>
+				</tags>
+			</choice>
+				</tags>
+			</choice>
+		</choices>
+	</event>
+</events>
+</EventList>

@@ -49,8 +49,6 @@ public class BattleManager : MonoBehaviour
         enemies = enemyLibrary.enemyList;
         
         OnBattleStart();
-        //gameManager.worldMapObject.SetActive(true);
-        //SceneManager.LoadScene("World");
     }
     void OnBattleStart()
     {
@@ -60,7 +58,6 @@ public class BattleManager : MonoBehaviour
             CreatePlayerObject();
         }
         enemies = new List<Enemy>();
-        //CheatSpawnDebugEnemies(4);
         enemies = gameManager.enemiesInBattle;
         enemyTimers = new List<float>();
         foreach (Enemy enemy in enemies)
@@ -223,6 +220,10 @@ public class BattleManager : MonoBehaviour
             else
             {
                 effectsTimer = effectsTimer - Time.deltaTime;
+            }
+            foreach (Enemy item in enemies)
+            {
+                item.UpdateHpBar();
             }
         }
 

@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 public class Enemy
 {
     public string name;
@@ -17,6 +19,14 @@ public class Enemy
 
     public GameObject enemyObject;
     public GameObject spriteObject;
+    public GameObject uiGameObject;
+    public GameObject hpTextGameObject;
+
+    public TextMeshPro hpText;
+
+    public GameObject initiativeBar;
+
+    public Slider initiativeSlider;
 
     public Sprite enemySprite;
 
@@ -57,12 +67,43 @@ public class Enemy
         spriteObject.tag = "enemy_sprite";
         return spriteObject;
     }
+    GameObject CreateUIObject()
+    {
+        uiGameObject = new GameObject("UI Canvas");
+        uiGameObject.transform.parent = enemyObject.transform;
+        uiGameObject.transform.localPosition = Vector3.zero;
+        uiGameObject.AddComponent<Canvas>();
+        RectTransform canvasRT = uiGameObject.GetComponent<RectTransform>();
+        canvasRT.sizeDelta = new Vector2(2.30f, 0.25f);
+        return uiGameObject;
+    }
+    GameObject CreateHPText()
+    {
+        hpTextGameObject = new GameObject("HP Text");
+        hpTextGameObject.transform.parent = uiGameObject.transform;
+        hpTextGameObject.transform.localPosition = new Vector3(0f,-10f,0f);
+        hpText = hpTextGameObject.AddComponent<TextMeshPro>();
+        hpText.text = "0/0";
+        return hpTextGameObject;
+    }
+    GameObject CreateInitiativeBar()
+    {
+        initiativeBar = new GameObject("Initiative Bar");
+        return initiativeBar;
+    }
+    void CreateUIElements()
+    {
+        CreateUIObject();
+        CreateHPText();
+        CreateInitiativeBar();
+    }
     public void CreateFightingEnemy(BattleManager battleManager)
     {
         CreateEnemyInstance();
         CreateEnemySpriteObject(enemySprite);
         this.battleManager = battleManager;
         enemyObject.transform.parent = battleManager.transform;
+        CreateUIElements();
         
     }
     public Enemy(string _name,float _healthMax, float _spellDuration, List<string> _cardSkills,Sprite sprite)
@@ -123,6 +164,10 @@ public class Enemy
             isDead = true;
             enemyObject.transform.Rotate(Vector3.forward, 90);
         }
+    }
+    public void UpdateHpBar()
+    {
+        hpText.text = health + "/" + healthMax;
     }
     public void MakeAMove()
     {

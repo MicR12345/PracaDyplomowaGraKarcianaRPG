@@ -384,7 +384,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 137431600}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 221835568}
+        m_TargetAssemblyTypeName: UnityEngine.Component, UnityEngine
+        m_MethodName: SendMessage
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: EventChoice1
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &137431600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -560,7 +572,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 265680300}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 221835568}
+        m_TargetAssemblyTypeName: UnityEngine.Component, UnityEngine
+        m_MethodName: SendMessage
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: EventChoice4
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &265680300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1127,7 +1151,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1532309910}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 221835568}
+        m_TargetAssemblyTypeName: UnityEngine.Component, UnityEngine
+        m_MethodName: SendMessage
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: EventChoice2
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1532309910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1348,7 +1384,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1713066551}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 221835568}
+        m_TargetAssemblyTypeName: UnityEngine.Component, UnityEngine
+        m_MethodName: SendMessage
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: EventChoice3
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1713066551
 MonoBehaviour:
   m_ObjectHideFlags: 0

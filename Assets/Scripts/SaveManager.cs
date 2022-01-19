@@ -22,8 +22,8 @@ public class SaveManager
         SaveGameData saveGameData = new SaveGameData(worldMap,worldDecoratorArray,siegedLocations,player,playerLocation);
         XmlSerializer xmlSerializer = new XmlSerializer(typeof(SaveGameData));
         TextWriter writer = new StreamWriter(Application.dataPath + "/save.savegame");
-        Debug.Log("Saving at " + Application.dataPath + "/save.savegame");
         xmlSerializer.Serialize(writer, saveGameData);
+        writer.Close();
     }
     [XmlRoot(ElementName = "SaveData")]
     public class SaveGameData

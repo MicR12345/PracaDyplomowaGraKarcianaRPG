@@ -164,6 +164,8 @@ public class GameManager : MonoBehaviour
         }
         ProgressSieges();
         playerPosition.visited = true;
+        Debug.Log(player.deck.Count);
+        SaveManager.SaveGame(worldMap, worldDecoratorArray, siegedLocations, player, playerPosition);
         //Pinezka gdzie gracz
     }
     void RollEvent()
@@ -794,6 +796,7 @@ public class GameManager : MonoBehaviour
         }
         if (!loadingSave)
         {
+            player = new PlayerData();
             playerPosition = worldMap[1];
 
             siegedLocations = new List<WorldMapNode>();

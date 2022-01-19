@@ -31,25 +31,17 @@ public class Card : Action
     }
     public GameObject CreateCardInstance(bool prototype = false)
     {
-        if (cardObject==null)
+        cardObject = new GameObject(name);
+        cardMover = cardObject.AddComponent<FancyCardMover>();
+        if (prototype)
         {
-            cardObject = new GameObject(name);
-            cardMover = cardObject.AddComponent<FancyCardMover>();
-            if (prototype)
-            {
-                CreateSpriteChildren();
-                cardObject.SetActive(false);
-                return cardObject;
-            }
-            else
-            {
-                CreateSpriteChildren();
-                return cardObject;
-            }
+            CreateSpriteChildren();
+            cardObject.SetActive(false);
+            return cardObject;
         }
         else
         {
-            Debug.LogError("Card alredy exists");
+            CreateSpriteChildren();
             return cardObject;
         }
     }

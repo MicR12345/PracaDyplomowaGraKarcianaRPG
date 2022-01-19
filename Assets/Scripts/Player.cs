@@ -37,14 +37,13 @@ public class Player : MonoBehaviour
     Vector2 playerPosition;
     public void PlayerObjectSetup(BattleManager _battleManager,GameManager _gameManager, Sprite _playerSprite, Vector2 _playerPosition)
     {
-        data = new PlayerData();
 
         this.name = "Player";
         playerSprite = _playerSprite;
 
         battleManager = _battleManager;
         gameManager = _gameManager;
-
+        data = _gameManager.player;
         playerPosition = _playerPosition;
 
         CreatePlayerSpriteGO();
@@ -119,6 +118,7 @@ public class Player : MonoBehaviour
     public void PrepareHandBeforeBattle()
     {
         CreateNewCardStack();
+        CreateInstancesOfCards();
     }
 
     public void AddToPlayerDeck(DeckCard card)
@@ -127,15 +127,25 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("More cards than possible in deck");
         }
-        if (card.card.cardObject == null)
+        /*if (card.card.cardObject == null)
         {
             card.card.CreateCardInstance();
         }
         card.card.cardObject.SetActive(false);
         CardHandle cardHandle = card.card.cardObject.AddComponent<CardHandle>();
-        cardHandle.card = card;
+        cardHandle.card = card;*/
         data.deck.Add(card);
 
+    }
+    public void CreateInstancesOfCards()
+    {
+        foreach (DeckCard item in data.deck)
+        {
+            item.card.CreateCardInstance();
+            item.card.cardObject.SetActive(false);
+            CardHandle cardHandle = item.card.cardObject.AddComponent<CardHandle>();
+            cardHandle.card = item;
+        }
     }
     public void CreateNewCardStack(bool random = true)
     {

@@ -12,6 +12,6 @@ public class PlayerData
 
     public PlayerData()
     {
-
+        deck = new List<DeckCard>();
     }
 }

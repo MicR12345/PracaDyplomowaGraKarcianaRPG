@@ -11,11 +11,8 @@ public class MenusController : MonoBehaviour
     public float mainSensitivity = 30;
     [SerializeField] private TMP_Text volumeValue = null;
     [SerializeField] private Slider volumeSlider = null;
-    [SerializeField] private TMP_Text sensitivityValue = null;
-    [SerializeField] private Slider sensitivitySlider = null;
-
     [SerializeField] private float defaultVolumeSettings = 0.5f;
-    [SerializeField] private float defaultSensitivitySettings = 30f;
+    private bool _fullScreen;
 
     [Header("SavedGames")]
     public string _newGameSave;
@@ -48,25 +45,24 @@ public class MenusController : MonoBehaviour
         AudioListener.volume = Volume;
         volumeValue.text = Volume.ToString("0.0");
     }
-    public void SetSensiviti(float Sensivity)
-    {
-        mainSensitivity = Sensivity;
-        sensitivityValue.text = Sensivity.ToString("0");
-    }
+
     public void DefaultButton()
     {
         AudioListener.volume = defaultVolumeSettings;
         volumeSlider.value = defaultVolumeSettings;
         volumeValue.text = defaultVolumeSettings.ToString("0.5");
         SetVolume(defaultVolumeSettings);
-        mainSensitivity = defaultSensitivitySettings;
-        sensitivitySlider.value = defaultSensitivitySettings;
-        sensitivityValue.text = defaultSensitivitySettings.ToString("0");
+
+    }
+    public void FullScreenChange(bool fullScreen)
+    {
+        _fullScreen = fullScreen;
     }
     public void Save()
     {
         PlayerPrefs.SetFloat("dzwiek", AudioListener.volume);
-        PlayerPrefs.SetFloat("czulosc", mainSensitivity);
+        PlayerPrefs.SetInt("pelenEkran", (_fullScreen ? 1 : 0));
+        Screen.fullScreen = _fullScreen;
     }
 }
 

@@ -199,7 +199,7 @@ public class BattleManager : MonoBehaviour
             }
             if (playerCardGiveTimer<=0f)
             {
-                if (player.hand.Count<=player.data.handSize)
+                if (player.hand.Count<player.data.handSize)
                 {
                     player.AddCardToPlayerHand();
                     playerCardGiveTimer = playerCardGiveTime;

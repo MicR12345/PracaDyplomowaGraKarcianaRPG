@@ -31,7 +31,7 @@ public class EnemyLibrary : MonoBehaviour
         }
 
         enemyList = new List<Enemy>();
-        EnemyLoader enemyLoader = new EnemyLoader("CoreGame/XmlFiles/enemies",cardLibrary);
+        EnemyLoader enemyLoader = new EnemyLoader("/CoreGame/XmlFiles/enemies.xml",cardLibrary);
         enemyList = new List<Enemy>(enemyLoader.enemies);
 
     }
@@ -72,16 +72,18 @@ public class EnemyLibrary : MonoBehaviour
         {
             loadedEnemies = new List<EnemyData>();
             enemies = new List<Enemy>();
+            string enemyList = File.ReadAllText(Application.dataPath + pathToEnemiesList);
             XmlSerializer reader = new XmlSerializer(typeof(Enemies));
-            TextAsset enemyXml = Resources.Load(pathToEnemiesList, typeof(TextAsset)) as TextAsset;
-            TextReader enemy = new StringReader(enemyXml.text);
+            TextReader enemy = new StringReader(enemyList);
             Enemies loaded = (Enemies)reader.Deserialize(enemy);
             enemy.Close();
             
             foreach(EnemyData i in loaded.enemies)
             {
                 Texture2D texture2D = new Texture2D(1, 1);
-                texture2D = Resources.Load(i.path + i.name, typeof(Texture2D)) as Texture2D;
+                byte[] bytes = File.ReadAllBytes(Application.dataPath + "/" + i.path + i.name + ".png");
+                texture2D.LoadImage(bytes);
+                texture2D.filterMode = FilterMode.Point;
                 Sprite enemySprite = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);
                 Enemy przeciwnik = new Enemy(i.name, i.healthMax, i.spellDuration, i.cardSkills, enemySprite);
                 foreach (string item in i.cardSkills)

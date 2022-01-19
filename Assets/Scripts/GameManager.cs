@@ -103,6 +103,7 @@ public class GameManager : MonoBehaviour
     }
     public void MovePlayer(WorldMapNode node)
     {
+        playerPosition.visited = true;
         playerPosition = node;
         if (playerPosition.type!="EnemyCastle")
         {
@@ -151,34 +152,41 @@ public class GameManager : MonoBehaviour
                 }
                 else if (roll < battleChance + eventChance && roll >= battleChance)
                 {
+                    RollEvent();
                     LaunchEvent();
                 }
                 else
                 {
+                    RollEvent();
                     LaunchEvent();
                 }
             }
         }
         ProgressSieges();
+        playerPosition.visited = true;
         //Pinezka gdzie gracz
     }
-    void LaunchEvent()
+    void RollEvent()
     {
         List<Event> acceptableEvents = new List<Event>();
-        foreach(Event i in eventLibrary.eventList)
+        foreach (Event i in eventLibrary.eventList)
         {
-            if(i.type == playerPosition.type)
+            if (i.type == playerPosition.type)
             {
                 acceptableEvents.Add(i);
             }
         }
         int rollEvent = UnityEngine.Random.Range(0, acceptableEvents.Count);
+
+        currentEvent = acceptableEvents[rollEvent];
+    }
+    void LaunchEvent()
+    {
         GameObject eventPopupGO = GameObject.Find("EventPopup");
         if (eventPopupGO == null)
         {
             Debug.LogError("Event popup object not found");
         }
-        currentEvent = acceptableEvents[rollEvent];
         EventPopupHandle eventPopupHandle = eventPopupGO.GetComponent<EventPopupHandle>();
         eventPopupHandle.eventPopupCanvas.SetActive(true);
         eventPopupHandle.eventBackgroundImage.sprite = currentEvent.eventBackground;
@@ -704,7 +712,8 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        
+        bool loadingSave = false;
+        if (SceneManager.GetActiveScene().name == "SaveLoadScreen") loadingSave = true;
         //https://answers.unity.com/questions/1736611/onmouse-events-eg-onmouseenter-not-working-with-ne.html
         /*PhysicsRaycaster physicsRaycaster = GameObject.FindObjectOfType<PhysicsRaycaster>();
         if (physicsRaycaster == null)
@@ -773,12 +782,28 @@ public class GameManager : MonoBehaviour
             spriteRenderer.sprite = worldMapSprite;
             spriteRenderer.sortingOrder = -50;
 
-            GenerateWorldMap(worldNodeCount);
-        }
-        playerPosition = worldMap[1];
+            if (!loadingSave)
+            {
+                GenerateWorldMap(worldNodeCount);
+            }
+            else
+            {
 
-        siegedLocations = new List<WorldMapNode>();
-        StartSiege(worldMap[0]);
+            }
+            
+        }
+        if (!loadingSave)
+        {
+            playerPosition = worldMap[1];
+
+            siegedLocations = new List<WorldMapNode>();
+            StartSiege(worldMap[0]);
+        }
+        else
+        {
+
+        }
+
 
         SceneManager.LoadScene("World");
 

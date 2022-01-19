@@ -6,12 +6,6 @@ using System.IO
 
 public class SaveManager
 {
-    public List<WorldMapNode> worldMap;
-    public int[,] worldDecoratorArray;
-    public List<WorldMapNode> siegedLocations;
-    public PlayerData player;
-    public WorldMapNode playerLocation;
-
     public static void SaveGame(
         List<WorldMapNode> worldMap,
         int[,] worldDecoratorArray,
@@ -24,6 +18,14 @@ public class SaveManager
         TextWriter writer = new StreamWriter(Application.dataPath + "/save.savegame");
         xmlSerializer.Serialize(writer, saveGameData);
         writer.Close();
+    }
+    public static SaveGameData LoadGame()
+    {
+        XmlSerializer xmlSerializer = new XmlSerializer(typeof(SaveGameData));
+        TextReader reader = new StreamReader(Application.dataPath + "/save.savegame");
+        SaveGameData saveGameData = (SaveGameData)xmlSerializer.Deserialize(reader);
+        reader.Close();
+        return saveGameData;
     }
     [XmlRoot(ElementName = "SaveData")]
     public class SaveGameData

@@ -774,28 +774,21 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Event library found with " + eventLibrary.eventList.Count + "events");
             }
         }
-        if (worldMap == null)
-        {
-            worldMapObject = new GameObject("WorldMap");
-            worldMapObject.transform.parent = this.gameObject.transform;
-            worldMapObject.transform.localPosition = Vector3.zero;
-
-            SpriteRenderer spriteRenderer = worldMapObject.AddComponent<SpriteRenderer>();
-            spriteRenderer.sprite = worldMapSprite;
-            spriteRenderer.sortingOrder = -50;
-
-            if (!loadingSave)
-            {
-                GenerateWorldMap(worldNodeCount);
-            }
-            else
-            {
-
-            }
-            
-        }
         if (!loadingSave)
         {
+            if (worldMap == null)
+            {
+                worldMapObject = new GameObject("WorldMap");
+                worldMapObject.transform.parent = this.gameObject.transform;
+                worldMapObject.transform.localPosition = Vector3.zero;
+
+                SpriteRenderer spriteRenderer = worldMapObject.AddComponent<SpriteRenderer>();
+                spriteRenderer.sprite = worldMapSprite;
+                spriteRenderer.sortingOrder = -50;
+
+                GenerateWorldMap(worldNodeCount);
+
+            }
             player = new PlayerData();
             playerPosition = worldMap[1];
 
@@ -804,7 +797,43 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            if (worldMap == null)
+            {
+                worldMapObject = new GameObject("WorldMap");
+                worldMapObject.transform.parent = this.gameObject.transform;
+                worldMapObject.transform.localPosition = Vector3.zero;
 
+                SpriteRenderer spriteRenderer = worldMapObject.AddComponent<SpriteRenderer>();
+                spriteRenderer.sprite = worldMapSprite;
+                spriteRenderer.sortingOrder = -50;
+
+                worldMap = new List<WorldMapNode>();
+            }
+            SaveManager.SaveGameData saveGameData = SaveManager.LoadGame();
+            foreach (SaveManager.WorldMapNodeData item in saveGameData.worldMapData.worldMapNodes)
+            {
+                worldMap.Add(new WorldMapNode(this, item));
+            }
+            foreach (WorldMapNode item in worldMap)
+            {
+                item.ConnectToLoadedConnections(worldMap);
+            }
+            int sizeY = saveGameData.decoratorArray.decoratorArrayLines.Count;
+            int sizeX = saveGameData.decoratorArray.decoratorArrayLines[0].data.Count;
+            worldDecoratorArray = new int[sizeX, sizeY];
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    worldDecoratorArray[x,y] = saveGameData.decoratorArray.decoratorArrayLines[y].data[x];
+                }
+            }
+            DrawDecorators();
+            siegedLocations = new List<WorldMapNode>();
+            foreach (int item in saveGameData.siegedLocations)
+            {
+                siegedLocations.Add(worldMap[item]);
+            }
         }
 
 
@@ -832,6 +861,7 @@ public class WorldMapNode
     public bool affectedBySmoothing = true;
     public bool visited = false;
 
+    List<int> loadedConnections;
     public WorldMapNode(GameManager _gameManager,string _name,string _type,bool smoothing = true)
     {
         gameManager = _gameManager;
@@ -885,6 +915,38 @@ public class WorldMapNode
         BoxCollider collider = gameObject.AddComponent<BoxCollider>();
         collider.size = new Vector3(spriteRenderer.sprite.texture.width / spriteRenderer.sprite.pixelsPerUnit,
             spriteRenderer.sprite.texture.height / spriteRenderer.sprite.pixelsPerUnit,0.2f);
+
+        siegeIconObject = new GameObject("SiegeIcon");
+        siegeIconObject.transform.parent = gameObject.transform;
+        siegeIconObject.transform.localPosition = new Vector3(0f, 0f, 0f);
+        siegeIconRenderer = siegeIconObject.AddComponent<SpriteRenderer>();
+    }
+    public WorldMapNode(GameManager _gameManager,SaveManager.WorldMapNodeData worldMapNodeData)
+    {
+        gameManager = _gameManager;
+        name = worldMapNodeData.name;
+        type = worldMapNodeData.type;
+        siegeTime = worldMapNodeData.siegeTime;
+        connections = new List<WorldMapNode>();
+        loadedConnections = new List<int>(worldMapNodeData.connections);
+        visited = worldMapNodeData.visited;
+        gameObject = new GameObject(name);
+        gameObject.transform.parent = gameManager.worldMapObject.transform;
+        gameObject.transform.localPosition = new Vector3(worldMapNodeData.x,worldMapNodeData.y,-5f);
+        WorldMapNodeHandle handle = gameObject.AddComponent<WorldMapNodeHandle>();
+        handle.SetWorldMapNodeHandle(this, gameManager);
+
+        spriteObject = new GameObject("Sprite");
+        spriteObject.transform.parent = gameObject.transform;
+        spriteObject.transform.localPosition = Vector3.zero + new Vector3(0f, 0.6f);
+
+        spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
+
+        SetSprite();
+
+        BoxCollider collider = gameObject.AddComponent<BoxCollider>();
+        collider.size = new Vector3(spriteRenderer.sprite.texture.width / spriteRenderer.sprite.pixelsPerUnit,
+            spriteRenderer.sprite.texture.height / spriteRenderer.sprite.pixelsPerUnit, 0.2f);
 
         siegeIconObject = new GameObject("SiegeIcon");
         siegeIconObject.transform.parent = gameObject.transform;
@@ -950,6 +1012,13 @@ public class WorldMapNode
         if (siegeTime<1)
         {
             siegeIconRenderer.sprite = gameManager.defeatedIcon;
+        }
+    }
+    public void ConnectToLoadedConnections(List<WorldMapNode> worldMap)
+    {
+        foreach (int item in loadedConnections)
+        {
+            connections.Add(worldMap[item]);
         }
     }
 }

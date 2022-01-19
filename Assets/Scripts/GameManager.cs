@@ -816,7 +816,13 @@ public class GameManager : MonoBehaviour
             }
             foreach (WorldMapNode item in worldMap)
             {
-                item.ConnectToLoadedConnections(worldMap);
+                foreach (int connectionIndex in item.loadedConnections)
+                {
+                    item.connections.Add(worldMap[connectionIndex]);
+                    worldMap[connectionIndex].connections.Add(item);
+                    worldMap[connectionIndex].loadedConnections.Remove(worldMap.IndexOf(item));
+                    DrawRoad(item.gameObject.transform.position, worldMap[connectionIndex].gameObject.transform.position);
+                }
             }
             int sizeY = saveGameData.decoratorArray.decoratorArrayLines.Count;
             int sizeX = saveGameData.decoratorArray.decoratorArrayLines[0].data.Count;
@@ -834,6 +840,8 @@ public class GameManager : MonoBehaviour
             {
                 siegedLocations.Add(worldMap[item]);
             }
+            player = new PlayerData(saveGameData.playerSaveData, cardLibrary);
+            playerPosition = worldMap[saveGameData.playerSaveData.playerLocation];
         }
 
 
@@ -861,7 +869,7 @@ public class WorldMapNode
     public bool affectedBySmoothing = true;
     public bool visited = false;
 
-    List<int> loadedConnections;
+    public List<int> loadedConnections;
     public WorldMapNode(GameManager _gameManager,string _name,string _type,bool smoothing = true)
     {
         gameManager = _gameManager;
@@ -1012,13 +1020,6 @@ public class WorldMapNode
         if (siegeTime<1)
         {
             siegeIconRenderer.sprite = gameManager.defeatedIcon;
-        }
-    }
-    public void ConnectToLoadedConnections(List<WorldMapNode> worldMap)
-    {
-        foreach (int item in loadedConnections)
-        {
-            connections.Add(worldMap[item]);
         }
     }
 }

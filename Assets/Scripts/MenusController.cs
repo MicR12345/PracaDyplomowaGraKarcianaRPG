@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -24,10 +25,9 @@ public class MenusController : MonoBehaviour
     }
     public void LoadGameDialogGrajDalej()
     {
-        if (PlayerPrefs.HasKey("Zapis"))
+        if (File.Exists(Application.dataPath + "/save.savegame"))
         {
-            _currentGameSave = PlayerPrefs.GetString("Zapis");
-            SceneManager.LoadScene(_currentGameSave);
+            SceneManager.LoadScene("SaveLoadScreen");
         }
         else
         {

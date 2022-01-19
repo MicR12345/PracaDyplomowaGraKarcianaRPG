@@ -11,7 +11,7 @@ public class CardLibrary : MonoBehaviour
     public void LoadAllCards()
     {
         cards = new List<Card>();
-        CardLoader cardLoader = new CardLoader("CoreGame/XmlFiles/cards");
+        CardLoader cardLoader = new CardLoader("/CoreGame/XmlFiles/cards.xml");
         cards = new List<Card>(cardLoader.cards);
     }
     public void AddCardPrototype(Card card,Sprite cardImage,Sprite cardBorder)
@@ -34,38 +34,6 @@ public class CardLibrary : MonoBehaviour
             Debug.Log(item.name);
         }
     }
-    [XmlRoot(ElementName = "CardList")]
-    public class Cards
-    {
-        [XmlArray("cards"), XmlArrayItem("card")]
-        public List<CardData> cards;
-        public Cards()
-        {
-            cards=new List<CardData>();
-        }
-    }
-
-    public class CardData
-    {
-        public string name;
-        public string path;
-        public int rarity;
-        public int cost;
-        [XmlArray("effects"), XmlArrayItem("effect")]
-        public List<Effect> effect;
-        [XmlArray("tags"), XmlArrayItem("tag")]
-        public List<Tag> tag;
-
-        public CardData()
-        {
-            name = "";
-            path = "";
-            rarity = 0;
-            cost = 0;
-            effect = new List<Effect>();
-            tag = new List<Tag>();
-        }
-    }
     class CardLoader
     {
         List<CardData> loadedCards;
@@ -73,7 +41,14 @@ public class CardLibrary : MonoBehaviour
         List<Sprite> borders;
         public void BordersRarityLoad(string pathToCardBorders)
         {
-            List<Texture2D> borderTextures = new List<Texture2D>(Resources.LoadAll<Texture2D>(pathToCardBorders));
+            List<Texture2D> borderTextures = new List<Texture2D>();
+            foreach (string item in Directory.GetFiles(Application.dataPath + pathToCardBorders,"*.png"))
+            {
+                byte[] bytes = File.ReadAllBytes(item);
+                Texture2D texture2D = new Texture2D(1, 1);
+                texture2D.LoadImage(bytes);
+                borderTextures.Add(texture2D);
+            }
             borders = new List<Sprite>();
             foreach (Texture2D item in borderTextures)
             {
@@ -84,20 +59,22 @@ public class CardLibrary : MonoBehaviour
         }
         public CardLoader(string pathToCardList)
         {
-            TextAsset cardXml = Resources.Load(pathToCardList, typeof(TextAsset)) as TextAsset;
-            BordersRarityLoad("CoreGame/BordersGFX");
+            string cardList = File.ReadAllText(Application.dataPath + pathToCardList);
+            //TextAsset cardXml = Resources.Load(pathToCardList, typeof(TextAsset)) as TextAsset;
+            BordersRarityLoad("/CoreGame/BordersGFX/");
             loadedCards = new List<CardData>();
             cards = new List<Card>();
             XmlSerializer reader  = new XmlSerializer(typeof(Cards));
-            TextReader card = new StringReader(cardXml.text);
+            TextReader card = new StringReader(cardList);
             Cards loaded = (Cards)reader.Deserialize(card);
-
+            
             card.Close();
             foreach(CardData i in loaded.cards)
             {
                 Card karta = new Card(i.name, i.effect, i.tag);
                 Texture2D texture2D = new Texture2D(1, 1);
-                texture2D = Resources.Load(i.path + i.name, typeof(Texture2D)) as Texture2D;
+                byte[] bytes = File.ReadAllBytes(Application.dataPath + "/" + i.path + i.name + ".png");
+                texture2D.LoadImage(bytes);
                 texture2D.filterMode = FilterMode.Point;
                 Sprite cardImage = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);
                 karta.AddCardGFX(cardImage, borders[i.rarity]);
@@ -105,5 +82,37 @@ public class CardLibrary : MonoBehaviour
 
             }
         }
+    }
+}
+[XmlRoot(ElementName = "CardList")]
+public class Cards
+{
+    [XmlArray("cards"), XmlArrayItem("card")]
+    public List<CardData> cards;
+    public Cards()
+    {
+        cards = new List<CardData>();
+    }
+}
+
+public class CardData
+{
+    public string name;
+    public string path;
+    public int rarity;
+    public int cost;
+    [XmlArray("effects"), XmlArrayItem("effect")]
+    public List<Effect> effect;
+    [XmlArray("tags"), XmlArrayItem("tag")]
+    public List<Tag> tag;
+
+    public CardData()
+    {
+        name = "";
+        path = "";
+        rarity = 0;
+        cost = 0;
+        effect = new List<Effect>();
+        tag = new List<Tag>();
     }
 }

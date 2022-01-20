@@ -47,6 +47,7 @@ public class SpriteAnimator : MonoBehaviour
     }
     private IEnumerator startOneOffAnimationCRT(float time)
     {
+        continueAnimationOnce = true;
         WaitForSeconds waitTime = new WaitForSeconds(time);
         while (continueAnimationOnce)
         {
@@ -61,6 +62,7 @@ public class SpriteAnimator : MonoBehaviour
 
             yield return waitTime;
         }
+        continueAnimationOnce = false;
     }
     public void startAnimation()
     {

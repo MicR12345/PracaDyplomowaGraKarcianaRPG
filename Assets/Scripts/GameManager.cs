@@ -103,6 +103,7 @@ public class GameManager : MonoBehaviour
         if (!siegedLocations.Contains(node))
         {
             siegedLocations.Add(node);
+            node.StartSiege();
         }
     }
     public void MovePlayer(WorldMapNode node)
@@ -719,6 +720,7 @@ public class GameManager : MonoBehaviour
             if (item.siegeTime>0)
             {
                 item.siegeTime--;
+                item.UpdateSiegeComponents();
             }
             else
             {

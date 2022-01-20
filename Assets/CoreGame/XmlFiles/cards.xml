@@ -28,7 +28,7 @@
 		<effect>
 		  <name>damage</name>
 		  <level>0</level>
-		  <value>2</value>
+		  <value>200</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>

@@ -58,7 +58,15 @@ public class EventLibrary : MonoBehaviour
             foreach(EventData i in loaded.events)
             {
                 Texture2D texture2D = new Texture2D(1, 1);
-                byte[] bytes = File.ReadAllBytes(Application.dataPath + "/CoreGame/EventGFX/" + i.name + ".png");
+                byte[] bytes;
+                if (File.Exists(Application.dataPath + "/CoreGame/EventGFX/" + i.name + ".png"))
+                {
+                    bytes = File.ReadAllBytes(Application.dataPath + "/CoreGame/EventGFX/" + i.name + ".png");
+                }
+                else
+                {
+                    bytes = File.ReadAllBytes(Application.dataPath + "/CoreGame/EventGFX/" + "default" + ".png");
+                }
                 texture2D.LoadImage(bytes);
                 texture2D.filterMode = FilterMode.Point;
                 Sprite eventSprite = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);

@@ -891,6 +891,7 @@ public class WorldMapNode
     public List<int> loadedConnections;
 
     Vector3 checkMarkOffset;
+    Vector3 siegeMarkOffset;
     public WorldMapNode(GameManager _gameManager,string _name,string _type,bool smoothing = true)
     {
         gameManager = _gameManager;
@@ -947,7 +948,7 @@ public class WorldMapNode
 
         siegeIconObject = new GameObject("SiegeIcon");
         siegeIconObject.transform.parent = gameObject.transform;
-        siegeIconObject.transform.localPosition = new Vector3(0f, 0f, 0f);
+        siegeIconObject.transform.localPosition = siegeMarkOffset;
         siegeIconRenderer = siegeIconObject.AddComponent<SpriteRenderer>();
 
         visitedIconObject = new GameObject("VisitedIcon");
@@ -986,7 +987,7 @@ public class WorldMapNode
 
         siegeIconObject = new GameObject("SiegeIcon");
         siegeIconObject.transform.parent = gameObject.transform;
-        siegeIconObject.transform.localPosition = new Vector3(0f, 0f, 0f);
+        siegeIconObject.transform.localPosition = siegeMarkOffset;
         siegeIconRenderer = siegeIconObject.AddComponent<SpriteRenderer>();
 
         visitedIconObject = new GameObject("VisitedIcon");
@@ -1006,31 +1007,37 @@ public class WorldMapNode
         {
             spriteRenderer.sprite = gameManager.enemyCastleSprite;
             checkMarkOffset = new Vector3(3f, -1f, 0f);
+            siegeMarkOffset = new Vector3(0f,0f,0f);
         }
         else if (type == "Capitol")
         {
             spriteRenderer.sprite = gameManager.capitolSprite;
             checkMarkOffset = new Vector3(2f, -1f, 0f);
+            siegeMarkOffset = new Vector3(0f, 0f, 0f);
         }
         else if (type == "City")
         {
             spriteRenderer.sprite = gameManager.citySprite;
             checkMarkOffset = new Vector3(1f, -0.75f, 0f);
+            siegeMarkOffset = new Vector3(0f, 0f, 0f);
         }
         else if (type == "Village")
         {
             spriteRenderer.sprite = gameManager.villageSprite;
             checkMarkOffset = new Vector3(1.5f, -1f, 0f);
+            siegeMarkOffset = new Vector3(0f, 0f, 0f);
         }
         else if (type == "Fortress")
         {
             spriteRenderer.sprite = gameManager.fortressSprite;
             checkMarkOffset = new Vector3(1f, -1f, 0f);
+            siegeMarkOffset = new Vector3(0f, 0f, 0f);
         }
         else if (type == "AcientRuins")
         {
             spriteRenderer.sprite = gameManager.ruinsSprite;
             checkMarkOffset = new Vector3(1.5f, -1f, 0f);
+            siegeMarkOffset = new Vector3(0f, 0f, 0f);
         }
     }
     public void PlaceRandomlyWithinBounds(Vector3 boundsStart,Vector3 boundsEnd)

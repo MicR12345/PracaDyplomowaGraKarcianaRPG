@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Globalization;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 public class Card : Action
 {
     public GameObject cardObject;
@@ -14,6 +16,10 @@ public class Card : Action
 
     GameObject spriteObject;
     GameObject borderObject;
+    GameObject uiGameObject;
+    GameObject descriptionTextGameObject;
+
+    TextMeshPro descriptionText;
 
     BoxCollider2D boxCollider;
 
@@ -29,21 +35,19 @@ public class Card : Action
         CreateBorderChild();
         CreateSpriteChild(); 
     }
+    public void CreateUI()
+    {
+        CreateUIObject();
+        CreateDescriptionText();
+    }
     public GameObject CreateCardInstance(bool prototype = false)
     {
         cardObject = new GameObject(name);
         cardMover = cardObject.AddComponent<FancyCardMover>();
-        if (prototype)
-        {
-            CreateSpriteChildren();
-            cardObject.SetActive(false);
-            return cardObject;
-        }
-        else
-        {
-            CreateSpriteChildren();
-            return cardObject;
-        }
+        CreateSpriteChildren();
+        CreateUI();
+        UpdateDescription();
+        return cardObject;
     }
     void CreateSpriteChild()
     {
@@ -65,6 +69,31 @@ public class Card : Action
         borderRenderer.sortingOrder = 1;
         borderObject.AddComponent<BoxCollider>();
     }
+    GameObject CreateUIObject()
+    {
+        uiGameObject = new GameObject("UI Canvas");
+        uiGameObject.transform.parent = cardObject.transform;
+        uiGameObject.transform.localPosition = new Vector3(0f,-10f,0f);
+        uiGameObject.AddComponent<Canvas>();
+        RectTransform canvasRT = uiGameObject.GetComponent<RectTransform>();
+        canvasRT.sizeDelta = new Vector2(25f, 18f);
+        return uiGameObject;
+    }
+    GameObject CreateDescriptionText()
+    {
+        descriptionTextGameObject = new GameObject("Description Text");
+        descriptionTextGameObject.transform.parent = uiGameObject.transform;
+        descriptionTextGameObject.transform.localPosition = new Vector3(0f, 0f, 0f);
+        descriptionText = descriptionTextGameObject.AddComponent<TextMeshPro>();
+        descriptionText.horizontalAlignment = HorizontalAlignmentOptions.Center;
+        descriptionText.verticalAlignment = VerticalAlignmentOptions.Top;
+        descriptionText.sortingOrder = 15;
+        descriptionText.color = Color.black;
+        descriptionText.text = "Something went wrong";
+        RectTransform rectTransform = descriptionTextGameObject.GetComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(25f, 18f);
+        return descriptionTextGameObject;
+    }
     public Tag FindCardTag(string name)
     {
         foreach (Tag item in tags)
@@ -78,7 +107,27 @@ public class Card : Action
     }
     public override void UpdateDescription()
     {
-        throw new System.NotImplementedException();
+        string newDescription = "";
+        TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+        foreach (Effect item in effects)
+        {
+            newDescription = newDescription + textInfo.ToTitleCase(item.name);
+            if (item.level!=0)
+            {
+                newDescription = newDescription + "+" + item.level;
+            }
+            if (item.value!=0)
+            {
+                newDescription = newDescription + " " + item.value;
+            }
+            newDescription = newDescription + "\n";
+        }
+        foreach (Tag item in tags)
+        {
+            newDescription = newDescription + textInfo.ToTitleCase(item.name) + "\n";
+        }
+        description = newDescription;
+        descriptionText.text = description;
     }
     public override void UpgradeCard()
     {

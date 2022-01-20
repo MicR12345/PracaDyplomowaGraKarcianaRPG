@@ -9,7 +9,7 @@
 	  <effects>
 		<effect>
 		  <name>damage</name>
-		  <level>1</level>
+		  <level>0</level>
 		  <value>2</value>
 		  <duration>0</duration>
 		  <tags>
@@ -27,7 +27,7 @@
 	  <effects>
 		<effect>
 		  <name>damage</name>
-		  <level>1</level>
+		  <level>0</level>
 		  <value>2</value>
 		  <duration>0</duration>
 		  <tags>

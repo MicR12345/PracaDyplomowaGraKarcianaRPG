@@ -168,15 +168,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba8b7ca6081a544a91fa19e115ec39f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Background: {fileID: 0}
-  GameLight: {fileID: 0}
   GameCamera: {fileID: 1182194128}
   pointerControl: {fileID: 178269321}
   enenmyTimers: []
   cardLibrary: {fileID: 0}
   enemyLibrary: {fileID: 0}
   player: {fileID: 0}
-  debugPlayerSprite: {fileID: 21300000, guid: a4eb354e8ad6fcd4e8d95d7a772fcad4, type: 3}
+  debugPlayerSprite: {fileID: 3201900792402615743, guid: 6d542ee5713d4a34ea75bc0c15b44f20, type: 3}
+  playerIdleSprite:
+  - {fileID: 3201900792402615743, guid: 6d542ee5713d4a34ea75bc0c15b44f20, type: 3}
+  - {fileID: 7584665292515829867, guid: 6d542ee5713d4a34ea75bc0c15b44f20, type: 3}
+  playerAttackSprites:
+  - {fileID: 8668670127082958837, guid: e8d8cfa6c0bd4a84b8ec56439cb2ae36, type: 3}
+  - {fileID: -5941346035635496992, guid: e8d8cfa6c0bd4a84b8ec56439cb2ae36, type: 3}
+  - {fileID: 5650021448124557786, guid: e8d8cfa6c0bd4a84b8ec56439cb2ae36, type: 3}
+  - {fileID: -1569644980886228494, guid: e8d8cfa6c0bd4a84b8ec56439cb2ae36, type: 3}
+  - {fileID: -6420912067543526000, guid: e8d8cfa6c0bd4a84b8ec56439cb2ae36, type: 3}
+  - {fileID: -8308232130243175545, guid: e8d8cfa6c0bd4a84b8ec56439cb2ae36, type: 3}
+  - {fileID: 7421101790521894873, guid: e8d8cfa6c0bd4a84b8ec56439cb2ae36, type: 3}
+  - {fileID: -6981625774021492059, guid: e8d8cfa6c0bd4a84b8ec56439cb2ae36, type: 3}
+  - {fileID: -6446401974293219499, guid: e8d8cfa6c0bd4a84b8ec56439cb2ae36, type: 3}
   playerPosition: {x: -42, y: 0}
   enemyPositions:
   - {x: 25, y: 5}

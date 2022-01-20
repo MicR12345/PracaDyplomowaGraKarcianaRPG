@@ -53,6 +53,7 @@ public class EnemyLibrary : MonoBehaviour
         [XmlArray("cardSkills"), XmlArrayItem("card")]
         public List<string> cardSkills;
         public string path;
+        public int frameCount;
 
         public EnemyData()
         {
@@ -61,6 +62,7 @@ public class EnemyLibrary : MonoBehaviour
             spellDuration = 0;
             cardSkills = new List<string>();
             path = "";
+            frameCount = 0;
         }
     }
     class EnemyLoader
@@ -84,8 +86,13 @@ public class EnemyLibrary : MonoBehaviour
                 byte[] bytes = File.ReadAllBytes(Application.dataPath + "/" + i.path + i.name + ".png");
                 texture2D.LoadImage(bytes);
                 texture2D.filterMode = FilterMode.Point;
-                Sprite enemySprite = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);
-                Enemy przeciwnik = new Enemy(i.name, i.healthMax, i.spellDuration, i.cardSkills, enemySprite);
+                List<Sprite> enemySprites = new List<Sprite>();
+                float singleTextureSize = texture2D.width / i.frameCount;
+                for (int j = 0; j < i.frameCount; j++)
+                {
+                    enemySprites.Add(Sprite.Create(texture2D, new Rect(j * singleTextureSize, 0.0f,singleTextureSize, texture2D.height), new Vector2(0.5f, 0.5f), 6f));
+                }
+                Enemy przeciwnik = new Enemy(i.name, i.healthMax, i.spellDuration, i.cardSkills, enemySprites);
                 foreach (string item in i.cardSkills)
                 {
                     DeckCard deckCard = new DeckCard(cardLibrary.FindCardByName(item));

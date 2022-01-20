@@ -15,31 +15,34 @@ public class Player : MonoBehaviour
 
     public PlayerData data;
 
-    Sprite playerSprite;
+    List<Sprite> playerSprites;
 
     SpriteRenderer spriteRenderer;
+    public SpriteAnimator spriteAnimator;
 
     GameManager gameManager; 
     BattleManager battleManager;
 
     public GameObject Hand;
-    public GameObject PlayerSpriteObject;
+    public GameObject playerSpriteObject;
 
     public GameObject uiGameObject;
     public GameObject hpTextGameObject;
+    public GameObject apTextGameObject;
 
     public TextMeshPro hpText;
+    public TextMeshPro apText;
 
     public GameObject initiativeBar;
 
     public Slider initiativeSlider;
 
     Vector2 playerPosition;
-    public void PlayerObjectSetup(BattleManager _battleManager,GameManager _gameManager, Sprite _playerSprite, Vector2 _playerPosition)
+    public void PlayerObjectSetup(BattleManager _battleManager,GameManager _gameManager, List<Sprite> _playerSprites, Vector2 _playerPosition)
     {
 
         this.name = "Player";
-        playerSprite = _playerSprite;
+        playerSprites = _playerSprites;
 
         battleManager = _battleManager;
         gameManager = _gameManager;
@@ -59,16 +62,18 @@ public class Player : MonoBehaviour
     }
     public void CreatePlayerSpriteGO()
     {
-        PlayerSpriteObject = new GameObject("PlayerSprite");
-        PlayerSpriteObject.transform.parent = this.transform;
-        PlayerSpriteObject.transform.localPosition = playerPosition;
-        spriteRenderer = PlayerSpriteObject.AddComponent<SpriteRenderer>();
-        spriteRenderer.sprite = playerSprite;
+        playerSpriteObject = new GameObject("PlayerSprite");
+        playerSpriteObject.transform.parent = this.transform;
+        playerSpriteObject.transform.localPosition = playerPosition;
+        spriteRenderer = playerSpriteObject.AddComponent<SpriteRenderer>();
+        spriteAnimator = playerSpriteObject.AddComponent<SpriteAnimator>();
+        spriteAnimator.setupSprites(spriteRenderer, playerSprites,"idle",1f);
+        spriteAnimator.startAnimation();
     }
     GameObject CreateUIObject()
     {
         uiGameObject = new GameObject("UI Canvas");
-        uiGameObject.transform.parent = PlayerSpriteObject.transform;
+        uiGameObject.transform.parent = playerSpriteObject.transform;
         uiGameObject.transform.localPosition = Vector3.zero;
         uiGameObject.AddComponent<Canvas>();
         RectTransform canvasRT = uiGameObject.GetComponent<RectTransform>();
@@ -85,6 +90,17 @@ public class Player : MonoBehaviour
         hpText.verticalAlignment = VerticalAlignmentOptions.Middle;
         hpText.text = "0/0";
         return hpTextGameObject;
+    }
+    GameObject CreateAPText()
+    {
+        apTextGameObject = new GameObject("AP Text");
+        apTextGameObject.transform.parent = uiGameObject.transform;
+        apTextGameObject.transform.localPosition = new Vector3(0f, -1f, 0f);
+        apText = apTextGameObject.AddComponent<TextMeshPro>();
+        apText.horizontalAlignment = HorizontalAlignmentOptions.Center;
+        apText.verticalAlignment = VerticalAlignmentOptions.Middle;
+        apText.text = "0/0";
+        return apTextGameObject;
     }
     GameObject CreateCardBar()
     {
@@ -114,6 +130,7 @@ public class Player : MonoBehaviour
         CreateUIObject();
         CreateHPText();
         CreateCardBar();
+        CreateAPText();
     }
     public void PrepareHandBeforeBattle()
     {
@@ -310,6 +327,7 @@ public class Player : MonoBehaviour
                 hand[i].card.cardObject.transform.localScale = new Vector3(0.5f, 0.5f);
                 hand[i].card.cardObject.transform.parent = Hand.transform;
                 hand[i].card.cardMover.rotateTo = new Vector3(0f,0f,-((((maxAngle * 2) / hand.Count) * (i + 0.5f)) - maxAngle));
+                hand[i].card.SetSortingOrder(i * 2);
             }
         }
     }
@@ -390,6 +408,10 @@ public class Player : MonoBehaviour
     public void UpdateHpBar()
     {
         hpText.text = health + "/" + data.healthMax;
+    }
+    public void UpdateApDisplay()
+    {
+        apText.text = actionPoints + "/" + data.actionPointsMax;
     }
     public void UpdateCardBar(float amount)
     {

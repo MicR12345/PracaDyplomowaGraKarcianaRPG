@@ -29,6 +29,7 @@ public class Enemy
     public Slider initiativeSlider;
 
     public Sprite enemySprite;
+    public List<Sprite> enemySpriteList;
 
     public BattleManager battleManager;
 
@@ -62,6 +63,9 @@ public class Enemy
         spriteObject.transform.localPosition = Vector3.zero;
         SpriteRenderer spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = sprite;
+        SpriteAnimator spriteAnimator = spriteObject.AddComponent<SpriteAnimator>();
+        spriteAnimator.setupSprites(spriteRenderer, enemySpriteList, "idle", 1f);
+        spriteAnimator.startAnimation();
         BoxCollider collider = spriteObject.AddComponent<BoxCollider>();
         collider.size = new Vector3(12f, 39f, 0.2f);
         spriteObject.tag = "enemy_sprite";
@@ -135,6 +139,18 @@ public class Enemy
         cardSkills = _cardSkills;
 
         enemySprite = sprite;
+        deck = new List<DeckCard>();
+        activeEffects = new List<Effect>();
+    }
+    public Enemy(string _name, float _healthMax, float _spellDuration, List<string> _cardSkills, List<Sprite> sprites)
+    {
+        name = _name;
+        health = _healthMax;
+        healthMax = _healthMax;
+        spellDuration = _spellDuration;
+        cardSkills = _cardSkills;
+
+        enemySpriteList = sprites;
         deck = new List<DeckCard>();
         activeEffects = new List<Effect>();
     }

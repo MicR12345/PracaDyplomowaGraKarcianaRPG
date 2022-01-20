@@ -71,7 +71,7 @@ public class CardLibrary : MonoBehaviour
             card.Close();
             foreach(CardData i in loaded.cards)
             {
-                Card karta = new Card(i.name, i.effect, i.tag);
+                Card karta = new Card(i.name,i.cost , i.effect, i.tag);
                 Texture2D texture2D = new Texture2D(1, 1);
                 byte[] bytes = File.ReadAllBytes(Application.dataPath + "/" + i.path + i.name + ".png");
                 texture2D.LoadImage(bytes);

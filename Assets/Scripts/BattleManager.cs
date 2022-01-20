@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -17,8 +18,6 @@ public class BattleManager : MonoBehaviour
 
     List<float> enemyTimers;
 
-    public GameObject Background;
-    public GameObject GameLight;
     public Camera GameCamera;
     public PointerControl pointerControl;
     public List<float> enenmyTimers;
@@ -34,6 +33,8 @@ public class BattleManager : MonoBehaviour
     public Player player;
 
     public Sprite debugPlayerSprite;
+    public List<Sprite> playerIdleSprite;
+    public List<Sprite> playerAttackSprites;
 
     public Vector2 playerPosition;
 
@@ -84,12 +85,11 @@ public class BattleManager : MonoBehaviour
         playerObject.transform.parent = this.gameObject.transform;
         playerObject.transform.localPosition = Vector3.zero;
         player = playerObject.AddComponent<Player>();
-        player.PlayerObjectSetup(this,gameManager, debugPlayerSprite,playerPosition);
+        player.PlayerObjectSetup(this,gameManager, playerIdleSprite,playerPosition);
 
         player.health = player.data.healthMax;
         player.actionPoints = player.data.actionPointsMax;
     }
-
     void PlaceEnemies()
     {
         for (int i = 0; i < enemies.Count; i++)
@@ -127,11 +127,13 @@ public class BattleManager : MonoBehaviour
     }
     public void CardWasMovedOntoEnemy(DeckCard card,Enemy enemy)
     {
-        if (!enemy.isDead)
+        if (!enemy.isDead && player.actionPoints>= card.card.cost)
         {
-            Debug.Log(enemy.health);
+            player.actionPoints = player.actionPoints - card.card.cost;
+            player.UpdateApDisplay();
             ApplyCard(card, enemy);
             player.CheckForCardRemoval();
+            player.spriteAnimator.PlayOnce(playerAttackSprites, 0.1f);
         }
         else
         {
@@ -219,6 +221,7 @@ public class BattleManager : MonoBehaviour
                 {
                     player.actionPoints = player.data.actionPointsMax;
                 }
+                player.UpdateApDisplay();
             }
             else
             {

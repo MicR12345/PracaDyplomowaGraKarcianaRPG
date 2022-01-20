@@ -16,6 +16,7 @@ public class PointerControl : MonoBehaviour
     RaycastHit raycastHit;
 
     GameObject grabbedCard;
+    CardHandle grabbedCardHandle;
 
     public BattleManager battleManager;
     void Start()
@@ -34,6 +35,7 @@ public class PointerControl : MonoBehaviour
     private void Cancel_performed(InputAction.CallbackContext obj)
     {
         grabbedCard = null;
+        grabbedCardHandle = null;
     }
 
     private void OnClickPerformed(InputAction.CallbackContext obj)
@@ -44,7 +46,8 @@ public class PointerControl : MonoBehaviour
             Physics.Raycast(mouseWorldPosition, new Vector3(0f, 0f, 1f), out raycastHit, 10f);
             if (raycastHit.collider != null && raycastHit.collider.CompareTag("card"))
             {
-                grabbedCard = raycastHit.collider.gameObject.transform.parent.gameObject;   
+                grabbedCard = raycastHit.collider.gameObject.transform.parent.gameObject;
+                grabbedCardHandle = grabbedCard.GetComponent<CardHandle>();
             }
             else
             {
@@ -59,9 +62,8 @@ public class PointerControl : MonoBehaviour
                 Physics.Raycast(grabbedCard.transform.position, new Vector3(0f, 0f, 1f), out raycastHit, 10f);
                 if (raycastHit.collider != null && raycastHit.collider.CompareTag("enemy_sprite"))
                 {
-                    CardHandle cardHandle = grabbedCard.GetComponent<CardHandle>();
                     EnemyHandle enemyHandle = raycastHit.collider.gameObject.transform.parent.gameObject.GetComponent<EnemyHandle>();
-                    battleManager.CardWasMovedOntoEnemy(cardHandle.card,enemyHandle.enemy);
+                    battleManager.CardWasMovedOntoEnemy(grabbedCardHandle.card,enemyHandle.enemy);
                 }
                 grabbedCard = null;
             }
@@ -76,6 +78,7 @@ public class PointerControl : MonoBehaviour
         mouseWorldPosition = mainCamera.ScreenToWorldPoint(mousePosition);
         if (grabbedCard != null)
         {
+            grabbedCardHandle.card.card.SetSortingOrder(10000);
             FancyCardMover fancyCardMover = grabbedCard.GetComponent<FancyCardMover>();
             fancyCardMover.moveCardTo = new Vector3(mouseWorldPosition.x, mouseWorldPosition.y, grabbedCard.transform.position.z);
             fancyCardMover.rotateTo = Vector3.zero;

@@ -18,7 +18,9 @@ public class Card : Action
     GameObject borderObject;
     GameObject uiGameObject;
     GameObject descriptionTextGameObject;
+    GameObject costTextGameObject;
 
+    TextMeshPro costText;
     TextMeshPro descriptionText;
 
     BoxCollider2D boxCollider;
@@ -39,6 +41,7 @@ public class Card : Action
     {
         CreateUIObject();
         CreateDescriptionText();
+        CreateCostText();
     }
     public GameObject CreateCardInstance(bool prototype = false)
     {
@@ -69,6 +72,13 @@ public class Card : Action
         borderRenderer.sortingOrder = 1;
         borderObject.AddComponent<BoxCollider>();
     }
+    public void SetSortingOrder(int number)
+    {
+        spriteRenderer.sortingOrder = number;
+        borderRenderer.sortingOrder = number + 1;
+        costText.sortingOrder = number + 2;
+        descriptionText.sortingOrder = number + 2;
+    }
     GameObject CreateUIObject()
     {
         uiGameObject = new GameObject("UI Canvas");
@@ -92,6 +102,19 @@ public class Card : Action
         descriptionText.text = "Something went wrong";
         RectTransform rectTransform = descriptionTextGameObject.GetComponent<RectTransform>();
         rectTransform.sizeDelta = new Vector2(25f, 18f);
+        return descriptionTextGameObject;
+    }
+    GameObject CreateCostText()
+    {
+        costTextGameObject = new GameObject("Cost Text");
+        costTextGameObject.transform.parent = uiGameObject.transform;
+        costTextGameObject.transform.localPosition = new Vector3(0f, 0f, 0f);
+        costText = costTextGameObject.AddComponent<TextMeshPro>();
+        costText.horizontalAlignment = HorizontalAlignmentOptions.Center;
+        costText.verticalAlignment = VerticalAlignmentOptions.Middle;
+        costText.sortingOrder = 15;
+        costText.color = Color.cyan;
+        costText.text = cost.ToString();
         return descriptionTextGameObject;
     }
     public Tag FindCardTag(string name)
@@ -129,6 +152,10 @@ public class Card : Action
         description = newDescription;
         descriptionText.text = description;
     }
+    public void UpdateCost()
+    {
+        costText.text = cost.ToString();
+    }
     public override void UpgradeCard()
     {
         throw new System.NotImplementedException();
@@ -137,11 +164,12 @@ public class Card : Action
     {
         throw new System.NotImplementedException();
     }
-    public Card(string _name,List<Effect> _effects,List<Tag> _tags)
+    public Card(string _name,int _cost,List<Effect> _effects,List<Tag> _tags)
     {
         name = _name;
         effects = _effects;
         tags = _tags;
+        cost = _cost;
     }
     public Card Clone()
     {

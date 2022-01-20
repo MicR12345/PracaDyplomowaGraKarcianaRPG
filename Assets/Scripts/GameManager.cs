@@ -77,8 +77,10 @@ public class GameManager : MonoBehaviour
 
     public Sprite worldMapSprite;
 
-    public Sprite siegedIcon;
-    public Sprite defeatedIcon;
+    public Sprite siegedIconSprite;
+    public Sprite defeatedIconSprite;
+    public Sprite visitedCheckmarkSprite;
+    public Sprite playerLocationSprite;
     GameObject cardLibraryGO;
     CardLibrary cardLibrary;
     GameObject enemyLibraryGO;
@@ -90,6 +92,8 @@ public class GameManager : MonoBehaviour
     Event currentEvent;
 
     public PlayerData player;
+    static public Vector3 playerMarkerOffSet = new Vector3(0f,1.5f,-1f);
+    GameObject playerMarker;
 
     List<WorldMapNode> siegedLocations;
 
@@ -103,8 +107,9 @@ public class GameManager : MonoBehaviour
     }
     public void MovePlayer(WorldMapNode node)
     {
-        playerPosition.visited = true;
+        playerPosition.SetAsVisited();
         playerPosition = node;
+        MovePlayerMark();
         if (playerPosition.type!="EnemyCastle")
         {
             if (!playerPosition.visited)
@@ -163,7 +168,7 @@ public class GameManager : MonoBehaviour
             }
         }
         ProgressSieges();
-        playerPosition.visited = true;
+        playerPosition.SetAsVisited();
         Debug.Log(player.deck.Count);
         SaveManager.SaveGame(worldMap, worldDecoratorArray, siegedLocations, player, playerPosition);
         //Pinezka gdzie gracz
@@ -241,6 +246,18 @@ public class GameManager : MonoBehaviour
     {
         worldMapObject.SetActive(false);
         SceneManager.LoadScene("Game");
+    }
+    void CreatePlayerMark()
+    {
+        playerMarker = new GameObject("Player Marker");
+        playerMarker.transform.parent = worldMapObject.transform;
+        playerMarker.transform.position = playerPosition.gameObject.transform.position + playerMarkerOffSet;
+        SpriteRenderer spriteRenderer = playerMarker.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = playerLocationSprite;
+    }
+    void MovePlayerMark()
+    {
+        playerMarker.transform.position = playerPosition.gameObject.transform.position + playerMarkerOffSet;
     }
     void GenerateWorldMap(int nodeCount)
     {
@@ -843,7 +860,7 @@ public class GameManager : MonoBehaviour
             player = new PlayerData(saveGameData.playerSaveData, cardLibrary);
             playerPosition = worldMap[saveGameData.playerSaveData.playerLocation];
         }
-
+        CreatePlayerMark();
 
         SceneManager.LoadScene("World");
 
@@ -863,6 +880,8 @@ public class WorldMapNode
     SpriteRenderer spriteRenderer;
     GameObject siegeIconObject;
     SpriteRenderer siegeIconRenderer;
+    GameObject visitedIconObject;
+    SpriteRenderer visitedIconRenderer;
 
     public int siegeTime;
 
@@ -870,6 +889,8 @@ public class WorldMapNode
     public bool visited = false;
 
     public List<int> loadedConnections;
+
+    Vector3 checkMarkOffset;
     public WorldMapNode(GameManager _gameManager,string _name,string _type,bool smoothing = true)
     {
         gameManager = _gameManager;
@@ -928,6 +949,13 @@ public class WorldMapNode
         siegeIconObject.transform.parent = gameObject.transform;
         siegeIconObject.transform.localPosition = new Vector3(0f, 0f, 0f);
         siegeIconRenderer = siegeIconObject.AddComponent<SpriteRenderer>();
+
+        visitedIconObject = new GameObject("VisitedIcon");
+        visitedIconObject.transform.parent = gameObject.transform;
+        visitedIconObject.transform.localPosition = checkMarkOffset;
+        visitedIconRenderer = visitedIconObject.AddComponent<SpriteRenderer>();
+        visitedIconRenderer.sprite = gameManager.visitedCheckmarkSprite;
+        visitedIconObject.SetActive(false);
     }
     public WorldMapNode(GameManager _gameManager,SaveManager.WorldMapNodeData worldMapNodeData)
     {
@@ -960,6 +988,16 @@ public class WorldMapNode
         siegeIconObject.transform.parent = gameObject.transform;
         siegeIconObject.transform.localPosition = new Vector3(0f, 0f, 0f);
         siegeIconRenderer = siegeIconObject.AddComponent<SpriteRenderer>();
+
+        visitedIconObject = new GameObject("VisitedIcon");
+        visitedIconObject.transform.parent = gameObject.transform;
+        visitedIconObject.transform.localPosition = checkMarkOffset;
+        visitedIconRenderer = visitedIconObject.AddComponent<SpriteRenderer>();
+        visitedIconRenderer.sprite = gameManager.visitedCheckmarkSprite;
+        if (!visited)
+        {
+            visitedIconObject.SetActive(false);
+        } 
     }
 
     void SetSprite()
@@ -967,26 +1005,32 @@ public class WorldMapNode
         if (type == "EnemyCastle")
         {
             spriteRenderer.sprite = gameManager.enemyCastleSprite;
+            checkMarkOffset = new Vector3(3f, -1f, 0f);
         }
         else if (type == "Capitol")
         {
             spriteRenderer.sprite = gameManager.capitolSprite;
+            checkMarkOffset = new Vector3(2f, -1f, 0f);
         }
         else if (type == "City")
         {
             spriteRenderer.sprite = gameManager.citySprite;
+            checkMarkOffset = new Vector3(1f, -0.75f, 0f);
         }
         else if (type == "Village")
         {
             spriteRenderer.sprite = gameManager.villageSprite;
+            checkMarkOffset = new Vector3(1.5f, -1f, 0f);
         }
         else if (type == "Fortress")
         {
             spriteRenderer.sprite = gameManager.fortressSprite;
+            checkMarkOffset = new Vector3(1f, -1f, 0f);
         }
         else if (type == "AcientRuins")
         {
             spriteRenderer.sprite = gameManager.ruinsSprite;
+            checkMarkOffset = new Vector3(1.5f, -1f, 0f);
         }
     }
     public void PlaceRandomlyWithinBounds(Vector3 boundsStart,Vector3 boundsEnd)
@@ -1013,14 +1057,19 @@ public class WorldMapNode
     }
     public void StartSiege()
     {
-        siegeIconRenderer.sprite = gameManager.siegedIcon;
+        siegeIconRenderer.sprite = gameManager.siegedIconSprite;
     }
     public void UpdateSiegeComponents()
     {
         if (siegeTime<1)
         {
-            siegeIconRenderer.sprite = gameManager.defeatedIcon;
+            siegeIconRenderer.sprite = gameManager.defeatedIconSprite;
         }
+    }
+    public void SetAsVisited()
+    {
+        visited = true;
+        visitedIconObject.SetActive(true);
     }
 }
 public class WorldMapNodeHandle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler ,IPointerDownHandler, IPointerUpHandler

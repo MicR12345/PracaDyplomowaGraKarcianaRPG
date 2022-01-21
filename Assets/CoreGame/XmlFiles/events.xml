@@ -1,110 +1,155 @@
 <?xml version="1.0"?>
 <EventList>
 <events>
+		<event>
+		<name>Przygoda się rozpoczyna</name>
+		<description>Przygoda się rozpoczyna</description>
+		<type>Start</type>
+		<path>/CoreGame/EventGFX/Daleki Przyjaciel.png</path>
+		<choices>
+			<choice>
+				<text>Wyrusz w drogę</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+						<name>RandomCardR0</name>
+						<value>5</value>
+					</tag>
+				</tags>
+			</choice>
+		</choices>
+		</event>
+		<event>
+		<name>Daleki Przyjaciel</name>
+		<description>Spotykasz znanego Ci przyjaciela, może ma on coś dla Ciebie?</description>
+		<type>Any</type>
+		<path>/CoreGame/EventGFX/Daleki Przyjaciel.png</path>
+		<choices>
+			<choice>
+				<text>Popros o jakies wsparcie.</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+						<name>IncreaseMaxHp</name>
+						<value>5</value>
+					</tag>
+				</tags>
+			</choice>
+			<choice>
+				<text>Zapytaj o karty.</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+						<name>RandomCardR1</name>
+						<value>1</value>
+					</tag>
+				</tags>
+			</choice>
+		</choices>
+		</event>
 	<event>
-		<name>Daleki Przyjaciel</name>
-		<description>Spotykasz nieznanego Ci przyjaciela, może ma on coś dla Ciebie?</description>
-		<type>Village</type>
+		<name>Trwajace Oblezenie</name>
+		<description>Przybywasz ale w te miejsce jest obecnie oblężane</description>
+		<type>Siege</type>
+		<path>/CoreGame/EventGFX/Daleki Przyjaciel.png</path>
 		<choices>
 			<choice>
-				<text>Popros o jakies wsparcie.</text>
+				<text>Wspomóż w walce</text>
 				<addCards>
-					<card></card>
 				</addCards>
 				<tags>
-					<name></name>
-					<value></value>
+					<tag>
+						<name>BattleRandom</name>
+						<value>3</value>
+					</tag>
 				</tags>
 			</choice>
 			<choice>
-				<text></text>
+				<text>Ucieknij</text>
 				<addCards>
-					<card></card>
 				</addCards>
 				<tags>
-					<name></name>
-					<value></value>
 				</tags>
 			</choice>
 		</choices>
 	</event>
 		<event>
-		<name>Daleki Przyjaciel</name>
-		<description>Spotykasz nieznanego Ci przyjaciela, może ma on coś dla Ciebie?</description>
-		<type>Fortress</type>
+		<name>Zgliszcza</name>
+		<description>Przybywasz, ale z tego miejsca pozostały już tylko ruiny, a wszędzie można znaleźć wrogów</description>
+		<type>Defeated</type>
+		<path>/CoreGame/EventGFX/Daleki Przyjaciel.png</path>
 		<choices>
 			<choice>
-				<text>Popros o jakies wsparcie.</text>
+				<text>Walcz</text>
 				<addCards>
-					<card></card>
 				</addCards>
 				<tags>
-					<name></name>
-					<value></value>
+					<tag>
+						<name>BattleRandom</name>
+						<value>1</value>
+					</tag>
 				</tags>
 			</choice>
 			<choice>
-				<text></text>
+				<text>Ucieknij</text>
 				<addCards>
-					<card></card>
 				</addCards>
 				<tags>
-					<name></name>
-					<value></value>
 				</tags>
 			</choice>
 		</choices>
 	</event>
-		<event>
-		<name>Daleki Przyjaciel</name>
-		<description>Spotykasz nieznanego Ci przyjaciela, może ma on coś dla Ciebie?</description>
-		<type>City</type>
+	<event>
+		<name>Finał</name>
+		<description>Nadszedł czas, by blah blah blah</description>
+		<type>Finale</type>
+		<path>/CoreGame/EventGFX/Daleki Przyjaciel.png</path>
 		<choices>
 			<choice>
-				<text>Popros o jakies wsparcie.</text>
+				<text>Ostateczna walka</text>
 				<addCards>
-					<card></card>
 				</addCards>
 				<tags>
-					<name></name>
-					<value></value>
+				<tag>
+					<name>FinalBoss</name>
+					<value>-1</value>
+				</tag>
 				</tags>
 			</choice>
 			<choice>
-				<text></text>
+				<text>Ostateczna walka</text>
 				<addCards>
-					<card></card>
 				</addCards>
 				<tags>
-					<name></name>
-					<value></value>
-				</tags>
-			</choice>
-		</choices>
-	</event>
-		<event>
-		<name>Daleki Przyjaciel</name>
-		<description>Spotykasz nieznanego Ci przyjaciela, może ma on coś dla Ciebie?</description>
-		<type>AcientRuins</type>
-		<choices>
-			<choice>
-				<text>Popros o jakies wsparcie.</text>
-				<addCards>
-					<card></card>
-				</addCards>
-				<tags>
-					<name></name>
-					<value></value>
+				<tag>
+					<name>FinalBoss</name>
+					<value>-1</value>
+				</tag>
 				</tags>
 			</choice>
 			<choice>
-				<text></text>
+				<text>Ostateczna walka</text>
 				<addCards>
-					<card></card>
 				</addCards>
 				<tags>
-					<name></name>
-					<value></value>
+				<tag>
+					<name>FinalBoss</name>
+					<value>-1</value>
+				</tag>
+				</tags>
+			</choice>
+			<choice>
+				<text>Ostateczna walka</text>
+				<addCards>
+				</addCards>
+				<tags>
+				<tag>
+					<name>FinalBoss</name>
+					<value>-1</value>
+				</tag>
 				</tags>
 			</choice>
 		</choices>

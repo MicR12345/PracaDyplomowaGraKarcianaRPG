@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Xml.Serialization;
 
 public class Event
 {
@@ -22,7 +23,9 @@ public class Event
 public class ChoiceOption
 {
     public string text;
+    [XmlArray("addCards"),XmlArrayItem("card")]
     public List<string> addCards;
+    [XmlArray("tags"), XmlArrayItem("tag")]
     public List<Tag> tags;
 
     public ChoiceOption(string _text, List<string> _addCards, List<Tag> _tags)
@@ -36,5 +39,16 @@ public class ChoiceOption
         text = "";
         addCards = new List<string>();
         tags = new List<Tag>();
+    }
+    public Tag FindTag(string name)
+    {
+        foreach (Tag item in tags)
+        {
+            if (item.name == name)
+            {
+                return item;
+            }
+        }
+        return null;
     }
 }

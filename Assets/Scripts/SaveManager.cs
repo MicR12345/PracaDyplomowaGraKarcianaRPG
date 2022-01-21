@@ -27,6 +27,13 @@ public class SaveManager
         reader.Close();
         return saveGameData;
     }
+    public static void RemoveSavedGame()
+    {
+        if (File.Exists(Application.dataPath + "/save.savegame"))
+        {
+            File.Delete(Application.dataPath + "/save.savegame");
+        }
+    }
     [XmlRoot(ElementName = "SaveData")]
     public class SaveGameData
     {

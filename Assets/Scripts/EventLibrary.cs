@@ -15,6 +15,39 @@ public class EventLibrary : MonoBehaviour
         EventLoader eventLoader = new EventLoader("/CoreGame/XmlFiles/events.xml");
         eventList = new List<Event>(eventLoader.events);
     }
+    public Event FindEventByName(string name)
+    {
+        foreach (Event item in eventList)
+        {
+            if (item.name == name)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+    public Event FindFinalBossEvent()
+    {
+        foreach (Event item in eventList)
+        {
+            if (item.type == "Finale")
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+    public Event FindStartEvent()
+    {
+        foreach (Event item in eventList)
+        {
+            if (item.type == "Start")
+            {
+                return item;
+            }
+        }
+        return null;
+    }
     [XmlRoot(ElementName = "EventList")]
     public class Events
     {
@@ -30,6 +63,7 @@ public class EventLibrary : MonoBehaviour
         public string name;
         public string description;
         public string type;
+        public string path;
         [XmlArray("choices"), XmlArrayItem("choice")]
         public List<ChoiceOption> choices;
         public EventData()
@@ -59,9 +93,9 @@ public class EventLibrary : MonoBehaviour
             {
                 Texture2D texture2D = new Texture2D(1, 1);
                 byte[] bytes;
-                if (File.Exists(Application.dataPath + "/CoreGame/EventGFX/" + i.name + ".png"))
+                if (File.Exists(Application.dataPath + i.path))
                 {
-                    bytes = File.ReadAllBytes(Application.dataPath + "/CoreGame/EventGFX/" + i.name + ".png");
+                    bytes = File.ReadAllBytes(Application.dataPath + i.path);
                 }
                 else
                 {

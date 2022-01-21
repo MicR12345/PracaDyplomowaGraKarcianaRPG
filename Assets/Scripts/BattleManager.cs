@@ -74,7 +74,7 @@ public class BattleManager : MonoBehaviour
 
         player.actionPoints = player.data.actionPointsMax;
 
-        CheatGiveDebugCardsToDeck(10);
+        //CheatGiveDebugCardsToDeck(10);
         player.PrepareHandBeforeBattle();
         player.DealAFullHand();
         player.SetupCardLocation();
@@ -179,6 +179,7 @@ public class BattleManager : MonoBehaviour
     }
     void OnBattleWon()
     {
+        pointerControl.UnRegisterFromInput();
         gameManager.worldMapObject.SetActive(true);
         SceneManager.LoadScene("World");
     }
@@ -275,9 +276,10 @@ public class BattleManager : MonoBehaviour
     {
         for (int i = 0; i < 10; i++)
         {
-            player.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
+            player.data.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
         }
     }
+    
     /*void CheatSpawnDebugEnemies(int count)
     {
         for (int i = 0; i < count; i++)

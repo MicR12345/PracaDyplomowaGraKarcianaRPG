@@ -27,21 +27,6 @@ public class GameManager : MonoBehaviour
 
     static float minSmoothingDistance = 5f;
 
-    static int defaultBattleChance = 40;
-    static int defaultEventChance = 40;
-
-    static int villageBattleChance = 40;
-    static int villageEventChance = 40;
-
-    static int cityBattleChance = 40;
-    static int cityEventChance = 40;
-
-    static int fortressBattleChance = 40;
-    static int fortressEventChance = 40;
-
-    static int ruinsBattleChance = 40;
-    static int ruinsEventChance = 40;
-
     static Vector3 worldBoundsStart = new Vector3(-30f,-23f,0f);
     static Vector3 worldBoundsEnd = new Vector3(30f, 15f, 0f);
 
@@ -98,6 +83,7 @@ public class GameManager : MonoBehaviour
     List<WorldMapNode> siegedLocations;
 
     public GameObject worldMapObject;
+    public GameObject miscObject;
     void StartSiege(WorldMapNode node)
     {
         if (!siegedLocations.Contains(node))
@@ -113,60 +99,26 @@ public class GameManager : MonoBehaviour
         MovePlayerMark();
         if (playerPosition.type!="EnemyCastle")
         {
-            if (!playerPosition.visited)
+            if (!playerPosition.visited && playerPosition.siegeTime>0 && !siegedLocations.Contains(playerPosition))
             {
-                int maxRoll = 0;
-                int battleChance = 0;
-                int eventChance = 0;
-                if (playerPosition.type == "Village")
-                {
-                    maxRoll = villageBattleChance + villageEventChance;
-                    battleChance = villageBattleChance;
-                    eventChance = villageEventChance;
-                }
-                else if (playerPosition.type == "City")
-                {
-                    maxRoll = cityBattleChance + cityEventChance;
-                    battleChance = cityBattleChance;
-                    eventChance = cityEventChance;
-                }
-                else if (playerPosition.type == "AcientRuins")
-                {
-                    maxRoll = ruinsBattleChance + ruinsEventChance;
-                    battleChance = ruinsBattleChance;
-                    eventChance = ruinsEventChance;
-                }
-                else if (playerPosition.type == "Fortress")
-                {
-                    maxRoll = fortressBattleChance + fortressEventChance;
-                    battleChance = fortressBattleChance;
-                    eventChance = fortressEventChance;
-                }
-                else
-                {
-                    maxRoll = defaultBattleChance + defaultEventChance;
-                    battleChance = defaultBattleChance;
-                    eventChance = defaultEventChance;
-                }
-                int roll = UnityEngine.Random.Range(0, maxRoll);
-                if (roll < battleChance)
-                {
-                    enemiesInBattle = new List<Enemy>();
-                    int rollEnemy = UnityEngine.Random.Range(0, enemyLibrary.enemyList.Count);
-                    enemiesInBattle.Add(enemyLibrary.enemyList[rollEnemy].Clone());
-                    BeginCombat();
-                }
-                else if (roll < battleChance + eventChance && roll >= battleChance)
-                {
                     RollEvent();
                     LaunchEvent();
-                }
-                else
-                {
-                    RollEvent();
-                    LaunchEvent();
-                }
             }
+            if (!playerPosition.visited && playerPosition.siegeTime > 0 && siegedLocations.Contains(playerPosition))
+            {
+                RollEventSiege();
+                LaunchEvent();
+            }
+            else if (!playerPosition.visited && playerPosition.siegeTime <= 0)
+            {
+                RollEventDefeated();
+                LaunchEvent();
+            }
+        }
+        else
+        {
+            currentEvent = eventLibrary.FindFinalBossEvent();
+            LaunchEvent();
         }
         ProgressSieges();
         playerPosition.SetAsVisited();
@@ -179,7 +131,35 @@ public class GameManager : MonoBehaviour
         List<Event> acceptableEvents = new List<Event>();
         foreach (Event i in eventLibrary.eventList)
         {
-            if (i.type == playerPosition.type)
+            if (i.type == playerPosition.type || i.type == "Any")
+            {
+                acceptableEvents.Add(i);
+            }
+        }
+        int rollEvent = UnityEngine.Random.Range(0, acceptableEvents.Count);
+
+        currentEvent = acceptableEvents[rollEvent];
+    }
+    void RollEventSiege()
+    {
+        List<Event> acceptableEvents = new List<Event>();
+        foreach (Event i in eventLibrary.eventList)
+        {
+            if (i.type == "Siege")
+            {
+                acceptableEvents.Add(i);
+            }
+        }
+        int rollEvent = UnityEngine.Random.Range(0, acceptableEvents.Count);
+
+        currentEvent = acceptableEvents[rollEvent];
+    }
+    void RollEventDefeated()
+    {
+        List<Event> acceptableEvents = new List<Event>();
+        foreach (Event i in eventLibrary.eventList)
+        {
+            if (i.type == "Defeated")
             {
                 acceptableEvents.Add(i);
             }
@@ -242,6 +222,66 @@ public class GameManager : MonoBehaviour
                 player.deck.Add(new DeckCard(cardLibrary.FindCardByName(item)));
             }
         }
+        Tag BattleRandom = choiceOption.FindTag("BattleRandom");
+        if (BattleRandom != null)
+        {
+            enemiesInBattle = new List<Enemy>();
+            for (int i = 0; i < BattleRandom.value; i++)
+            {
+                enemiesInBattle.Add(enemyLibrary.PickRandomEnemy());
+            }
+            BeginCombat();
+        }
+        Tag FinalBoss = choiceOption.FindTag("FinalBoss");
+        if (FinalBoss != null)
+        {
+            enemiesInBattle = new List<Enemy>();
+            enemiesInBattle.Add(enemyLibrary.PickEnemyByName("FinalBoss"));
+            BeginCombat();
+        }
+        Tag RandomCardR0 = choiceOption.FindTag("RandomCardR0");
+        if (RandomCardR0 != null)
+        {
+            for (int i = 0; i < RandomCardR0.value; i++)
+            {
+                player.AddToPlayerDeck(new DeckCard(cardLibrary.FindRandomCardByRarity(0)));
+            } 
+        }
+        Tag RandomCardR1 = choiceOption.FindTag("RandomCardR1");
+        if (RandomCardR1!=null)
+        {
+            for (int i = 0; i < RandomCardR1.value; i++)
+            {
+                player.AddToPlayerDeck(new DeckCard(cardLibrary.FindRandomCardByRarity(1)));
+            }
+        }
+        Tag RandomCardR2 = choiceOption.FindTag("RandomCardR2");
+        if (RandomCardR2 != null)
+        {
+            for (int i = 0; i < RandomCardR2.value; i++)
+            {
+                player.AddToPlayerDeck(new DeckCard(cardLibrary.FindRandomCardByRarity(2)));
+            }
+        }
+        Tag RandomCardR3 = choiceOption.FindTag("RandomCardR3");
+        if (RandomCardR3 != null)
+        {
+            for (int i = 0; i < RandomCardR3.value; i++)
+            {
+                player.AddToPlayerDeck(new DeckCard(cardLibrary.FindRandomCardByRarity(3)));
+            }
+        }
+        Tag IncreaseMaxHp = choiceOption.FindTag("IncreaseMaxHp");
+        if (IncreaseMaxHp != null)
+        {
+            player.healthMax = player.healthMax + IncreaseMaxHp.value;
+        }
+        Tag IncreaseMaxAp = choiceOption.FindTag("IncreaseMaxAp");
+        if (IncreaseMaxAp != null)
+        {
+            player.actionPointsMax = player.actionPointsMax + Mathf.FloorToInt(IncreaseMaxAp.value);
+        }
+
     }
     void BeginCombat()
     {
@@ -730,6 +770,18 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        if (worldMap[1].siegeTime<1)
+        {
+            LoseGame();
+        }
+    }
+    public void LoseGame()
+    {
+        GameObject.Destroy(miscObject);
+        GameObject.Destroy(worldMapObject);
+        SaveManager.RemoveSavedGame();
+        SceneManager.LoadScene("LoseGame");
+        GameObject.Destroy(this.gameObject);
     }
     private void Start()
     {
@@ -793,6 +845,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Event library found with " + eventLibrary.eventList.Count + "events");
             }
         }
+        currentEvent = eventLibrary.FindStartEvent();
         if (!loadingSave)
         {
             if (worldMap == null)
@@ -863,10 +916,33 @@ public class GameManager : MonoBehaviour
             playerPosition = worldMap[saveGameData.playerSaveData.playerLocation];
         }
         CreatePlayerMark();
-
-        SceneManager.LoadScene("World");
-
+        //https://forum.unity.com/threads/stop-a-function-till-scene-is-loaded.546646/
+        newScene("World");
     }
+    public void newScene(string scene)
+    {
+        SceneManager.LoadScene(scene);
+
+        if (SceneManager.GetActiveScene().name != scene)
+        {
+            StartCoroutine(waitForSceneLoad(scene));
+        }
+    }
+
+    IEnumerator waitForSceneLoad(string scene)
+    {
+        while (SceneManager.GetActiveScene().name != scene)
+        {
+            yield return null;
+        }
+
+        // Do anything after proper scene has been loaded
+        if (SceneManager.GetActiveScene().name == scene)
+        {
+            LaunchEvent();
+        }
+    }
+
 }
 public class WorldMapNode
 {
@@ -952,7 +1028,10 @@ public class WorldMapNode
         siegeIconObject.transform.parent = gameObject.transform;
         siegeIconObject.transform.localPosition = siegeMarkOffset;
         siegeIconRenderer = siegeIconObject.AddComponent<SpriteRenderer>();
-
+        if (type == "EnemyCastle")
+        {
+            siegeIconObject.SetActive(false);
+        }
         visitedIconObject = new GameObject("VisitedIcon");
         visitedIconObject.transform.parent = gameObject.transform;
         visitedIconObject.transform.localPosition = checkMarkOffset;
@@ -991,7 +1070,10 @@ public class WorldMapNode
         siegeIconObject.transform.parent = gameObject.transform;
         siegeIconObject.transform.localPosition = siegeMarkOffset;
         siegeIconRenderer = siegeIconObject.AddComponent<SpriteRenderer>();
-
+        if (type == "EnemyCastle")
+        {
+            siegeIconObject.SetActive(false);
+        }
         visitedIconObject = new GameObject("VisitedIcon");
         visitedIconObject.transform.parent = gameObject.transform;
         visitedIconObject.transform.localPosition = checkMarkOffset;
@@ -1009,37 +1091,37 @@ public class WorldMapNode
         {
             spriteRenderer.sprite = gameManager.enemyCastleSprite;
             checkMarkOffset = new Vector3(3f, -1f, 0f);
-            siegeMarkOffset = new Vector3(0f,0f,0f);
+            siegeMarkOffset = new Vector3(3f,1f,-0.5f);
         }
         else if (type == "Capitol")
         {
             spriteRenderer.sprite = gameManager.capitolSprite;
             checkMarkOffset = new Vector3(2f, -1f, 0f);
-            siegeMarkOffset = new Vector3(0f, 0f, 0f);
+            siegeMarkOffset = new Vector3(2f, 3f, -0.5f);
         }
         else if (type == "City")
         {
             spriteRenderer.sprite = gameManager.citySprite;
             checkMarkOffset = new Vector3(1f, -0.75f, 0f);
-            siegeMarkOffset = new Vector3(0f, 0f, 0f);
+            siegeMarkOffset = new Vector3(1f, 2.25f, -0.5f);
         }
         else if (type == "Village")
         {
             spriteRenderer.sprite = gameManager.villageSprite;
             checkMarkOffset = new Vector3(1.5f, -1f, 0f);
-            siegeMarkOffset = new Vector3(0f, 0f, 0f);
+            siegeMarkOffset = new Vector3(1.15f, 2.7f, -0.5f);
         }
         else if (type == "Fortress")
         {
             spriteRenderer.sprite = gameManager.fortressSprite;
             checkMarkOffset = new Vector3(1f, -1f, 0f);
-            siegeMarkOffset = new Vector3(0f, 0f, 0f);
+            siegeMarkOffset = new Vector3(1f, 2f, -0.5f);
         }
         else if (type == "AcientRuins")
         {
             spriteRenderer.sprite = gameManager.ruinsSprite;
             checkMarkOffset = new Vector3(1.5f, -1f, 0f);
-            siegeMarkOffset = new Vector3(0f, 0f, 0f);
+            siegeMarkOffset = new Vector3(1.5f, 2f, -0.5f);
         }
     }
     public void PlaceRandomlyWithinBounds(Vector3 boundsStart,Vector3 boundsEnd)

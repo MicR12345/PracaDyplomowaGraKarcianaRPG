@@ -483,6 +483,7 @@ MonoBehaviour:
   visitedCheckmarkSprite: {fileID: 21300000, guid: 1288421f068a3f34d8bc65f14a285a9e, type: 3}
   playerLocationSprite: {fileID: 21300000, guid: 1ba709c6dbf059c4198a6a085c181ebc, type: 3}
   worldMapObject: {fileID: 0}
+  miscObject: {fileID: 1033563771}
 --- !u!114 &932929285
 MonoBehaviour:
   m_ObjectHideFlags: 0

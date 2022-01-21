@@ -31,4 +31,20 @@ public class PlayerData
             deck.Add(toBeAddedCard);
         }
     }
+    public void AddToPlayerDeck(DeckCard card)
+    {
+        if (deck.Count > deckSize)
+        {
+            Debug.LogError("More cards than possible in deck");
+        }
+        /*if (card.card.cardObject == null)
+        {
+            card.card.CreateCardInstance();
+        }
+        card.card.cardObject.SetActive(false);
+        CardHandle cardHandle = card.card.cardObject.AddComponent<CardHandle>();
+        cardHandle.card = card;*/
+        deck.Add(card);
+
+    }
 }

@@ -35,6 +35,30 @@ public class EnemyLibrary : MonoBehaviour
         enemyList = new List<Enemy>(enemyLoader.enemies);
 
     }
+    public Enemy PickRandomEnemy()
+    {
+        List<Enemy> applicableEnemies = new List<Enemy>();
+        foreach (Enemy item in enemyList)
+        {
+            if (item.name!="FinalBoss")
+            {
+                applicableEnemies.Add(item);
+            }
+        }
+        int random = UnityEngine.Random.Range(0, applicableEnemies.Count);
+        return applicableEnemies[random].Clone();
+    }
+    public Enemy PickEnemyByName(string name)
+    {
+        foreach (Enemy item in enemyList)
+        {
+            if (item.name == name)
+            {
+                return item.Clone();
+            }
+        }
+        return null;
+    }
     [XmlRoot(ElementName = "EnemyList")]
     public class Enemies
     {

@@ -164,12 +164,13 @@ public class Card : Action
     {
         throw new System.NotImplementedException();
     }
-    public Card(string _name,int _cost,List<Effect> _effects,List<Tag> _tags)
+    public Card(string _name,int _cost,int _rarity,List<Effect> _effects,List<Tag> _tags)
     {
         name = _name;
         effects = _effects;
         tags = _tags;
         cost = _cost;
+        rarity = _rarity;
     }
     public Card Clone()
     {

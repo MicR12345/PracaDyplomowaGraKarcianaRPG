@@ -27,6 +27,21 @@ public class CardLibrary : MonoBehaviour
         }
         return null;
     }
+    public Card FindRandomCardByRarity(int rarity)
+    {
+        List<Card> randomList = new List<Card>();
+        foreach (Card item in cards)
+        {
+            if (item.rarity == rarity) randomList.Add(item);
+        }
+        if (randomList.Count == 0)
+        {
+            Debug.LogError("No cards of rarity " + rarity + " found");
+            return null;
+        }
+        int random = UnityEngine.Random.Range(0,randomList.Count);
+        return randomList[random];
+    }
     public void DebugPrintAllCardsNames()
     {
         foreach (Card item in cards)
@@ -67,13 +82,21 @@ public class CardLibrary : MonoBehaviour
             XmlSerializer reader  = new XmlSerializer(typeof(Cards));
             TextReader card = new StringReader(cardList);
             Cards loaded = (Cards)reader.Deserialize(card);
-            
             card.Close();
             foreach(CardData i in loaded.cards)
             {
-                Card karta = new Card(i.name,i.cost , i.effect, i.tag);
+                Card karta = new Card(i.name,i.cost,i.rarity , i.effect, i.tag);
                 Texture2D texture2D = new Texture2D(1, 1);
-                byte[] bytes = File.ReadAllBytes(Application.dataPath + "/" + i.path + i.name + ".png");
+                byte[] bytes;
+                if (File.Exists(Application.dataPath + "/" + i.path + i.name + ".png"))
+                {
+                    bytes = File.ReadAllBytes(Application.dataPath + "/" + i.path + i.name + ".png");
+                }
+                else
+                {
+                    bytes = File.ReadAllBytes(Application.dataPath + "/" + i.path + "0_cardTest" + ".png");
+                }
+                
                 texture2D.LoadImage(bytes);
                 texture2D.filterMode = FilterMode.Point;
                 Sprite cardImage = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);

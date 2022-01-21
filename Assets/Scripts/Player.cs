@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
-
 public class Player : MonoBehaviour
 {
     public float health;
@@ -136,23 +135,6 @@ public class Player : MonoBehaviour
     {
         CreateNewCardStack();
         CreateInstancesOfCards();
-    }
-
-    public void AddToPlayerDeck(DeckCard card)
-    {
-        if (data.deck.Count>data.deckSize)
-        {
-            Debug.LogError("More cards than possible in deck");
-        }
-        /*if (card.card.cardObject == null)
-        {
-            card.card.CreateCardInstance();
-        }
-        card.card.cardObject.SetActive(false);
-        CardHandle cardHandle = card.card.cardObject.AddComponent<CardHandle>();
-        cardHandle.card = card;*/
-        data.deck.Add(card);
-
     }
     public void CreateInstancesOfCards()
     {
@@ -384,7 +366,8 @@ public class Player : MonoBehaviour
     {
         if (health <= 0)
         {
-            SceneManager.LoadScene("MainMenu");
+            battleManager.pointerControl.UnRegisterFromInput();
+            gameManager.LoseGame();
         }
     }
     public Effect CheckForEffect(string name)

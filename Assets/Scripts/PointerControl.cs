@@ -56,17 +56,14 @@ public class PointerControl : MonoBehaviour
         }
         else
         {
-            //TODO
-            if (grabbedCard!=null)
+            Physics.Raycast(grabbedCard.transform.position, new Vector3(0f, 0f, 1f), out raycastHit, 10f);
+            if (raycastHit.collider != null && raycastHit.collider.CompareTag("enemy_sprite"))
             {
-                Physics.Raycast(grabbedCard.transform.position, new Vector3(0f, 0f, 1f), out raycastHit, 10f);
-                if (raycastHit.collider != null && raycastHit.collider.CompareTag("enemy_sprite"))
-                {
-                    EnemyHandle enemyHandle = raycastHit.collider.gameObject.transform.parent.gameObject.GetComponent<EnemyHandle>();
-                    battleManager.CardWasMovedOntoEnemy(grabbedCardHandle.card,enemyHandle.enemy);
-                }
-                grabbedCard = null;
+                EnemyHandle enemyHandle = raycastHit.collider.gameObject.transform.parent.gameObject.GetComponent<EnemyHandle>();
+                battleManager.CardWasMovedOntoEnemy(grabbedCardHandle.card, enemyHandle.enemy);
             }
+            grabbedCard = null;
+
         }
     }
     // Update is called once per frame
@@ -92,8 +89,9 @@ public class PointerControl : MonoBehaviour
         }
 
     }
-    private void OnDrawGizmos()
+    public void UnRegisterFromInput()
     {
-        Gizmos.DrawLine(mouseWorldPosition, new Vector3(0f, 0f, 0f));
+        actions.UI.Click.performed -= OnClickPerformed;
+        actions.UI.Cancel.performed -= Cancel_performed;
     }
 }

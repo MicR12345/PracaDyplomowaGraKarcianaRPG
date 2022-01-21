@@ -72,7 +72,7 @@ public class Enemy
         spriteObject.tag = "enemy_sprite";
         return spriteObject;
     }
-    GameObject DmgAnimationStart(List<Sprite> sprite)
+    GameObject DmgAnimationStart(List<Sprite> sprite, Vector3 vector3)
     {
         List<Sprite> enemyAttackSprites = sprite;
         spriteObject = new GameObject("Sprite");
@@ -80,6 +80,7 @@ public class Enemy
         SpriteAnimator spriteAnimator = spriteObject.AddComponent <SpriteAnimator>();
         spriteAnimator.setupSprites(spriteRenderer, enemyAttackSprites, "idle", 1f);
         spriteAnimator.PlayOnceDMGAnimation(enemyAttackSprites, 0.05f);
+        spriteObject.transform.position = vector3 + new Vector3(0f,0f,-5f);
         return spriteObject;    
     }
     GameObject CreateUIObject()
@@ -141,9 +142,9 @@ public class Enemy
         CreateUIElements();
         
     }
-    public void CreateDMGAnimation(List<Sprite> enemyAttackAnimationSpriteList)
+    public void CreateDMGAnimation(List<Sprite> enemyAttackAnimationSpriteList, Vector3 vector3)
     {
-        DmgAnimationStart(enemyAttackAnimationSpriteList);
+        DmgAnimationStart(enemyAttackAnimationSpriteList, vector3);
     }
     public Enemy(string _name,float _healthMax, float _spellDuration, List<string> _cardSkills,Sprite sprite)
     {

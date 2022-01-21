@@ -28,6 +28,12 @@ public class SpriteAnimator : MonoBehaviour
         currentFrame = 0;
         startAnimationOnce(_animationSpeedPlayOnce);
     }
+    public void PlayOnceDMGAnimation(List<Sprite> _playOnceSprites, float _animationSpeedPlayOnce)
+    {
+        playOnceSprites = _playOnceSprites;
+        currentFrame = 0;
+        startAnimationDMGOnce(_animationSpeedPlayOnce);
+    }
     private IEnumerator startAnimationCRT()
     {
         continueAnimation = true;
@@ -64,6 +70,25 @@ public class SpriteAnimator : MonoBehaviour
         }
         continueAnimationOnce = false;
     }
+    private IEnumerator startOneAnimationCRT(float time)
+    {
+        continueAnimationOnce = true;
+        WaitForSeconds waitTime = new WaitForSeconds(time);
+        while (continueAnimationOnce)
+        {
+            displaySprite.sprite = playOnceSprites[currentFrame++];
+            if (currentFrame >= playOnceSprites.Count)
+            {
+                currentFrame = 0;
+                continueAnimationOnce = false;
+                GameObject.Destroy(this.gameObject);
+            }
+
+
+            yield return waitTime;
+        }
+        continueAnimationOnce = false;
+    }
     public void startAnimation()
     {
         StopAllCoroutines();
@@ -74,7 +99,11 @@ public class SpriteAnimator : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(startOneOffAnimationCRT(time));
     }
-
+    public void startAnimationDMGOnce(float time)
+    {
+        StopAllCoroutines();
+        StartCoroutine(startOneAnimationCRT(time));
+    }
     public void stopAnimation()
     {
         StopAllCoroutines();

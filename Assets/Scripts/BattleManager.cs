@@ -35,6 +35,7 @@ public class BattleManager : MonoBehaviour
     public Sprite debugPlayerSprite;
     public List<Sprite> playerIdleSprite;
     public List<Sprite> playerAttackSprites;
+    public List<Sprite> enemyAttackSprites;
 
     public Vector2 playerPosition;
 
@@ -233,6 +234,7 @@ public class BattleManager : MonoBehaviour
                 if (enemyTimers[i]<=0)
                 {
                     enemies[i].MakeAMove();
+                    enemies[i].CreateDMGAnimation(enemyAttackSprites);
                     enemyTimers[i] = enemies[i].spellDuration;
                     enemies[i].UpdateInitiativeBar(enemyTimers[i]);
                 }

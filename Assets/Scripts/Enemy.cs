@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -71,6 +72,16 @@ public class Enemy
         spriteObject.tag = "enemy_sprite";
         return spriteObject;
     }
+    GameObject DmgAnimationStart(List<Sprite> sprite)
+    {
+        List<Sprite> enemyAttackSprites = sprite;
+        spriteObject = new GameObject("Sprite");
+        SpriteRenderer spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
+        SpriteAnimator spriteAnimator = spriteObject.AddComponent <SpriteAnimator>();
+        spriteAnimator.setupSprites(spriteRenderer, enemyAttackSprites, "idle", 1f);
+        spriteAnimator.PlayOnceDMGAnimation(enemyAttackSprites, 0.05f);
+        return spriteObject;    
+    }
     GameObject CreateUIObject()
     {
         uiGameObject = new GameObject("UI Canvas");
@@ -129,6 +140,10 @@ public class Enemy
         enemyObject.transform.parent = battleManager.transform;
         CreateUIElements();
         
+    }
+    public void CreateDMGAnimation(List<Sprite> enemyAttackAnimationSpriteList)
+    {
+        DmgAnimationStart(enemyAttackAnimationSpriteList);
     }
     public Enemy(string _name,float _healthMax, float _spellDuration, List<string> _cardSkills,Sprite sprite)
     {
@@ -211,6 +226,8 @@ public class Enemy
     }
     public void MakeAMove()
     {
+        
+
         List<DeckCard> possibleCard = new List<DeckCard>();
         for (int i = 0; i < deck.Count; i++)
         {

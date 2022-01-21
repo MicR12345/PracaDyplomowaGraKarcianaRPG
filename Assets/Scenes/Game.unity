@@ -188,6 +188,12 @@ MonoBehaviour:
   - {fileID: 7421101790521894873, guid: e8d8cfa6c0bd4a84b8ec56439cb2ae36, type: 3}
   - {fileID: -6981625774021492059, guid: e8d8cfa6c0bd4a84b8ec56439cb2ae36, type: 3}
   - {fileID: -6446401974293219499, guid: e8d8cfa6c0bd4a84b8ec56439cb2ae36, type: 3}
+  enemyAttackSprites:
+  - {fileID: -6835173583506137934, guid: eaea3d607f6e4cf4db085802b252794a, type: 3}
+  - {fileID: -6445537751246730102, guid: eaea3d607f6e4cf4db085802b252794a, type: 3}
+  - {fileID: -1934205548259823669, guid: eaea3d607f6e4cf4db085802b252794a, type: 3}
+  - {fileID: -9076866070092474925, guid: eaea3d607f6e4cf4db085802b252794a, type: 3}
+  - {fileID: -4135272102373986999, guid: eaea3d607f6e4cf4db085802b252794a, type: 3}
   playerPosition: {x: -42, y: 0}
   enemyPositions:
   - {x: 25, y: 5}

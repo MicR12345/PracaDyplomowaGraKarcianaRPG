@@ -32,7 +32,8 @@ public class BattleManager : MonoBehaviour
     public List<Sprite> playerAttackSprites;
     public List<Sprite> enemyAttackSprites;
     public List<Sprite> playerAttackDMGSprites;
-
+    public Sprite backgroundFinalBossFight;
+    public Image BgImage;
     public Vector2 playerPosition;
 
     List<Enemy> enemies;
@@ -55,6 +56,10 @@ public class BattleManager : MonoBehaviour
     }
     void OnBattleStart()
     {
+        if(gameManager.bossFight == true)
+        {
+            BgImage.sprite = backgroundFinalBossFight;
+        }
         inBattle = true;
         if (player==null)
         {

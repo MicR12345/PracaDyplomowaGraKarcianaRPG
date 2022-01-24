@@ -165,7 +165,15 @@ public class BattleManager : MonoBehaviour
     {
         pointerControl.UnRegisterFromInput();
         gameManager.worldMapObject.SetActive(true);
-        SceneManager.LoadScene("World");
+        if (gameManager.bossFight)
+        {
+            gameManager.WinGame();
+        }
+        else
+        {
+            SceneManager.LoadScene("World");
+        }
+        
     }
     // Update is called once per frame
     void Update()

@@ -192,6 +192,18 @@ public class Enemy
             }
             health = health - damage;
         }
+        if(effect.name == "Ostatnia szansa")
+        {
+            if(battleManager.player.health < health)
+            {
+                health = health - battleManager.player.health;
+            }
+            else
+            {   
+                if(health + 10 < healthMax) { health = health + 10; }
+                else { health = healthMax; }
+            }
+        }
         CheckForDeath();
     }
     public void SetPosition(Vector2 position)

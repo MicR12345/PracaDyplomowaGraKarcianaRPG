@@ -21,6 +21,29 @@
 		</choices>
 		</event>
 		<event>
+			<name>Ostatnia szansa</name>
+			<description>Nieopodal ponurej wioski spotykasz specyficzne drzewo i ostatki po jego ofierze, możesz uszanować jej spokój, ale czy chcesz?</description>
+			<type>Village</type>
+			<path>/CoreGame/EventGFX/Ostatnia_szansa.png</path>
+			<choices>
+				<choice>
+					<text>Sprawdź co możesz znaleźć przy ofierze.</text>
+					<addCards>
+						<card>Ostatnia_szansa</card>
+					</addCards>
+					<tags>
+					</tags>
+				</choice>
+				<choice>
+					<text>Obejdź drzewo i skieruj się w dalszą podróż.</text>
+					<addCards>
+					</addCards>
+					<tags>
+					</tags>
+				</choice>
+			</choices>
+		</event>
+		<event>
 		<name>Daleki Przyjaciel</name>
 		<description>Spotykasz znanego Ci przyjaciela, może ma on coś dla Ciebie?</description>
 		<type>Any</type>

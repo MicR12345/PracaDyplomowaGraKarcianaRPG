@@ -99,7 +99,7 @@ public class CardLibrary : MonoBehaviour
                 
                 texture2D.LoadImage(bytes);
                 texture2D.filterMode = FilterMode.Point;
-                Sprite cardImage = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 15f);
+                Sprite cardImage = Sprite.Create(texture2D, new Rect(0.0f, 0.0f, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f), 5f);
                 karta.AddCardGFX(cardImage, borders[i.rarity]);
                 cards.Add(karta);
 

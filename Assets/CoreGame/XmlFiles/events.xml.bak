@@ -1,31 +1,223 @@
 <?xml version="1.0"?>
 <EventList>
 <events>
-	<event>
+		<event>
+		<name>Przygoda się rozpoczyna</name>
+		<description>Przygoda się rozpoczyna</description>
+		<type>Start</type>
+		<path>/CoreGame/EventGFX/Daleki Przyjaciel.png</path>
+		<choices>
+			<choice>
+				<text>Wyrusz w drogę</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+						<name>RandomCardR0</name>
+						<value>5</value>
+					</tag>
+				</tags>
+			</choice>
+		</choices>
+		</event>
+		<event>
+		<name>Ostatnia szansa</name>
+		<description>Nieopodal ponurej wioski spotykasz specyficzne drzewo i ostatki po jego ofierze, możesz uszanować jej spokój, ale czy chcesz?</description>
+		<type>Village</type>
+		<path>/CoreGame/EventGFX/Ostatnia_szansa.png</path>
+		<choices>
+			<choice>
+				<text>Sprawdź co możesz znaleźć przy ofierze.</text>
+				<addCards>
+					<card>Ostatnia_szansa</card>
+				</addCards>
+				<tags>
+				</tags>
+			</choice>
+			<choice>
+				<text>Obejdź drzewo i skieruj się w dalszą podróż.</text>
+				<addCards>
+				</addCards>
+				<tags>
+				</tags>
+			</choice>
+		</choices>
+		</event>
+		<event>
 		<name>Daleki Przyjaciel</name>
-		<description>Spotykasz nieznanego Ci przyjaciela, może ma on coś dla Ciebie?</description>
-		<type></type>
+		<description>Spotykasz znanego Ci przyjaciela, może ma on coś dla Ciebie?</description>
+		<type>Any</type>
+		<path>/CoreGame/EventGFX/Daleki Przyjaciel.png</path>
 		<choices>
 			<choice>
 				<text>Popros o jakies wsparcie.</text>
 				<addCards>
-					<card></card>
 				</addCards>
 				<tags>
-					<name></name>
-					<value></value>
+					<tag>
+						<name>IncreaseMaxHp</name>
+						<value>5</value>
+					</tag>
 				</tags>
 			</choice>
 			<choice>
-				<text></text>
+				<text>Zapytaj o karty.</text>
 				<addCards>
-					<card></card>
 				</addCards>
 				<tags>
-					<name></name>
-					<value></value>
+					<tag>
+						<name>RandomCardR1</name>
+						<value>1</value>
+					</tag>
 				</tags>
 			</choice>
+		</choices>
+		</event>
+				<event>
+		<name>Przyjazna Wioska</name>
+		<description>Spędzasz dzień w przyjaznej wiosce, mieszkańcy poznając twój cel oferują ci wsparcie</description>
+		<type>Village</type>
+		<path>/CoreGame/EventGFX/Wioska.png</path>
+		<choices>
+			<choice>
+				<text>Wypocznij w karczmie.</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+						<name>IncreaseMaxAp</name>
+						<value>1</value>
+					</tag>
+				</tags>
+			</choice>
+			<choice>
+				<text>Poproś o karty.</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+						<name>RandomCardR0</name>
+						<value>2</value>
+					</tag>
+				</tags>
+			</choice>
+			<choice>
+				<text>Poszukaj medycznych ziół</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+						<name>BattleRandom</name>
+						<value>2</value>
+					</tag>
+					<tag>
+						<name>RandomCardR0</name>
+						<value>1</value>
+					</tag>
+				</tags>
+			</choice>
+		</choices>
+		</event>
+	<event>
+		<name>Trwajace Oblezenie</name>
+		<description>Przybywasz ale w te miejsce jest obecnie oblężane</description>
+		<type>Siege</type>
+		<path>/CoreGame/EventGFX/Daleki Przyjaciel.png</path>
+		<choices>
+			<choice>
+				<text>Wspomóż w walce</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+						<name>BattleRandom</name>
+						<value>3</value>
+					</tag>
+				</tags>
+			</choice>
+			<choice>
+				<text>Ucieknij</text>
+				<addCards>
+				</addCards>
+				<tags>
+				</tags>
+			</choice>
+		</choices>
+	</event>
+		<event>
+		<name>Zgliszcza</name>
+		<description>Przybywasz, ale z tego miejsca pozostały już tylko ruiny, a wszędzie można znaleźć wrogów</description>
+		<type>Defeated</type>
+		<path>/CoreGame/EventGFX/Daleki Przyjaciel.png</path>
+		<choices>
+			<choice>
+				<text>Walcz</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+						<name>BattleRandom</name>
+						<value>1</value>
+					</tag>
+				</tags>
+			</choice>
+			<choice>
+				<text>Ucieknij</text>
+				<addCards>
+				</addCards>
+				<tags>
+				</tags>
+			</choice>
+		</choices>
+	</event>
+	<event>
+		<name>Finał</name>
+		<description>Nadszedł czas, by blah blah blah</description>
+		<type>Finale</type>
+		<path>/CoreGame/EventGFX/Daleki Przyjaciel.png</path>
+		<choices>
+			<choice>
+				<text>Ostateczna walka</text>
+				<addCards>
+				</addCards>
+				<tags>
+				<tag>
+					<name>FinalBoss</name>
+					<value>-1</value>
+				</tag>
+				</tags>
+			</choice>
+			<choice>
+				<text>Ostateczna walka</text>
+				<addCards>
+				</addCards>
+				<tags>
+				<tag>
+					<name>FinalBoss</name>
+					<value>-1</value>
+				</tag>
+				</tags>
+			</choice>
+			<choice>
+				<text>Ostateczna walka</text>
+				<addCards>
+				</addCards>
+				<tags>
+				<tag>
+					<name>FinalBoss</name>
+					<value>-1</value>
+				</tag>
+				</tags>
+			</choice>
+			<choice>
+				<text>Ostateczna walka</text>
+				<addCards>
+				</addCards>
+				<tags>
+				<tag>
+					<name>FinalBoss</name>
+					<value>-1</value>
+				</tag>
 				</tags>
 			</choice>
 		</choices>

@@ -50,6 +50,51 @@
 			</choice>
 		</choices>
 		</event>
+				<event>
+		<name>Przyjazna Wioska</name>
+		<description>Spędzasz dzień w przyjaznej wiosce, mieszkańcy poznając twój cel oferują ci wsparcie</description>
+		<type>Village</type>
+		<path>/CoreGame/EventGFX/Wioska.png</path>
+		<choices>
+			<choice>
+				<text>Wypocznij w karczmie.</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+						<name>IncreaseMaxAp</name>
+						<value>1</value>
+					</tag>
+				</tags>
+			</choice>
+			<choice>
+				<text>Poproś o karty.</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+						<name>RandomCardR0</name>
+						<value>2</value>
+					</tag>
+				</tags>
+			</choice>
+			<choice>
+				<text>Poszukaj medycznych ziół</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+						<name>BattleRandom</name>
+						<value>2</value>
+					</tag>
+					<tag>
+						<name>RandomCardR0</name>
+						<value>1</value>
+					</tag>
+				</tags>
+			</choice>
+		</choices>
+		</event>
 	<event>
 		<name>Trwajace Oblezenie</name>
 		<description>Przybywasz ale w te miejsce jest obecnie oblężane</description>

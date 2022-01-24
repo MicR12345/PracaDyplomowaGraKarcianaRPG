@@ -3,7 +3,16 @@ guid: 5ba8b7ca6081a544a91fa19e115ec39f
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - GameCamera: {instanceID: 0}
+  - pointerControl: {instanceID: 0}
+  - cardLibrary: {instanceID: 0}
+  - enemyLibrary: {instanceID: 0}
+  - player: {instanceID: 0}
+  - debugPlayerSprite: {instanceID: 0}
+  - backgroundFinalBossFight: {fileID: 21300000, guid: 9c8d0d9d86c7f7b4d9b216d9c358540a, type: 3}
+  - BgImage: {instanceID: 0}
+  - pauseBlocker: {instanceID: 0}
   executionOrder: 0
   icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   userData: 

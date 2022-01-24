@@ -314,6 +314,13 @@ public class Player : MonoBehaviour
             }
         }
     }
+    public void HideAllHand()
+    {
+        foreach (DeckCard item in hand)
+        {
+            item.card.cardObject.SetActive(false);
+        }
+    }
     public void RefreshHand()
     {
         foreach (DeckCard item in hand)

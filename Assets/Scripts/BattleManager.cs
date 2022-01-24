@@ -45,6 +45,8 @@ public class BattleManager : MonoBehaviour
     public GameObject pauseBlocker;
 
     GameManager gameManager;
+
+    public CardSelector cardSelector;
     void Start()
     {
         gameManager = GameObject.Find("World").GetComponent<GameManager>();
@@ -81,6 +83,8 @@ public class BattleManager : MonoBehaviour
         player.PrepareHandBeforeBattle();
         player.DealAFullHand();
         player.SetupCardLocation();
+        player.UpdateApDisplay();
+        player.UpdateHpBar();
     }
     void CreatePlayerObject()
     {
@@ -163,15 +167,17 @@ public class BattleManager : MonoBehaviour
     }
     void OnBattleWon()
     {
+        inBattle = false;
+        player.HideAllHand();
         pointerControl.UnRegisterFromInput();
-        gameManager.worldMapObject.SetActive(true);
         if (gameManager.bossFight)
         {
             gameManager.WinGame();
         }
         else
         {
-            SceneManager.LoadScene("World");
+            cardSelector.CreateCards(cardLibrary, player,gameManager);
+            cardSelector.gameObject.SetActive(true);
         }
         
     }

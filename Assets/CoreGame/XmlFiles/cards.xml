@@ -17,6 +17,10 @@
 		</effect>
 	  </effects>
 	  <tags>
+		  <tag>
+			  <name>NoRandom</name>
+			  <value>0</value>
+		  </tag>
 	  </tags>
 	</card>
 	<card>

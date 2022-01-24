@@ -11,5 +11,15 @@
 		<path>CoreGame/EnemyGFX/</path>
 		<frameCount>4</frameCount>
 	</enemy>
+	<enemy>
+		<name>FinalBoss</name>
+		<healthMax>5000</healthMax>
+		<spellDuration>10</spellDuration>
+		<cardSkills>
+			<card>FinalBossCardTest</card>
+		</cardSkills>
+		<path>CoreGame/EnemyGFX/</path>
+		<frameCount>4</frameCount>
+	</enemy>
 </enemies>
 </EnemyList>

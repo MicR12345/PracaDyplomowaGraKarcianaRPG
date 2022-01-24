@@ -776,6 +776,13 @@ public class GameManager : MonoBehaviour
             LoseGame();
         }
     }
+    public void LeaveToMenu()
+    {
+        GameObject.Destroy(miscObject);
+        GameObject.Destroy(worldMapObject);
+        SceneManager.LoadScene("MainMenu");
+        GameObject.Destroy(this.gameObject);
+    }
     public void LoseGame()
     {
         GameObject.Destroy(miscObject);

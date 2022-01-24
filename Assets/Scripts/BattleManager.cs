@@ -46,6 +46,8 @@ public class BattleManager : MonoBehaviour
     [HideInInspector]
     public bool inBattle;
 
+    public GameObject pauseBlocker;
+
     GameManager gameManager;
     void Start()
     {
@@ -270,7 +272,16 @@ public class BattleManager : MonoBehaviour
         }
 
     }
-
+    public void PauseGame()
+    {
+        pauseBlocker.SetActive(true);
+        inBattle = false;
+    }
+    public void ResumeGame()
+    {
+        pauseBlocker.SetActive(false);
+        inBattle = true;
+    }
     void UpdateEffectProgressBar(float amount)
     {
         effectProgressBarSlider.value = 1 - (amount / effectsTime);

@@ -63,5 +63,27 @@
 		</tag>
 	  </tags>
 	</card>
+		<card>
+	  <name>FinalBossCardTest</name>
+	  <path>CoreGame/CardGFX/</path>
+	  <rarity>3</rarity>
+	  <cost>0</cost>
+	  <effects>
+		<effect>
+		  <name>damage</name>
+		  <level>0</level>
+		  <value>50</value>
+		  <duration>0</duration>
+		  <tags>
+		  </tags>
+		</effect>
+	  </effects>
+	  <tags>
+		<tag>
+		  <name>testo</name>
+		  <value>1</value>
+		</tag>
+	  </tags>
+	</card>
 </cards>
 </CardList>

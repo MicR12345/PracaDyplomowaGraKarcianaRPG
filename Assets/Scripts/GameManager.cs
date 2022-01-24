@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
     EnemyLibrary enemyLibrary;
     EventLibrary eventLibrary;
     GameObject eventLibraryGO;
-
+    public bool bossFight = false;
     public List<Enemy> enemiesInBattle;
     Event currentEvent;
 
@@ -236,6 +236,7 @@ public class GameManager : MonoBehaviour
         if (FinalBoss != null)
         {
             enemiesInBattle = new List<Enemy>();
+            bossFight = true;
             enemiesInBattle.Add(enemyLibrary.PickEnemyByName("FinalBoss"));
             BeginCombat();
         }

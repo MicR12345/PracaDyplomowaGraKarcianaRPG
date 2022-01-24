@@ -194,6 +194,12 @@ MonoBehaviour:
   - {fileID: -1934205548259823669, guid: eaea3d607f6e4cf4db085802b252794a, type: 3}
   - {fileID: -9076866070092474925, guid: eaea3d607f6e4cf4db085802b252794a, type: 3}
   - {fileID: -4135272102373986999, guid: eaea3d607f6e4cf4db085802b252794a, type: 3}
+  playerAttackDMGSprites:
+  - {fileID: -8485747168204286638, guid: ffb350cad3acc0b43ba07d38ab307673, type: 3}
+  - {fileID: -3699796623939503914, guid: ffb350cad3acc0b43ba07d38ab307673, type: 3}
+  - {fileID: -8752706532089506295, guid: ffb350cad3acc0b43ba07d38ab307673, type: 3}
+  - {fileID: 1756712025950532123, guid: ffb350cad3acc0b43ba07d38ab307673, type: 3}
+  - {fileID: 4198830887129632110, guid: ffb350cad3acc0b43ba07d38ab307673, type: 3}
   playerPosition: {x: -42, y: 0}
   enemyPositions:
   - {x: 25, y: 5}

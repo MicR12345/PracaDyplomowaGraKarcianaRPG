@@ -36,6 +36,7 @@ public class BattleManager : MonoBehaviour
     public List<Sprite> playerIdleSprite;
     public List<Sprite> playerAttackSprites;
     public List<Sprite> enemyAttackSprites;
+    public List<Sprite> playerAttackDMGSprites;
 
     public Vector2 playerPosition;
 
@@ -135,6 +136,8 @@ public class BattleManager : MonoBehaviour
             ApplyCard(card, enemy);
             player.CheckForCardRemoval();
             player.spriteAnimator.PlayOnce(playerAttackSprites, 0.1f);
+            Vector3 position = enemy.enemyObject.transform.position;
+            player.CreateDMGAnimation(playerAttackDMGSprites, position + new Vector3(0f, 0f, 0.5f));
         }
         else
         {

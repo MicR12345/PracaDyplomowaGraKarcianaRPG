@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     public GameObject uiGameObject;
     public GameObject hpTextGameObject;
     public GameObject apTextGameObject;
+    public GameObject spriteObject;
 
     public TextMeshPro hpText;
     public TextMeshPro apText;
@@ -328,6 +329,21 @@ public class Player : MonoBehaviour
             item.card.cardObject.SetActive(true);
         }
         SetupCardLocation();
+    }
+    public void CreateDMGAnimation(List<Sprite> enemyAttackAnimationSpriteList, Vector3 vector3)
+    {
+        DmgAnimationStart(enemyAttackAnimationSpriteList, vector3);
+    }
+    GameObject DmgAnimationStart(List<Sprite> sprite, Vector3 vector3)
+    {
+        List<Sprite> enemyAttackSprites = sprite;
+        spriteObject = new GameObject("Sprite");
+        SpriteRenderer spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
+        SpriteAnimator spriteAnimator = spriteObject.AddComponent<SpriteAnimator>();
+        spriteAnimator.setupSprites(spriteRenderer, enemyAttackSprites, "idle", 1f);
+        spriteAnimator.PlayOnceDMGAnimation(enemyAttackSprites, 0.05f);
+        spriteObject.transform.position = vector3 + new Vector3(0f, 0f, -5f);
+        return spriteObject;
     }
     public void ApplyCardEffect(Effect effect)
     {

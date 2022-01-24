@@ -13,9 +13,6 @@ public class BattleManager : MonoBehaviour
     static public float playerResourceGiveTime = 3f;
     float playerResourceGiveTimer = playerResourceGiveTime;
 
-    static float effectsTime = 10f;
-    float effectsTimer = effectsTime;
-
     List<float> enemyTimers;
 
     public Camera GameCamera;
@@ -27,8 +24,6 @@ public class BattleManager : MonoBehaviour
     public EnemyLibrary enemyLibrary;
 
     GameObject playerObject;
-    GameObject effectProgressBar;
-    Slider effectProgressBarSlider;
     [HideInInspector]
     public Player player;
 
@@ -65,7 +60,6 @@ public class BattleManager : MonoBehaviour
         {
             CreatePlayerObject();
         }
-        CreateEffectSlider();
         enemies = new List<Enemy>();
         enemies = gameManager.enemiesInBattle;
         enemyTimers = new List<float>();
@@ -107,27 +101,6 @@ public class BattleManager : MonoBehaviour
                 Debug.LogError("More enemies than aviable slots");
             }
         }
-    }
-    void CreateEffectSlider()
-    {
-        effectProgressBar = new GameObject("Effects Bar");
-        effectProgressBar.transform.parent = this.gameObject.transform;
-        effectProgressBar.transform.localPosition = new Vector3(0f,40f);
-        effectProgressBar.AddComponent<Canvas>();
-        RectTransform rectTransformSize = effectProgressBar.GetComponent<RectTransform>();
-        rectTransformSize.sizeDelta = new Vector2(50f, 3f);
-        GameObject sliderObject = new GameObject("Slider");
-        sliderObject.transform.parent = effectProgressBar.transform;
-        effectProgressBarSlider = sliderObject.AddComponent<Slider>();
-        GameObject sliderBar = new GameObject("Slider Bar");
-        sliderBar.transform.parent = effectProgressBar.transform;
-        Image image = sliderBar.AddComponent<Image>();
-        RectTransform rectTransform = sliderBar.GetComponent<RectTransform>();
-
-        effectProgressBarSlider.fillRect = rectTransform;
-        rectTransform.sizeDelta = new Vector2(0f, 0f);
-        rectTransform.offsetMin = Vector2.zero;
-        rectTransform.offsetMax = Vector2.zero;
     }
     public void CardWasMovedOntoEnemy(DeckCard card,Enemy enemy)
     {
@@ -249,21 +222,6 @@ public class BattleManager : MonoBehaviour
                     enemies[i].UpdateInitiativeBar(enemyTimers[i]);
                 }
             }
-            if (effectsTimer <= 0f)
-            {
-                for (int i = 0; i < enemies.Count; i++)
-                {
-                    enemies[i].TickEffects();
-                }
-                player.TickEffects();
-                effectsTimer = effectsTime;
-                UpdateEffectProgressBar(effectsTimer);
-            }
-            else
-            {
-                effectsTimer = effectsTimer - Time.deltaTime;
-                UpdateEffectProgressBar(effectsTimer);
-            }
             foreach (Enemy item in enemies)
             {
                 item.UpdateHpBar();
@@ -281,10 +239,6 @@ public class BattleManager : MonoBehaviour
     {
         pauseBlocker.SetActive(false);
         inBattle = true;
-    }
-    void UpdateEffectProgressBar(float amount)
-    {
-        effectProgressBarSlider.value = 1 - (amount / effectsTime);
     }
     //DEBUGGING FUNCTIONS
 

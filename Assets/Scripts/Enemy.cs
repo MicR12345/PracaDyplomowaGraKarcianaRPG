@@ -194,17 +194,6 @@ public class Enemy
         }
         CheckForDeath();
     }
-
-    public void TakeDamageDirect(float damage)
-    {
-
-    }
-
-    public void TickEffects()
-    {
-
-    }
-
     public void SetPosition(Vector2 position)
     {
         enemyObject.transform.localPosition = position;
@@ -227,8 +216,6 @@ public class Enemy
     }
     public void MakeAMove()
     {
-        
-
         List<DeckCard> possibleCard = new List<DeckCard>();
         for (int i = 0; i < deck.Count; i++)
         {

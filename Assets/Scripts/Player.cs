@@ -368,16 +368,6 @@ public class Player : MonoBehaviour
         }
         CheckForDeath();
     }
-
-    public void TakeDamageDirect(float damage)
-    {
-
-    }
-
-    public void TickEffects()
-    {
-
-    }
     public void CheckForDeath()
     {
         if (health <= 0)

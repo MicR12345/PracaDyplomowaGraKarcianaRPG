@@ -853,7 +853,6 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Event library found with " + eventLibrary.eventList.Count + "events");
             }
         }
-        currentEvent = eventLibrary.FindStartEvent();
         if (!loadingSave)
         {
             if (worldMap == null)
@@ -925,7 +924,15 @@ public class GameManager : MonoBehaviour
         }
         CreatePlayerMark();
         //https://forum.unity.com/threads/stop-a-function-till-scene-is-loaded.546646/
-        newScene("World");
+        if (!loadingSave)
+        {
+            currentEvent = eventLibrary.FindStartEvent();
+            newScene("World");
+        }
+        else
+        {
+            SceneManager.LoadScene("World");
+        }
     }
     public void newScene(string scene)
     {

@@ -783,6 +783,14 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
         GameObject.Destroy(this.gameObject);
     }
+    public void WinGame()
+    {
+        GameObject.Destroy(miscObject);
+        GameObject.Destroy(worldMapObject);
+        SaveManager.RemoveSavedGame();
+        SceneManager.LoadScene("VictoryScene");
+        GameObject.Destroy(this.gameObject);
+    }
     public void LoseGame()
     {
         GameObject.Destroy(miscObject);

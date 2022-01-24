@@ -18,9 +18,9 @@ public class CardSelector : MonoBehaviour
     {
         player = _player;
         gameManager = _gameManager;
-        choice1 = new DeckCard(cardLibrary.FindRandomCardByRarity(UnityEngine.Random.Range(0, 1)));
-        choice2 = new DeckCard(cardLibrary.FindRandomCardByRarity(UnityEngine.Random.Range(0, 1)));
-        choice3 = new DeckCard(cardLibrary.FindRandomCardByRarity(UnityEngine.Random.Range(0, 1)));
+        choice1 = new DeckCard(cardLibrary.FindRandomCardByRarity(UnityEngine.Random.Range(0, 3)));
+        choice2 = new DeckCard(cardLibrary.FindRandomCardByRarity(UnityEngine.Random.Range(0, 3)));
+        choice3 = new DeckCard(cardLibrary.FindRandomCardByRarity(UnityEngine.Random.Range(0, 3)));
         choice1.card.CreateCardInstance();
         choice2.card.CreateCardInstance();
         choice3.card.CreateCardInstance();

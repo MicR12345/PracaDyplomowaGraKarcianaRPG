@@ -23,23 +23,23 @@ public class EventPopupHandle : MonoBehaviour
     public Text button4Text;
 
     GameManager gameManager;
-    void EventChoice1()
+    public void EventChoice1()
     {
         Debug.Log("Test");
         gameManager.HandleEvent(0);
         eventPopupCanvas.SetActive(false);
     }
-    void EventChoice2()
+    public void EventChoice2()
     {
         gameManager.HandleEvent(1);
         eventPopupCanvas.SetActive(false);
     }
-    void EventChoice3()
+    public void EventChoice3()
     {
         gameManager.HandleEvent(2);
         eventPopupCanvas.SetActive(false);
     }
-    void EventChoice4()
+    public void EventChoice4()
     {
         gameManager.HandleEvent(3);
         eventPopupCanvas.SetActive(false);

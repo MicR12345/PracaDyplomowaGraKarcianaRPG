@@ -15,17 +15,10 @@ public class GameManager : MonoBehaviour
     static int fortressChance = 5;
     static int acientRuinsChance = 5;
 
-    static int maxConnectionCount = 3;
     static int minConnectionCount = 2;
-    static int maxConnectAttempts = 10;
     static float maxLocationConnectionDistance = 10f;
 
     static float minDistanceBetweenLocations = 5f;
-
-    static float worldMapLocationPullForce = 0.5f;
-    static float smoothingCount = 2;
-
-    static float minSmoothingDistance = 5f;
 
     static Vector3 worldBoundsStart = new Vector3(-30f,-23f,0f);
     static Vector3 worldBoundsEnd = new Vector3(30f, 15f, 0f);
@@ -288,7 +281,7 @@ public class GameManager : MonoBehaviour
     void BeginCombat()
     {
         worldMapObject.SetActive(false);
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("Battle");
     }
     void CreatePlayerMark()
     {

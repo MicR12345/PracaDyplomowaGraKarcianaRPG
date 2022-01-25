@@ -9,7 +9,6 @@ using TMPro;
 public class MenusController : MonoBehaviour
 {
     [Header("Game Settings")]
-    public float mainSensitivity = 30;
     [SerializeField] private TMP_Text volumeValue = null;
     [SerializeField] private Slider volumeSlider = null;
     [SerializeField] private float defaultVolumeSettings = 0.5f;
@@ -52,7 +51,7 @@ public class MenusController : MonoBehaviour
         volumeSlider.value = defaultVolumeSettings;
         volumeValue.text = defaultVolumeSettings.ToString("0.5");
         SetVolume(defaultVolumeSettings);
-
+        FullScreenChange(true);
     }
     public void FullScreenChange(bool fullScreen)
     {

@@ -6,7 +6,7 @@
 		<healthMax>50</healthMax>
 		<spellDuration>5</spellDuration>
 		<cardSkills>
-			<card>cardTest2</card>
+			<card>orkDamage</card>
 		</cardSkills>
 		<path>CoreGame/EnemyGFX/</path>
 		<frameCount>4</frameCount>

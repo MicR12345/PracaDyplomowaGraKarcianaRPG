@@ -94,7 +94,7 @@ public class CardLibrary : MonoBehaviour
                 }
                 else
                 {
-                    bytes = File.ReadAllBytes(Application.dataPath + "/" + i.path + "0_cardTest" + ".png");
+                    bytes = File.ReadAllBytes(Application.dataPath + "/" + i.path + "default" + ".png");
                 }
                 
                 texture2D.LoadImage(bytes);

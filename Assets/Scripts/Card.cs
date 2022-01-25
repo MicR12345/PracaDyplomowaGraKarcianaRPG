@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Globalization;
 using System.Collections.Generic;
 using UnityEngine;
@@ -134,7 +134,18 @@ public class Card : Action
         TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
         foreach (Effect item in effects)
         {
-            newDescription = newDescription + textInfo.ToTitleCase(item.name);
+            if (item.name == "damage")
+            {
+                newDescription = newDescription + "Obrażenia";
+            }
+            else if (item.name == "shield")
+            {
+                newDescription = newDescription + "Tarcza";
+            }
+            else
+            {
+                newDescription = newDescription + textInfo.ToTitleCase(item.name);
+            }
             if (item.level!=0)
             {
                 newDescription = newDescription + "+" + item.level;
@@ -145,24 +156,12 @@ public class Card : Action
             }
             newDescription = newDescription + "\n";
         }
-        foreach (Tag item in tags)
-        {
-            newDescription = newDescription + textInfo.ToTitleCase(item.name) + "\n";
-        }
         description = newDescription;
         descriptionText.text = description;
     }
     public void UpdateCost()
     {
         costText.text = cost.ToString();
-    }
-    public override void UpgradeCard()
-    {
-        throw new System.NotImplementedException();
-    }
-    public override bool CanUpgrade()
-    {
-        throw new System.NotImplementedException();
     }
     public Card(string _name,int _cost,int _rarity,List<Effect> _effects,List<Tag> _tags)
     {

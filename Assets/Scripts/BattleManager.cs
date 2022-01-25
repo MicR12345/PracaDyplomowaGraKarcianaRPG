@@ -117,11 +117,20 @@ public class BattleManager : MonoBehaviour
         {
             player.actionPoints = player.actionPoints - card.card.cost;
             player.UpdateApDisplay();
-            ApplyCard(card, enemy);
+            if (card.card.FindCardTag("self")!=null)
+            {
+                ApplyCardToPlayer(card);
+                player.spriteAnimator.PlayOnce(playerAttackSprites, 0.1f);
+            }
+            else
+            {
+                ApplyCard(card, enemy);
+                player.spriteAnimator.PlayOnce(playerAttackSprites, 0.1f);
+                Vector3 position = enemy.enemyObject.transform.position;
+                player.CreateDMGAnimation(playerAttackDMGSprites, position + new Vector3(0f, 0f, 0.5f));
+            }
+            
             player.CheckForCardRemoval();
-            player.spriteAnimator.PlayOnce(playerAttackSprites, 0.1f);
-            Vector3 position = enemy.enemyObject.transform.position;
-            player.CreateDMGAnimation(playerAttackDMGSprites, position + new Vector3(0f, 0f, 0.5f));
         }
         else
         {

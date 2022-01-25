@@ -30,4 +30,8 @@ public class Effect
         duration = 0;
         tags = new List<Tag>();
     }
+    public Effect Clone()
+    {
+        return (Effect)this.MemberwiseClone();
+    }
 }

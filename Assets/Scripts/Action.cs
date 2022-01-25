@@ -13,6 +13,4 @@ public abstract class Action
     public List<Tag> tags;
 
     public abstract void UpdateDescription();
-    public abstract bool CanUpgrade();
-    public abstract void UpgradeCard();
 }

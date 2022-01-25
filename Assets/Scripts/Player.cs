@@ -373,6 +373,11 @@ public class Player : MonoBehaviour
             }
             health = health - damage;
         }
+        else
+        {
+            if (activeEffects == null) activeEffects = new List<Effect>();
+            activeEffects.Add(effect.Clone());
+        }
         CheckForDeath();
     }
     public void CheckForDeath()

@@ -84,7 +84,7 @@ public class Player : MonoBehaviour
     {
         hpTextGameObject = new GameObject("HP Text");
         hpTextGameObject.transform.parent = uiGameObject.transform;
-        hpTextGameObject.transform.localPosition = new Vector3(0f, -10f, 0f);
+        hpTextGameObject.transform.localPosition = new Vector3(-5f, -20f, 0f);
         hpText = hpTextGameObject.AddComponent<TextMeshPro>();
         hpText.horizontalAlignment = HorizontalAlignmentOptions.Center;
         hpText.verticalAlignment = VerticalAlignmentOptions.Middle;
@@ -94,12 +94,14 @@ public class Player : MonoBehaviour
     GameObject CreateAPText()
     {
         apTextGameObject = new GameObject("AP Text");
-        apTextGameObject.transform.parent = uiGameObject.transform;
-        apTextGameObject.transform.localPosition = new Vector3(0f, -1f, 0f);
+        apTextGameObject.transform.parent = this.transform;
+        apTextGameObject.transform.localPosition = new Vector3(0f, 45f, 0f);
         apText = apTextGameObject.AddComponent<TextMeshPro>();
         apText.horizontalAlignment = HorizontalAlignmentOptions.Center;
         apText.verticalAlignment = VerticalAlignmentOptions.Middle;
         apText.text = "0/0";
+        apText.color = Color.cyan;
+        apText.fontSize = 30;
         return apTextGameObject;
     }
     GameObject CreateCardBar()

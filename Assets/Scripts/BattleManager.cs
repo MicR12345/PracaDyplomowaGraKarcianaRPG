@@ -271,21 +271,4 @@ public class BattleManager : MonoBehaviour
         pauseBlocker.SetActive(false);
         inBattle = true;
     }
-    //DEBUGGING FUNCTIONS
-
-    void CheatGiveDebugCardsToDeck(int count)
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            player.data.AddToPlayerDeck(new DeckCard(cardLibrary.FindCardByName("0_cardTest")));
-        }
-    }
-    
-    /*void CheatSpawnDebugEnemies(int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            enemies.Add(new Enemy(this, "debugEnemy", 10, 10, 10, 1, debugPlayerSprite));
-        }
-    }*/
 }

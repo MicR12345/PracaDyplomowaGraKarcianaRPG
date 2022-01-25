@@ -110,9 +110,48 @@
 						<name>BattleRandom</name>
 						<value>2</value>
 					</tag>
+				</tags>
+			</choice>
+		</choices>
+		</event>
+		<event>
+		<name>Przyjazna Wioska 2</name>
+		<description>Docierasz do przyjaznej wioski, ale jest ona obecnie atakowana</description>
+		<type>Village</type>
+		<path>/CoreGame/EventGFX/Wioska.png</path>
+		<choices>
+			<choice>
+				<text>Walcz</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+						<name>BattleRandom</name>
+						<value>1</value>
+					</tag>
+				</tags>
+			</choice>
+			<choice>
+				<text>Ucieknij</text>
+				<addCards>
+				</addCards>
+				<tags>
+					<tag>
+					</tag>
+				</tags>
+			</choice>
+			<choice>
+				<text>Plądruj wioskę</text>
+				<addCards>
+				</addCards>
+				<tags>
 					<tag>
 						<name>RandomCardR0</name>
 						<value>1</value>
+					</tag>
+					<tag>
+						<name>IncreaseMaxHp</name>
+						<value>-5</value>
 					</tag>
 				</tags>
 			</choice>

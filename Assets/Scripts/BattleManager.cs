@@ -230,10 +230,13 @@ public class BattleManager : MonoBehaviour
             {
                 if (enemyTimers[i]<=0)
                 {
-                    enemies[i].MakeAMove();
-                    enemies[i].CreateDMGAnimation(enemyAttackSprites, playerPosition);
-                    enemyTimers[i] = enemies[i].spellDuration;
-                    enemies[i].UpdateInitiativeBar(enemyTimers[i]);
+                    if (!enemies[i].isDead)
+                    {
+                        enemies[i].MakeAMove();
+                        enemies[i].CreateDMGAnimation(enemyAttackSprites, playerPosition);
+                        enemyTimers[i] = enemies[i].spellDuration;
+                        enemies[i].UpdateInitiativeBar(enemyTimers[i]);
+                    }
                 }
                 else
                 {

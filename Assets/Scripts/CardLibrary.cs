@@ -32,7 +32,7 @@ public class CardLibrary : MonoBehaviour
         List<Card> randomList = new List<Card>();
         foreach (Card item in cards)
         {
-            if (item.rarity == rarity) randomList.Add(item);
+            if (item.rarity == rarity && item.FindCardTag("NoRandom") ==null) randomList.Add(item);
         }
         if (randomList.Count == 0)
         {

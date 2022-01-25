@@ -216,6 +216,8 @@ public class Enemy
         {
             isDead = true;
             enemyObject.transform.Rotate(Vector3.forward, 90);
+            initiativeBar.SetActive(false);
+            uiGameObject.SetActive(false);
         }
     }
     public void UpdateHpBar()

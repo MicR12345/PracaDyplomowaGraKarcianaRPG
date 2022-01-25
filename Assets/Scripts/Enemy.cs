@@ -97,7 +97,7 @@ public class Enemy
     {
         hpTextGameObject = new GameObject("HP Text");
         hpTextGameObject.transform.parent = uiGameObject.transform;
-        hpTextGameObject.transform.localPosition = new Vector3(0f,-10f,0f);
+        hpTextGameObject.transform.localPosition = new Vector3(0f,-20f,0f);
         hpText = hpTextGameObject.AddComponent<TextMeshPro>();
         hpText.horizontalAlignment = HorizontalAlignmentOptions.Center;
         hpText.verticalAlignment = VerticalAlignmentOptions.Middle;
@@ -108,7 +108,7 @@ public class Enemy
     {
         initiativeBar = new GameObject("Initiative Bar");
         initiativeBar.transform.parent = enemyObject.transform;
-        initiativeBar.transform.localPosition = new Vector3(0f,10f);
+        initiativeBar.transform.localPosition = new Vector3(0f, 25f);
         initiativeBar.AddComponent<Canvas>();
         RectTransform rectTransformSize = initiativeBar.GetComponent<RectTransform>();
         rectTransformSize.sizeDelta = new Vector2(10f, 1f);

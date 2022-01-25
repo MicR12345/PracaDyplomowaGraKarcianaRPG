@@ -108,11 +108,12 @@ public class Card : Action
     {
         costTextGameObject = new GameObject("Cost Text");
         costTextGameObject.transform.parent = uiGameObject.transform;
-        costTextGameObject.transform.localPosition = new Vector3(0f, 0f, 0f);
+        costTextGameObject.transform.localPosition = new Vector3(0f, -5f, 0f);
         costText = costTextGameObject.AddComponent<TextMeshPro>();
         costText.horizontalAlignment = HorizontalAlignmentOptions.Center;
         costText.verticalAlignment = VerticalAlignmentOptions.Middle;
         costText.sortingOrder = 15;
+        costText.fontSize = 32;
         costText.color = Color.cyan;
         costText.text = cost.ToString();
         return descriptionTextGameObject;

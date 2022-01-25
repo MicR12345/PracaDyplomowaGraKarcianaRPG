@@ -204,6 +204,19 @@ public class Enemy
                 else { health = healthMax; }
             }
         }
+        if (effect.name == "CzerwonaMaska")
+        {
+            if (health > healthMax/2)
+            {
+                if (health + 20 > healthMax) { health = healthMax; }
+                else { health = health + 20; }
+            }
+            else
+            {
+                if (battleManager.player.health > health) { health = 1; }
+                else { battleManager.player.health = battleManager.player.health + 30; }
+            }
+        }
         CheckForDeath();
     }
     public void SetPosition(Vector2 position)

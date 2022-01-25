@@ -44,6 +44,100 @@
 			</choices>
 		</event>
 		<event>
+			<name>Ciemny zakątek świata</name>
+			<description>Wchodzisz w głębszą część ruin, co może Ciebie spotkać? Robi się kompletnie ciemno, co zrobisz?</description>
+			<type>AcientRuins</type>
+			<path>/CoreGame/EventGFX/Najciemniejszy_z_ciemnych.png</path>
+			<choices>
+				<choice>
+					<text>Spróbuj zapalić pochodnie, unikając kłopotów psychicznych.</text>
+					<addCards>
+					</addCards>
+					<tags>
+						<tag>
+							<name>BattleRandom</name>
+							<value>1</value>
+						</tag>
+					</tags>
+				</choice>
+				<choice>
+					<text>Kłopoty psychiczne to dla Ciebie pestka, tak samo jak rozciągająca się ciemność.</text>
+					<addCards>
+					</addCards>
+					<tags>
+						<tag>
+							<name>IncreaseMaxHp</name>
+							<value>-10</value>
+						</tag>
+					</tags>
+				</choice>
+			</choices>
+		</event>
+		<event>
+			<name>Przyjemniaczki</name>
+			<description>Usłyszałeś, że miejską karczmę okupują przyjemni pijacy, ponoć śpiewają piosenki z dziwnym akcentem. Może jak do nich dołączysz wydarzy się coś ciekawego?</description>
+			<type>City</type>
+			<path>/CoreGame/EventGFX/Przyjemni_pijacy.png</path>
+			<choices>
+				<choice>
+					<text>Dołącz się do przyjemniaczków, na pewno sprawi im to radość!.</text>
+					<addCards>
+						<card>Czerwona_Maska</card>
+					</addCards>
+					<tags>
+						<tag>
+							<name>IncreaseMaxHp</name>
+							<value>5</value>
+						</tag>
+					</tags>
+				</choice>
+				<choice>
+					<text>Odpuść kolejny relaksujący wieczór by zająć się miejskimi nieprzyjemniaczkami.</text>
+					<addCards>
+					</addCards>
+					<tags>
+						<tag>
+							<name>BattleRandom</name>
+							<value>2</value>
+						</tag>
+						<tag>
+							<name>IncreaseMaxHp</name>
+							<value>10</value>
+					</tag>
+					</tags>
+				</choice>
+			</choices>
+		</event>
+		<event>
+			<name>Ciekawy klient</name>
+			<description></description>
+			<type>City</type>
+			<path>/CoreGame/EventGFX/Ciekawy_klient.png</path>
+			<choices>
+				<choice>
+					<text>Spróbuj ukraść kilka kart(skończy się obiciem twarzy jednego z potworów właściciela).</text>
+					<addCards>
+					</addCards>
+					<tag>
+						<name>BattleRandom</name>
+						<value>1</value>
+					</tag>
+					<tag>
+					
+						<name>RandomCardR0</name>
+						<value>1</value>
+					</tag>
+				</choice>
+				<choice>
+					<text>Przywitaj się ze sprzedawcą i odejdź w dalszą podróż.</text>
+					<addCards>
+					</addCards>
+					<tags>
+					</tags>
+				</choice>
+			</choices>
+		</event>
+		<event>
 		<name>Daleki Przyjaciel</name>
 		<description>Spotykasz znanego Ci przyjaciela, może ma on coś dla Ciebie?</description>
 		<type>Any</type>
@@ -73,7 +167,7 @@
 			</choice>
 		</choices>
 		</event>
-				<event>
+		<event>
 		<name>Przyjazna Wioska</name>
 		<description>Spędzasz dzień w przyjaznej wiosce, mieszkańcy poznając twój cel oferują ci wsparcie</description>
 		<type>Village</type>
@@ -161,7 +255,7 @@
 		<name>Trwajace Oblezenie</name>
 		<description>Przybywasz ale w te miejsce jest obecnie oblężane</description>
 		<type>Siege</type>
-		<path>/CoreGame/EventGFX/Daleki Przyjaciel.png</path>
+		<path>/CoreGame/EventGFX/Oblezenie.png</path>
 		<choices>
 			<choice>
 				<text>Wspomóż w walce</text>
@@ -187,7 +281,7 @@
 		<name>Zgliszcza</name>
 		<description>Przybywasz, ale z tego miejsca pozostały już tylko ruiny, a wszędzie można znaleźć wrogów</description>
 		<type>Defeated</type>
-		<path>/CoreGame/EventGFX/Daleki Przyjaciel.png</path>
+		<path>/CoreGame/EventGFX/Podbite.png</path>
 		<choices>
 			<choice>
 				<text>Walcz</text>
@@ -196,7 +290,7 @@
 				<tags>
 					<tag>
 						<name>BattleRandom</name>
-						<value>1</value>
+						<value>2</value>
 					</tag>
 				</tags>
 			</choice>

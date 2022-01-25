@@ -4,7 +4,7 @@
 	<card>
 	  <name>Ostatnia_szansa</name>
 	  <path>CoreGame/CardGFX/</path>
-	  <rarity>3</rarity>
+	  <rarity>2</rarity>
 	  <cost>8</cost>
 	  <effects>
 		<effect>
@@ -17,6 +17,10 @@
 		</effect>
 	  </effects>
 	  <tags>
+		  <tag>
+			  <name>NoRandom</name>
+			  <value>0</value>
+		  </tag>
 	  </tags>
 	</card>
 	<card>

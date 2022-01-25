@@ -24,6 +24,28 @@
 	  </tags>
 	</card>
 	<card>
+	  <name>Czerwona_Maska</name>
+	  <path>CoreGame/CardGFX/</path>
+	  <rarity>3</rarity>
+	  <cost>10</cost>
+	  <effects>
+		<effect>
+		  <name>CzerwonaMaska</name>
+		  <level>0</level>
+		  <value>0</value>
+		  <duration>0</duration>
+		  <tags>
+		  </tags>
+		</effect>
+	  </effects>
+	  <tags>
+		  <tag>
+			  <name>NoRandom</name>
+			  <value>0</value>
+		  </tag>
+	  </tags>
+	</card>
+	<card>
 	  <name>cardTest2</name>
 	  <path>CoreGame/CardGFX/</path>
 	  <rarity>0</rarity>

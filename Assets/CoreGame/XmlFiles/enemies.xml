@@ -13,13 +13,23 @@
 	</enemy>
 	<enemy>
 		<name>FinalBoss</name>
-		<healthMax>5000</healthMax>
+		<healthMax>500</healthMax>
 		<spellDuration>10</spellDuration>
 		<cardSkills>
 			<card>FinalBossCardTest</card>
 		</cardSkills>
 		<path>CoreGame/EnemyGFX/</path>
 		<frameCount>4</frameCount>
+	</enemy>
+		<enemy>
+		<name>Dwarf</name>
+		<healthMax>40</healthMax>
+		<spellDuration>2</spellDuration>
+		<cardSkills>
+			<card>dwarfDamage</card>
+		</cardSkills>
+		<path>CoreGame/EnemyGFX/</path>
+		<frameCount>3</frameCount>
 	</enemy>
 </enemies>
 </EnemyList>

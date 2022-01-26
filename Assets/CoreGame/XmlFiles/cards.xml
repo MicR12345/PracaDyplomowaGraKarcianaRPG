@@ -54,7 +54,29 @@
 		<effect>
 		  <name>damage</name>
 		  <level>0</level>
-		  <value>2</value>
+		  <value>15</value>
+		  <duration>0</duration>
+		  <tags>
+		  </tags>
+		</effect>
+	  </effects>
+	  <tags>
+		<tag>
+			  <name>NoRandom</name>
+			  <value>0</value>
+		  </tag>
+	  </tags>
+	</card>
+		<card>
+	  <name>dwarfDamage</name>
+	  <path>CoreGame/CardGFX/</path>
+	  <rarity>0</rarity>
+	  <cost>3</cost>
+	  <effects>
+		<effect>
+		  <name>damage</name>
+		  <level>0</level>
+		  <value>5</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>
@@ -76,7 +98,7 @@
 		<effect>
 		  <name>damage</name>
 		  <level>0</level>
-		  <value>50</value>
+		  <value>30</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>
@@ -93,12 +115,12 @@
 	  <name>Shockwave</name>
 	  <path>CoreGame/CardGFX/</path>
 	  <rarity>1</rarity>
-	  <cost>0</cost>
+	  <cost>3</cost>
 	  <effects>
 		<effect>
 		  <name>damage</name>
 		  <level>0</level>
-		  <value>25</value>
+		  <value>35</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>
@@ -111,7 +133,7 @@
 	  <name>RunicShield</name>
 	  <path>CoreGame/CardGFX/</path>
 	  <rarity>1</rarity>
-	  <cost>0</cost>
+	  <cost>2</cost>
 	  <effects>
 		<effect>
 		  <name>shield</name>
@@ -133,7 +155,7 @@
 	  <name>SimpleSlash</name>
 	  <path>CoreGame/CardGFX/</path>
 	  <rarity>0</rarity>
-	  <cost>0</cost>
+	  <cost>2</cost>
 	  <effects>
 		<effect>
 		  <name>damage</name>

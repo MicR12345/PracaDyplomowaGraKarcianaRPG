@@ -152,6 +152,10 @@ public class Player : MonoBehaviour
     public void CreateNewCardStack(bool random = true)
     {
         cardStack = new List<DeckCard>(data.deck);
+        foreach (DeckCard item in cardStack)
+        {
+            item.ResetCard();
+        }
         Debug.Log("Created card stack with " + cardStack.Count + " cards.");
         if (random)
         {
@@ -251,6 +255,7 @@ public class Player : MonoBehaviour
             {
                 item.discarded = false;
                 cardStack.Add(item);
+                item.ResetCard();
             }
         }
         if (random)
@@ -322,22 +327,6 @@ public class Player : MonoBehaviour
         {
             item.card.cardObject.SetActive(false);
         }
-    }
-    public void RefreshHand()
-    {
-        foreach (DeckCard item in hand)
-        {
-            if (item.card.cardObject == null)
-            {
-                item.card.CreateCardInstance();
-            }
-            else
-            {
-                item.card.ResetCard();
-            }
-            item.card.cardObject.SetActive(true);
-        }
-        SetupCardLocation();
     }
     public void CreateDMGAnimation(List<Sprite> enemyAttackAnimationSpriteList, Vector3 vector3)
     {

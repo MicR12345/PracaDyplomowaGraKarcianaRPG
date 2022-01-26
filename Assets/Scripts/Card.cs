@@ -3,8 +3,16 @@ using System.Globalization;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-public class Card : Action
+public class Card
 {
+    public string name;
+    public string description;
+    public int rarity;
+    public int cost;
+    public int upgradeCount;
+    public List<Effect> effects;
+    public List<Tag> tags;
+
     public GameObject cardObject;
     public FancyCardMover cardMover;
 
@@ -129,7 +137,7 @@ public class Card : Action
         }
         return null;
     }
-    public override void UpdateDescription()
+    public void UpdateDescription()
     {
         string newDescription = "";
         TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
@@ -214,6 +222,13 @@ public class DeckCard
         destroyed = false;
         staysInHand = false;
         usedTimes = 0;
+    }
+    public void ResetCard()
+    {
+        discarded = false;
+        exhausted = 0;
+        destroyed = false;
+        staysInHand = false;
     }
 }
 

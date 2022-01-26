@@ -95,29 +95,26 @@ public class GameManager : MonoBehaviour
             if (!playerPosition.visited && playerPosition.siegeTime>0 && !siegedLocations.Contains(playerPosition))
             {
                     RollEvent();
-                    LaunchEvent();
             }
             if (!playerPosition.visited && playerPosition.siegeTime > 0 && siegedLocations.Contains(playerPosition))
             {
                 RollEventSiege();
-                LaunchEvent();
             }
             else if (!playerPosition.visited && playerPosition.siegeTime <= 0)
             {
                 RollEventDefeated();
-                LaunchEvent();
+                
             }
         }
         else
         {
             currentEvent = eventLibrary.FindFinalBossEvent();
-            LaunchEvent();
         }
+        LaunchEvent();
         ProgressSieges();
         playerPosition.SetAsVisited();
         Debug.Log(player.deck.Count);
         SaveManager.SaveGame(worldMap, worldDecoratorArray, siegedLocations, player, playerPosition);
-        //Pinezka gdzie gracz
     }
     void RollEvent()
     {
@@ -295,16 +292,28 @@ public class GameManager : MonoBehaviour
     {
         playerMarker.transform.position = playerPosition.gameObject.transform.position + playerMarkerOffSet;
     }
-    void GenerateWorldMap(int nodeCount)
+    void GenerateWorldMap()
     {
         worldMap = new List<WorldMapNode>();
-
-        worldMap.Add(new WorldMapNode(this,"EnemyCastle", "EnemyCastle",false));
-        worldMap[0].SetPosition(enemyCastleLocation);
-        worldMap.Add(new WorldMapNode(this, "Capitol", "Capitol"));
-        worldMap[1].SetPosition(capitolLocation);
+        CreateMainLocations();
+        CreateWorldLocationsRandom();
+        CreateBorderFortresses();
+        ConnectNodesToTheirClosestNodes();
+        for (int i = 1; i < worldMap.Count; i++)
+        {
+            ConnectIfNotConnected(worldMap[i]);
+        }
+        CreateWorldDecorationsArray();
+        for (int i = 0; i < decoratorArraySmoothingCount; i++)
+        {
+            SmoothWorldDecorationArray();
+        }
+        DrawDecorators();
+    }
+    void CreateWorldLocationsRandom()
+    {
         int maxChance = villageChance + cityChance + fortressChance + acientRuinsChance;
-        for (int i = 1; i < nodeCount; i++)
+        for (int i = 1; i < worldNodeCount; i++)
         {
             int newNodeNumber = worldMap.Count;
             int roll = UnityEngine.Random.Range(0, maxChance);
@@ -312,7 +321,7 @@ public class GameManager : MonoBehaviour
             {
                 worldMap.Add(new WorldMapNode(this, "Village", "Village"));
             }
-            else if (roll >= villageChance && roll<villageChance + cityChance)
+            else if (roll >= villageChance && roll < villageChance + cityChance)
             {
                 worldMap.Add(new WorldMapNode(this, "City", "City"));
             }
@@ -330,30 +339,28 @@ public class GameManager : MonoBehaviour
                 worldMap[newNodeNumber].PlaceRandomlyWithinBounds(worldBoundsStart, worldBoundsEnd);
             }
         }
+    }
+    void CreateMainLocations()
+    {
+        worldMap.Add(new WorldMapNode(this, "EnemyCastle", "EnemyCastle"));
+        worldMap[0].SetPosition(enemyCastleLocation);
+        worldMap.Add(new WorldMapNode(this, "Capitol", "Capitol"));
+        worldMap[1].SetPosition(capitolLocation);
+    }
+    void CreateBorderFortresses()
+    {
         int worldNodeCount = worldMap.Count;
 
-        worldMap.Add(new WorldMapNode(this, "BorderFortress", "Fortress", false));
-        worldMap.Add(new WorldMapNode(this, "BorderFortress", "Fortress", false));
+        worldMap.Add(new WorldMapNode(this, "BorderFortress", "Fortress"));
+        worldMap.Add(new WorldMapNode(this, "BorderFortress", "Fortress"));
         worldMap[0].connections.Add(worldMap[worldNodeCount]);
         worldMap[worldNodeCount].connections.Add(worldMap[0]);
-        worldMap[0].connections.Add(worldMap[worldNodeCount+1]);
-        worldMap[worldNodeCount+1].connections.Add(worldMap[0]);  
+        worldMap[0].connections.Add(worldMap[worldNodeCount + 1]);
+        worldMap[worldNodeCount + 1].connections.Add(worldMap[0]);
         worldMap[worldNodeCount].SetPosition(fortress1Location);
-        worldMap[worldNodeCount+1].SetPosition(fortress2Location);
+        worldMap[worldNodeCount + 1].SetPosition(fortress2Location);
         DrawRoad(worldMap[0].gameObject.transform.position, worldMap[worldNodeCount].gameObject.transform.position);
         DrawRoad(worldMap[0].gameObject.transform.position, worldMap[worldNodeCount + 1].gameObject.transform.position);
-        ConnectNodesToTheirClosestNodes();
-        for (int i = 1; i < worldMap.Count; i++)
-        {
-            ConnectIfNotConnected(worldMap[i]);
-        }
-        CreateWorldDecorationsArray();
-        for (int i = 0; i < decoratorArraySmoothingCount; i++)
-        {
-            SmoothWorldDecorationArray();
-        }
-        DrawDecorators();
-        //SmoothLocationPositions();
     }
     void CreateWorldDecorationsArray()
     {
@@ -760,7 +767,7 @@ public class GameManager : MonoBehaviour
                 spriteRenderer.sprite = worldMapSprite;
                 spriteRenderer.sortingOrder = -50;
 
-                GenerateWorldMap(worldNodeCount);
+                GenerateWorldMap();
 
             }
             player = new PlayerData();
@@ -873,14 +880,13 @@ public class WorldMapNode
 
     public int siegeTime;
 
-    public bool affectedBySmoothing = true;
     public bool visited = false;
 
     public List<int> loadedConnections;
 
     Vector3 checkMarkOffset;
     Vector3 siegeMarkOffset;
-    public WorldMapNode(GameManager _gameManager,string _name,string _type,bool smoothing = true)
+    public WorldMapNode(GameManager _gameManager,string _name,string _type)
     {
         gameManager = _gameManager;
         name = _name;
@@ -914,7 +920,6 @@ public class WorldMapNode
         {
             siegeTime = 0;
         }
-        affectedBySmoothing = smoothing;
 
         gameObject = new GameObject(name);
         gameObject.transform.parent = gameManager.worldMapObject.transform;

@@ -405,6 +405,7 @@ MonoBehaviour:
   defeatedIconSprite: {fileID: 21300000, guid: f451aa92db2dd2942931ca3dba4ec10c, type: 3}
   visitedCheckmarkSprite: {fileID: 21300000, guid: 1288421f068a3f34d8bc65f14a285a9e, type: 3}
   playerLocationSprite: {fileID: 21300000, guid: 1ba709c6dbf059c4198a6a085c181ebc, type: 3}
+  bossFight: 0
   worldMapObject: {fileID: 0}
   miscObject: {fileID: 599715697}
 --- !u!4 &1416959977
@@ -480,11 +481,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 64
+    m_FontSize: 120
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 2
-    m_MaxSize: 64
+    m_MinSize: 1
+    m_MaxSize: 120
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -591,10 +592,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 3840, y: 2160}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3

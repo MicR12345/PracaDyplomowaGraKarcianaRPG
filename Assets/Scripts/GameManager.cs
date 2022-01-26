@@ -219,7 +219,7 @@ public class GameManager : MonoBehaviour
         if (BattleRandom != null)
         {
             enemiesInBattle = new List<Enemy>();
-            int enemyCount = UnityEngine.Random.Range(1, Mathf.FloorToInt(BattleRandom.value));
+            int enemyCount = UnityEngine.Random.Range(1, Mathf.FloorToInt(BattleRandom.value+1));
             for (int i = 0; i < enemyCount; i++)
             {
                 enemiesInBattle.Add(enemyLibrary.PickRandomEnemy());

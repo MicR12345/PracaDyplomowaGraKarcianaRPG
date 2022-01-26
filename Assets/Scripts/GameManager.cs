@@ -77,6 +77,12 @@ public class GameManager : MonoBehaviour
 
     public GameObject worldMapObject;
     public GameObject miscObject;
+    [HideInInspector]
+    public Vector3 currentConnectedExpansionScale = new Vector3(1f, 1f, 1f);
+    static Vector3 maxSize = new Vector3(1.2f, 1.2f, 1f);
+    static Vector3 minSize = new Vector3(1f, 1f, 1f);
+    bool expanding = true;
+    float expansionSpeed = 0.06f;
     void StartSiege(WorldMapNode node)
     {
         if (!siegedLocations.Contains(node))
@@ -296,8 +302,9 @@ public class GameManager : MonoBehaviour
     {
         worldMap = new List<WorldMapNode>();
         CreateMainLocations();
-        CreateWorldLocationsRandom();
         CreateBorderFortresses();
+        CreateWorldLocationsRandom();
+        
         ConnectNodesToTheirClosestNodes();
         for (int i = 1; i < worldMap.Count; i++)
         {
@@ -842,6 +849,27 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene("World");
         }
     }
+    private void Update()
+    {
+        if (currentConnectedExpansionScale == minSize && !expanding)
+        {
+            expanding = true;
+            currentConnectedExpansionScale = Vector3.Lerp(currentConnectedExpansionScale, maxSize, expansionSpeed);
+        }
+        else if (currentConnectedExpansionScale == maxSize && expanding)
+        {
+            expanding = false;
+            currentConnectedExpansionScale = Vector3.Lerp(currentConnectedExpansionScale, minSize, expansionSpeed);
+        }
+        if (expanding)
+        {
+            currentConnectedExpansionScale = Vector3.Lerp(currentConnectedExpansionScale, maxSize, expansionSpeed);
+        }
+        else
+        {
+            currentConnectedExpansionScale = Vector3.Lerp(currentConnectedExpansionScale, minSize, expansionSpeed);
+        }
+    }
     public void newScene(string scene)
     {
         SceneManager.LoadScene(scene);
@@ -1072,6 +1100,7 @@ public class WorldMapNode
     public void StartSiege()
     {
         siegeIconRenderer.sprite = gameManager.siegedIconSprite;
+        UpdateSiegeComponents();
     }
     public void UpdateSiegeComponents()
     {
@@ -1090,6 +1119,8 @@ public class WorldMapNodeHandle : MonoBehaviour, IPointerEnterHandler, IPointerE
 {
     public WorldMapNode worldMapNode;
     GameManager gameManager;
+
+    bool affectedByPointer = false;
     public void SetWorldMapNodeHandle(WorldMapNode _worldMapNode,GameManager _gameManager)
     {
         worldMapNode = _worldMapNode;
@@ -1097,6 +1128,7 @@ public class WorldMapNodeHandle : MonoBehaviour, IPointerEnterHandler, IPointerE
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
+        affectedByPointer = true;
         if (gameManager.playerPosition.connections.Contains(worldMapNode))
         {
             worldMapNode.gameObject.transform.localScale = new Vector3(1.4f, 1.4f, 1f);
@@ -1104,6 +1136,7 @@ public class WorldMapNodeHandle : MonoBehaviour, IPointerEnterHandler, IPointerE
     }
     public void OnPointerExit(PointerEventData eventData)
     {
+        affectedByPointer = false;
         if (gameManager.playerPosition.connections.Contains(worldMapNode))
         {
             worldMapNode.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
@@ -1118,6 +1151,18 @@ public class WorldMapNodeHandle : MonoBehaviour, IPointerEnterHandler, IPointerE
         {
             gameManager.MovePlayer(worldMapNode);
             worldMapNode.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+        }
+    }
+    void Update()
+    {
+        if (gameManager.playerPosition.connections.Contains(worldMapNode) && !affectedByPointer)
+        {
+            worldMapNode.gameObject.transform.localScale = gameManager.currentConnectedExpansionScale;
+        }
+        else if(!affectedByPointer)
+        {
+
+            worldMapNode.gameObject.transform.localScale = Vector3.one;
         }
     }
 }

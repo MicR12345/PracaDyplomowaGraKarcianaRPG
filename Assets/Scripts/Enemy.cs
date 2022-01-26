@@ -32,6 +32,8 @@ public class Enemy
     public Sprite enemySprite;
     public List<Sprite> enemySpriteList;
 
+    SpriteAnimator spriteAnimator;
+
     public BattleManager battleManager;
 
     public Enemy Clone()
@@ -64,7 +66,7 @@ public class Enemy
         spriteObject.transform.localPosition = Vector3.zero;
         SpriteRenderer spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = sprite;
-        SpriteAnimator spriteAnimator = spriteObject.AddComponent<SpriteAnimator>();
+        spriteAnimator = spriteObject.AddComponent<SpriteAnimator>();
         spriteAnimator.setupSprites(spriteRenderer, enemySpriteList, "idle", 1f);
         spriteAnimator.startAnimation();
         BoxCollider collider = spriteObject.AddComponent<BoxCollider>();
@@ -231,6 +233,7 @@ public class Enemy
             enemyObject.transform.Rotate(Vector3.forward, 90);
             initiativeBar.SetActive(false);
             uiGameObject.SetActive(false);
+            spriteAnimator.StopAllCoroutines();
         }
     }
     public void UpdateHpBar()

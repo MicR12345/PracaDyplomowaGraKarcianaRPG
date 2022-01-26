@@ -24,7 +24,29 @@
 	  </tags>
 	</card>
 	<card>
-	  <name>cardTest2</name>
+	  <name>Czerwona_Maska</name>
+	  <path>CoreGame/CardGFX/</path>
+	  <rarity>3</rarity>
+	  <cost>10</cost>
+	  <effects>
+		<effect>
+		  <name>CzerwonaMaska</name>
+		  <level>0</level>
+		  <value>0</value>
+		  <duration>0</duration>
+		  <tags>
+		  </tags>
+		</effect>
+	  </effects>
+	  <tags>
+		  <tag>
+			  <name>NoRandom</name>
+			  <value>0</value>
+		  </tag>
+	  </tags>
+	</card>
+	<card>
+	  <name>orkDamage</name>
 	  <path>CoreGame/CardGFX/</path>
 	  <rarity>0</rarity>
 	  <cost>3</cost>
@@ -32,17 +54,21 @@
 		<effect>
 		  <name>damage</name>
 		  <level>0</level>
-		  <value>2</value>
+		  <value>10</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>
 		</effect>
 	  </effects>
 	  <tags>
+		<tag>
+			  <name>NoRandom</name>
+			  <value>0</value>
+		  </tag>
 	  </tags>
 	</card>
-	<card>
-	  <name>0_cardTest</name>
+		<card>
+	  <name>dwarfDamage</name>
 	  <path>CoreGame/CardGFX/</path>
 	  <rarity>0</rarity>
 	  <cost>3</cost>
@@ -50,7 +76,7 @@
 		<effect>
 		  <name>damage</name>
 		  <level>0</level>
-		  <value>200</value>
+		  <value>5</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>
@@ -58,31 +84,9 @@
 	  </effects>
 	  <tags>
 		<tag>
-		  <name>test</name>
-		  <value>1</value>
-		</tag>
-	  </tags>
-	</card>
-	<card>
-	  <name>cardTestR1</name>
-	  <path>CoreGame/CardGFX/</path>
-	  <rarity>1</rarity>
-	  <cost>1</cost>
-	  <effects>
-		<effect>
-		  <name>damage</name>
-		  <level>0</level>
-		  <value>200</value>
-		  <duration>0</duration>
-		  <tags>
-		  </tags>
-		</effect>
-	  </effects>
-	  <tags>
-		<tag>
-		  <name>test</name>
-		  <value>1</value>
-		</tag>
+			  <name>NoRandom</name>
+			  <value>0</value>
+		  </tag>
 	  </tags>
 	</card>
 		<card>
@@ -94,7 +98,7 @@
 		<effect>
 		  <name>damage</name>
 		  <level>0</level>
-		  <value>50</value>
+		  <value>20</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>
@@ -102,9 +106,67 @@
 	  </effects>
 	  <tags>
 		<tag>
-		  <name>testo</name>
+		  <name>NoRandom</name>
+		  <value>0</value>
+		</tag>
+	  </tags>
+	</card>
+		<card>
+	  <name>Shockwave</name>
+	  <path>CoreGame/CardGFX/</path>
+	  <rarity>1</rarity>
+	  <cost>5</cost>
+	  <effects>
+		<effect>
+		  <name>damage</name>
+		  <level>0</level>
+		  <value>20</value>
+		  <duration>0</duration>
+		  <tags>
+		  </tags>
+		</effect>
+	  </effects>
+	  <tags>
+	  </tags>
+	</card>
+			<card>
+	  <name>RunicShield</name>
+	  <path>CoreGame/CardGFX/</path>
+	  <rarity>1</rarity>
+	  <cost>3</cost>
+	  <effects>
+		<effect>
+		  <name>shield</name>
+		  <level>0</level>
+		  <value>10</value>
+		  <duration>0</duration>
+		  <tags>
+		  </tags>
+		</effect>
+	  </effects>
+	  <tags>
+		<tag>
+		  <name>self</name>
 		  <value>1</value>
 		</tag>
+	  </tags>
+	</card>
+	<card>
+	  <name>SimpleSlash</name>
+	  <path>CoreGame/CardGFX/</path>
+	  <rarity>0</rarity>
+	  <cost>2</cost>
+	  <effects>
+		<effect>
+		  <name>damage</name>
+		  <level>0</level>
+		  <value>5</value>
+		  <duration>0</duration>
+		  <tags>
+		  </tags>
+		</effect>
+	  </effects>
+	  <tags>
 	  </tags>
 	</card>
 </cards>

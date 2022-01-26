@@ -1,22 +1,292 @@
-using System;
+﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
+using UnityEngine.UI;
 public class Enemy
 {
-    private int enemyId { get; }
-    private int health { get; set; }
-    private int healthMax { get; set; }
-    private int moves { get; set; }
-    private int movesMax { get; set; }
-    private int initiative { get; set; }
+    public string name;
+    public float health;
+    public float healthMax;
+    public float spellDuration;
+    public List<string> cardSkills;
 
-    private List<Tuple<Card, CardState>> deck;
-    private int deckSize { get; set; }
-    private List<Card> cardStack { get; }
-    private List<Card> hand { get; set; }
-    private int handSize { get; set; }
-    private List<Card> abilityCards { get; set; }
-    private List<Tuple<int, int>> activeEffects { get; set; }
+    public bool isDead = false;
+
+    public List<DeckCard> deck;
+    public List<Effect> activeEffects;
+
+    public GameObject enemyObject;
+    public GameObject spriteObject;
+    public GameObject uiGameObject;
+    public GameObject hpTextGameObject;
+
+    public TextMeshPro hpText;
+
+    public GameObject initiativeBar;
+
+    public Slider initiativeSlider;
+
+    public Sprite enemySprite;
+    public List<Sprite> enemySpriteList;
+
+    SpriteAnimator spriteAnimator;
+
+    public BattleManager battleManager;
+
+    public Enemy Clone()
+    {
+        Enemy enemy = (Enemy)this.MemberwiseClone();
+        return enemy;
+    }
+    GameObject CreateEnemyInstance()
+    {
+        if (enemyObject == null)
+        {
+            enemyObject = new GameObject(name);
+            enemyObject.transform.localPosition = Vector3.zero;
+            EnemyHandle enemyHandle = enemyObject.AddComponent<EnemyHandle>();
+            enemyHandle.enemy = this;
+            enemyObject.tag = "enemy";
+            return enemyObject;
+        }
+        else
+        {
+            Debug.LogError("Trying to create enemy that alredy exists");
+        }
+        return null;
+    }
+
+    GameObject CreateEnemySpriteObject(Sprite sprite)
+    {
+        spriteObject = new GameObject("Sprite");
+        spriteObject.transform.parent = enemyObject.transform;
+        spriteObject.transform.localPosition = Vector3.zero;
+        SpriteRenderer spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = sprite;
+        spriteAnimator = spriteObject.AddComponent<SpriteAnimator>();
+        spriteAnimator.setupSprites(spriteRenderer, enemySpriteList, "idle", 1f);
+        spriteAnimator.startAnimation();
+        BoxCollider collider = spriteObject.AddComponent<BoxCollider>();
+        collider.size = new Vector3(12f, 39f, 0.2f);
+        spriteObject.tag = "enemy_sprite";
+        return spriteObject;
+    }
+    GameObject DmgAnimationStart(List<Sprite> sprite, Vector3 vector3)
+    {
+        List<Sprite> enemyAttackSprites = sprite;
+        spriteObject = new GameObject("Sprite");
+        SpriteRenderer spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
+        SpriteAnimator spriteAnimator = spriteObject.AddComponent <SpriteAnimator>();
+        spriteAnimator.setupSprites(spriteRenderer, enemyAttackSprites, "idle", 1f);
+        spriteAnimator.PlayOnceDMGAnimation(enemyAttackSprites, 0.05f);
+        spriteObject.transform.position = vector3 + new Vector3(0f,0f,-5f);
+        return spriteObject;    
+    }
+    GameObject CreateUIObject()
+    {
+        uiGameObject = new GameObject("UI Canvas");
+        uiGameObject.transform.parent = enemyObject.transform;
+        uiGameObject.transform.localPosition = Vector3.zero;
+        uiGameObject.AddComponent<Canvas>();
+        RectTransform canvasRT = uiGameObject.GetComponent<RectTransform>();
+        canvasRT.sizeDelta = new Vector2(2.30f, 0.25f);
+        return uiGameObject;
+    }
+    GameObject CreateHPText()
+    {
+        hpTextGameObject = new GameObject("HP Text");
+        hpTextGameObject.transform.parent = uiGameObject.transform;
+        hpTextGameObject.transform.localPosition = new Vector3(0f,-20f,0f);
+        hpText = hpTextGameObject.AddComponent<TextMeshPro>();
+        hpText.horizontalAlignment = HorizontalAlignmentOptions.Center;
+        hpText.verticalAlignment = VerticalAlignmentOptions.Middle;
+        hpText.font = battleManager.font;
+        hpText.text = "0/0";
+        return hpTextGameObject;
+    }
+    GameObject CreateInitiativeBar()
+    {
+        initiativeBar = new GameObject("Initiative Bar");
+        initiativeBar.transform.parent = enemyObject.transform;
+        initiativeBar.transform.localPosition = new Vector3(0f, 25f);
+        initiativeBar.AddComponent<Canvas>();
+        RectTransform rectTransformSize = initiativeBar.GetComponent<RectTransform>();
+        rectTransformSize.sizeDelta = new Vector2(10f, 1f);
+        GameObject sliderObject = new GameObject("Slider");
+        sliderObject.transform.parent = initiativeBar.transform;
+        initiativeSlider = sliderObject.AddComponent<Slider>();
+        GameObject sliderBar = new GameObject("Slider Bar");
+        sliderBar.transform.parent = initiativeBar.transform;
+        Image image = sliderBar.AddComponent<Image>();
+        RectTransform rectTransform = sliderBar.GetComponent<RectTransform>();
+        
+        initiativeSlider.fillRect = rectTransform;
+        rectTransform.sizeDelta = new Vector2(0f, 0f);
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
+
+        return initiativeBar;
+    }
+    void CreateUIElements()
+    {
+        CreateUIObject();
+        CreateHPText();
+        CreateInitiativeBar();
+    }
+    public void CreateFightingEnemy(BattleManager battleManager)
+    {
+        CreateEnemyInstance();
+        CreateEnemySpriteObject(enemySprite);
+        this.battleManager = battleManager;
+        enemyObject.transform.parent = battleManager.transform;
+        CreateUIElements();
+        
+    }
+    public void CreateDMGAnimation(List<Sprite> enemyAttackAnimationSpriteList, Vector3 vector3)
+    {
+        DmgAnimationStart(enemyAttackAnimationSpriteList, vector3);
+    }
+    public Enemy(string _name,float _healthMax, float _spellDuration, List<string> _cardSkills,Sprite sprite)
+    {
+        name = _name;
+        health = _healthMax;
+        healthMax = _healthMax;
+        spellDuration = _spellDuration;
+        cardSkills = _cardSkills;
+
+        enemySprite = sprite;
+        deck = new List<DeckCard>();
+        activeEffects = new List<Effect>();
+    }
+    public Enemy(string _name, float _healthMax, float _spellDuration, List<string> _cardSkills, List<Sprite> sprites)
+    {
+        name = _name;
+        health = _healthMax;
+        healthMax = _healthMax;
+        spellDuration = _spellDuration;
+        cardSkills = _cardSkills;
+
+        enemySpriteList = sprites;
+        deck = new List<DeckCard>();
+        activeEffects = new List<Effect>();
+    }
+
+    public void ApplyCardEffect(Effect effect)
+    {
+        if (effect.name == "damage")
+        {
+            float damage = effect.value;
+            Effect activeShield = CheckForEffect("shield");
+            if (activeShield != null)
+            {
+                if (damage >= activeShield.value)
+                {
+                    damage = damage - activeShield.value;
+                    RemoveEffect(activeShield);
+                }
+                else
+                {
+                    activeShield.value = activeShield.value - damage;
+                    damage = 0;
+                }
+            }
+            health = health - damage;
+        }
+        if(effect.name == "Ostatnia szansa")
+        {
+            if(battleManager.player.health < health)
+            {
+                health = health - battleManager.player.health;
+            }
+            else
+            {   
+                if(health + 10 < healthMax) { health = health + 10; }
+                else { health = healthMax; }
+            }
+        }
+        if (effect.name == "CzerwonaMaska")
+        {
+            if (health > healthMax/2)
+            {
+                if (health + 20 > healthMax) { health = healthMax; }
+                else { health = health + 20; }
+            }
+            else
+            {
+                if (battleManager.player.health > health) { health = 1; }
+                else { battleManager.player.health = battleManager.player.health + 30; }
+            }
+        }
+        CheckForDeath();
+    }
+    public void SetPosition(Vector2 position)
+    {
+        enemyObject.transform.localPosition = position;
+    }
+    public void CheckForDeath()
+    {
+        if (health<=0)
+        {
+            isDead = true;
+            enemyObject.transform.Rotate(Vector3.forward, 90);
+            initiativeBar.SetActive(false);
+            uiGameObject.SetActive(false);
+            spriteAnimator.StopAllCoroutines();
+        }
+    }
+    public void UpdateHpBar()
+    {
+        hpText.text = health + "/" + healthMax;
+    }
+    public void UpdateInitiativeBar(float amount)
+    {
+        initiativeSlider.value = 1 - (amount / spellDuration);
+    }
+    public void MakeAMove()
+    {
+        List<DeckCard> possibleCard = new List<DeckCard>();
+        for (int i = 0; i < deck.Count; i++)
+        {
+            if (!deck[0].destroyed &&
+                deck[0].exhausted == 0)
+            {
+                possibleCard.Add(deck[0]);
+            }
+        }
+        int pickRandom = UnityEngine.Random.Range(0, possibleCard.Count);
+        Tag selfTag = possibleCard[pickRandom].card.FindCardTag("self");
+        if (selfTag!=null)
+        {
+            battleManager.ApplyCard(possibleCard[pickRandom], this);
+        }
+        else
+        {
+            battleManager.ApplyCardToPlayer(possibleCard[pickRandom]);
+        }
+    }
+    public Effect CheckForEffect(string name)
+    {
+        foreach (Effect item in activeEffects)
+        {
+            if (item.name == name)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+    public void RemoveEffect(Effect effect)
+    {
+        if (activeEffects.Contains(effect))
+        {
+            activeEffects.Remove(effect);
+        }
+    }
+}
+public class EnemyHandle : MonoBehaviour
+{
+    public Enemy enemy;
 }

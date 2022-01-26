@@ -1,3 +1,1 @@
-# Praca Dyplomowa
- 
-Praca dyplomowa Michał Ruść , MiłoszProc
+#Gra karciana RPG

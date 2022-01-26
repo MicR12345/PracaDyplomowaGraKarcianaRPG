@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<EnemyList>
+<enemies>
+	<enemy>
+		<name>Orc</name>
+		<healthMax>65</healthMax>
+		<spellDuration>5</spellDuration>
+		<cardSkills>
+			<card>orkDamage</card>
+		</cardSkills>
+		<path>CoreGame/EnemyGFX/</path>
+		<frameCount>4</frameCount>
+	</enemy>
+	<enemy>
+		<name>FinalBoss</name>
+		<healthMax>300</healthMax>
+		<spellDuration>10</spellDuration>
+		<cardSkills>
+			<card>FinalBossCardTest</card>
+		</cardSkills>
+		<path>CoreGame/EnemyGFX/</path>
+		<frameCount>4</frameCount>
+	</enemy>
+		<enemy>
+		<name>Dwarf</name>
+		<healthMax>50</healthMax>
+		<spellDuration>2</spellDuration>
+		<cardSkills>
+			<card>dwarfDamage</card>
+		</cardSkills>
+		<path>CoreGame/EnemyGFX/</path>
+		<frameCount>3</frameCount>
+	</enemy>
+</enemies>
+</EnemyList>

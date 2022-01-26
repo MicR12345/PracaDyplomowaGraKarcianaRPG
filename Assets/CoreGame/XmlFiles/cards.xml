@@ -115,12 +115,12 @@
 	  <name>Shockwave</name>
 	  <path>CoreGame/CardGFX/</path>
 	  <rarity>1</rarity>
-	  <cost>5</cost>
+	  <cost>3</cost>
 	  <effects>
 		<effect>
 		  <name>damage</name>
 		  <level>0</level>
-		  <value>20</value>
+		  <value>40</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>
@@ -138,7 +138,7 @@
 		<effect>
 		  <name>shield</name>
 		  <level>0</level>
-		  <value>10</value>
+		  <value>15</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>
@@ -160,7 +160,7 @@
 		<effect>
 		  <name>damage</name>
 		  <level>0</level>
-		  <value>8</value>
+		  <value>12</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>

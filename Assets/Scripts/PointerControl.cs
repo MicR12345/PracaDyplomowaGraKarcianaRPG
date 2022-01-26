@@ -29,13 +29,6 @@ public class PointerControl : MonoBehaviour
         actions.Enable();
 
         actions.UI.Click.performed += OnClickPerformed;
-        actions.UI.Cancel.performed += Cancel_performed;
-    }
-
-    private void Cancel_performed(InputAction.CallbackContext obj)
-    {
-        grabbedCard = null;
-        grabbedCardHandle = null;
     }
 
     private void OnClickPerformed(InputAction.CallbackContext obj)
@@ -92,6 +85,5 @@ public class PointerControl : MonoBehaviour
     public void UnRegisterFromInput()
     {
         actions.UI.Click.performed -= OnClickPerformed;
-        actions.UI.Cancel.performed -= Cancel_performed;
     }
 }

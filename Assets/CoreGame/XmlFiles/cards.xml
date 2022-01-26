@@ -54,7 +54,7 @@
 		<effect>
 		  <name>damage</name>
 		  <level>0</level>
-		  <value>15</value>
+		  <value>10</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>
@@ -98,7 +98,7 @@
 		<effect>
 		  <name>damage</name>
 		  <level>0</level>
-		  <value>30</value>
+		  <value>15</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>
@@ -115,12 +115,12 @@
 	  <name>Shockwave</name>
 	  <path>CoreGame/CardGFX/</path>
 	  <rarity>1</rarity>
-	  <cost>3</cost>
+	  <cost>5</cost>
 	  <effects>
 		<effect>
 		  <name>damage</name>
 		  <level>0</level>
-		  <value>35</value>
+		  <value>20</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>
@@ -133,7 +133,7 @@
 	  <name>RunicShield</name>
 	  <path>CoreGame/CardGFX/</path>
 	  <rarity>1</rarity>
-	  <cost>2</cost>
+	  <cost>3</cost>
 	  <effects>
 		<effect>
 		  <name>shield</name>
@@ -160,7 +160,7 @@
 		<effect>
 		  <name>damage</name>
 		  <level>0</level>
-		  <value>20</value>
+		  <value>8</value>
 		  <duration>0</duration>
 		  <tags>
 		  </tags>

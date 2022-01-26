@@ -33,7 +33,6 @@ public class PointerControl : MonoBehaviour
 
     private void OnClickPerformed(InputAction.CallbackContext obj)
     {
-        /*Do przerobienia by reagowało na UI też*/
         if (grabbedCard == null)
         {
             Physics.Raycast(mouseWorldPosition, new Vector3(0f, 0f, 1f), out raycastHit, 10f);
@@ -41,10 +40,6 @@ public class PointerControl : MonoBehaviour
             {
                 grabbedCard = raycastHit.collider.gameObject.transform.parent.gameObject;
                 grabbedCardHandle = grabbedCard.GetComponent<CardHandle>();
-            }
-            else
-            {
-
             }
         }
         else
@@ -56,10 +51,8 @@ public class PointerControl : MonoBehaviour
                 battleManager.CardWasMovedOntoEnemy(grabbedCardHandle.card, enemyHandle.enemy);
             }
             grabbedCard = null;
-
         }
     }
-    // Update is called once per frame
 
     bool resetPosition = false;
     void Update()

@@ -88,6 +88,7 @@ public class Player : MonoBehaviour
         hpText = hpTextGameObject.AddComponent<TextMeshPro>();
         hpText.horizontalAlignment = HorizontalAlignmentOptions.Center;
         hpText.verticalAlignment = VerticalAlignmentOptions.Middle;
+        hpText.font = battleManager.font;
         hpText.text = "0/0";
         return hpTextGameObject;
     }
@@ -99,6 +100,7 @@ public class Player : MonoBehaviour
         apText = apTextGameObject.AddComponent<TextMeshPro>();
         apText.horizontalAlignment = HorizontalAlignmentOptions.Center;
         apText.verticalAlignment = VerticalAlignmentOptions.Middle;
+        apText.font = battleManager.font;
         apText.text = "0/0";
         apText.color = Color.cyan;
         apText.fontSize = 30;

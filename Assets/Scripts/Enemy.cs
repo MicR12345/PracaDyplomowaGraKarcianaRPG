@@ -103,6 +103,7 @@ public class Enemy
         hpText = hpTextGameObject.AddComponent<TextMeshPro>();
         hpText.horizontalAlignment = HorizontalAlignmentOptions.Center;
         hpText.verticalAlignment = VerticalAlignmentOptions.Middle;
+        hpText.font = battleManager.font;
         hpText.text = "0/0";
         return hpTextGameObject;
     }

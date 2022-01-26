@@ -377,8 +377,10 @@ public class GameManager : MonoBehaviour
         }
         foreach (WorldMapNode item in worldMap)
         {
-            worldDecoratorArray[Mathf.FloorToInt(worldDecoratorMultiplier * (item.gameObject.transform.localPosition.x + Mathf.Abs(worldBoundsStart.x))),
-                                Mathf.FloorToInt(worldDecoratorMultiplier * (item.gameObject.transform.localPosition.y + Mathf.Abs(worldBoundsStart.y)))]
+            worldDecoratorArray[Mathf.FloorToInt(worldDecoratorMultiplier * 
+                                (item.gameObject.transform.localPosition.x + Mathf.Abs(worldBoundsStart.x))),
+                                Mathf.FloorToInt(worldDecoratorMultiplier * 
+                                (item.gameObject.transform.localPosition.y + Mathf.Abs(worldBoundsStart.y)))]
                                 = 50;
         }
     }
@@ -821,6 +823,10 @@ public class GameManager : MonoBehaviour
             {
                 siegedLocations.Add(worldMap[item]);
             }
+            foreach (WorldMapNode item in siegedLocations)
+            {
+                item.StartSiege();
+            }
             player = new PlayerData(saveGameData.playerSaveData, cardLibrary);
             playerPosition = worldMap[saveGameData.playerSaveData.playerLocation];
         }
@@ -892,6 +898,75 @@ public class WorldMapNode
         name = _name;
         type = _type;
         connections = new List<WorldMapNode>();
+        SetSiegeTime();
+
+        gameObject = new GameObject(name);
+        gameObject.transform.parent = gameManager.worldMapObject.transform;
+        gameObject.transform.localPosition = Vector3.zero;
+        WorldMapNodeHandle handle = gameObject.AddComponent<WorldMapNodeHandle>();
+        handle.SetWorldMapNodeHandle(this,gameManager);
+
+        CreateSpriteObject();
+
+        SetSprite();
+
+        CreateCollider();
+
+        CreateSiegeIcon();
+ 
+        CreateVisitedIcon();
+    }
+    public WorldMapNode(GameManager _gameManager,SaveManager.WorldMapNodeData worldMapNodeData)
+    {
+        gameManager = _gameManager;
+        name = worldMapNodeData.name;
+        type = worldMapNodeData.type;
+        siegeTime = worldMapNodeData.siegeTime;
+        connections = new List<WorldMapNode>();
+        loadedConnections = new List<int>(worldMapNodeData.connections);
+        visited = worldMapNodeData.visited;
+        gameObject = new GameObject(name);
+        gameObject.transform.parent = gameManager.worldMapObject.transform;
+        gameObject.transform.localPosition = new Vector3(worldMapNodeData.x,worldMapNodeData.y,-5f);
+        WorldMapNodeHandle handle = gameObject.AddComponent<WorldMapNodeHandle>();
+        handle.SetWorldMapNodeHandle(this, gameManager);
+
+        CreateSpriteObject();
+
+        SetSprite();
+
+        CreateCollider();
+
+        CreateSiegeIcon();
+        CreateVisitedIcon();
+    }
+    void CreateCollider()
+    {
+        BoxCollider collider = gameObject.AddComponent<BoxCollider>();
+        collider.size = new Vector3(spriteRenderer.sprite.texture.width / spriteRenderer.sprite.pixelsPerUnit,
+            spriteRenderer.sprite.texture.height / spriteRenderer.sprite.pixelsPerUnit, 0.2f);
+    }
+    void CreateSpriteObject()
+    {
+        spriteObject = new GameObject("Sprite");
+        spriteObject.transform.parent = gameObject.transform;
+        spriteObject.transform.localPosition = Vector3.zero + new Vector3(0f, 0.6f);
+        spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
+    }
+    void CreateVisitedIcon()
+    {
+        visitedIconObject = new GameObject("VisitedIcon");
+        visitedIconObject.transform.parent = gameObject.transform;
+        visitedIconObject.transform.localPosition = checkMarkOffset;
+        visitedIconRenderer = visitedIconObject.AddComponent<SpriteRenderer>();
+        visitedIconRenderer.sprite = gameManager.visitedCheckmarkSprite;
+        if (!visited)
+        {
+            visitedIconObject.SetActive(false);
+        }
+    }
+    void SetSiegeTime()
+    {
         if (type == "EnemyCastle")
         {
             siegeTime = 0;
@@ -920,67 +995,9 @@ public class WorldMapNode
         {
             siegeTime = 0;
         }
-
-        gameObject = new GameObject(name);
-        gameObject.transform.parent = gameManager.worldMapObject.transform;
-        gameObject.transform.localPosition = Vector3.zero;
-        WorldMapNodeHandle handle = gameObject.AddComponent<WorldMapNodeHandle>();
-        handle.SetWorldMapNodeHandle(this,gameManager);
-
-        spriteObject = new GameObject("Sprite");
-        spriteObject.transform.parent = gameObject.transform;
-        spriteObject.transform.localPosition = Vector3.zero + new Vector3(0f, 0.6f);
-
-        spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
-
-        SetSprite();
-
-        BoxCollider collider = gameObject.AddComponent<BoxCollider>();
-        collider.size = new Vector3(spriteRenderer.sprite.texture.width / spriteRenderer.sprite.pixelsPerUnit,
-            spriteRenderer.sprite.texture.height / spriteRenderer.sprite.pixelsPerUnit,0.2f);
-
-        siegeIconObject = new GameObject("SiegeIcon");
-        siegeIconObject.transform.parent = gameObject.transform;
-        siegeIconObject.transform.localPosition = siegeMarkOffset;
-        siegeIconRenderer = siegeIconObject.AddComponent<SpriteRenderer>();
-        if (type == "EnemyCastle")
-        {
-            siegeIconObject.SetActive(false);
-        }
-        visitedIconObject = new GameObject("VisitedIcon");
-        visitedIconObject.transform.parent = gameObject.transform;
-        visitedIconObject.transform.localPosition = checkMarkOffset;
-        visitedIconRenderer = visitedIconObject.AddComponent<SpriteRenderer>();
-        visitedIconRenderer.sprite = gameManager.visitedCheckmarkSprite;
-        visitedIconObject.SetActive(false);
     }
-    public WorldMapNode(GameManager _gameManager,SaveManager.WorldMapNodeData worldMapNodeData)
+    void CreateSiegeIcon()
     {
-        gameManager = _gameManager;
-        name = worldMapNodeData.name;
-        type = worldMapNodeData.type;
-        siegeTime = worldMapNodeData.siegeTime;
-        connections = new List<WorldMapNode>();
-        loadedConnections = new List<int>(worldMapNodeData.connections);
-        visited = worldMapNodeData.visited;
-        gameObject = new GameObject(name);
-        gameObject.transform.parent = gameManager.worldMapObject.transform;
-        gameObject.transform.localPosition = new Vector3(worldMapNodeData.x,worldMapNodeData.y,-5f);
-        WorldMapNodeHandle handle = gameObject.AddComponent<WorldMapNodeHandle>();
-        handle.SetWorldMapNodeHandle(this, gameManager);
-
-        spriteObject = new GameObject("Sprite");
-        spriteObject.transform.parent = gameObject.transform;
-        spriteObject.transform.localPosition = Vector3.zero + new Vector3(0f, 0.6f);
-
-        spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
-
-        SetSprite();
-
-        BoxCollider collider = gameObject.AddComponent<BoxCollider>();
-        collider.size = new Vector3(spriteRenderer.sprite.texture.width / spriteRenderer.sprite.pixelsPerUnit,
-            spriteRenderer.sprite.texture.height / spriteRenderer.sprite.pixelsPerUnit, 0.2f);
-
         siegeIconObject = new GameObject("SiegeIcon");
         siegeIconObject.transform.parent = gameObject.transform;
         siegeIconObject.transform.localPosition = siegeMarkOffset;
@@ -989,15 +1006,6 @@ public class WorldMapNode
         {
             siegeIconObject.SetActive(false);
         }
-        visitedIconObject = new GameObject("VisitedIcon");
-        visitedIconObject.transform.parent = gameObject.transform;
-        visitedIconObject.transform.localPosition = checkMarkOffset;
-        visitedIconRenderer = visitedIconObject.AddComponent<SpriteRenderer>();
-        visitedIconRenderer.sprite = gameManager.visitedCheckmarkSprite;
-        if (!visited)
-        {
-            visitedIconObject.SetActive(false);
-        } 
     }
 
     void SetSprite()

@@ -118,15 +118,17 @@
 					<text>Spróbuj ukraść kilka kart(skończy się obiciem twarzy jednego z potworów właściciela).</text>
 					<addCards>
 					</addCards>
-					<tag>
-						<name>BattleRandom</name>
-						<value>1</value>
-					</tag>
-					<tag>
-					
-						<name>RandomCardR0</name>
-						<value>1</value>
-					</tag>
+					<tags>
+						<tag>
+							<name>BattleRandom</name>
+							<value>1</value>
+						</tag>
+						<tag>
+
+							<name>RandomCardR0</name>
+							<value>1</value>
+						</tag>
+					</tags>
 				</choice>
 				<choice>
 					<text>Przywitaj się ze sprzedawcą i odejdź w dalszą podróż.</text>

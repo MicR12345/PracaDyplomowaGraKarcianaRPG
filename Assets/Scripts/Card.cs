@@ -121,7 +121,7 @@ public class Card
         costText.horizontalAlignment = HorizontalAlignmentOptions.Center;
         costText.verticalAlignment = VerticalAlignmentOptions.Middle;
         costText.sortingOrder = 15;
-        costText.fontSize = 32;
+        costText.fontSize = 64;
         costText.color = Color.cyan;
         costText.text = cost.ToString();
         return descriptionTextGameObject;

@@ -47,6 +47,7 @@ public class BattleManager : MonoBehaviour
     GameManager gameManager;
 
     public CardSelector cardSelector;
+    public TMPro.TMP_FontAsset font;
     void Start()
     {
         gameManager = GameObject.Find("World").GetComponent<GameManager>();

@@ -88,6 +88,7 @@ public class Player : MonoBehaviour
         hpText = hpTextGameObject.AddComponent<TextMeshPro>();
         hpText.horizontalAlignment = HorizontalAlignmentOptions.Center;
         hpText.verticalAlignment = VerticalAlignmentOptions.Middle;
+        hpText.font = battleManager.font;
         hpText.text = "0/0";
         return hpTextGameObject;
     }
@@ -99,6 +100,7 @@ public class Player : MonoBehaviour
         apText = apTextGameObject.AddComponent<TextMeshPro>();
         apText.horizontalAlignment = HorizontalAlignmentOptions.Center;
         apText.verticalAlignment = VerticalAlignmentOptions.Middle;
+        apText.font = battleManager.font;
         apText.text = "0/0";
         apText.color = Color.cyan;
         apText.fontSize = 30;
@@ -312,7 +314,8 @@ public class Player : MonoBehaviour
             for (int i = 0; i < hand.Count; i++)
             {
                 float angleHeightInfluence = -Mathf.Abs (((((maxAngle * 2) / hand.Count) * (i + 0.5f)) - maxAngle)/maxAngle);
-                hand[i].card.cardMover.moveCardTo = transform.TransformPoint(BasePosition + new Vector3((((maxSpreadDistance * 2) / hand.Count) * (i + 0.5f)) - maxSpreadDistance,
+                hand[i].card.cardMover.moveCardTo = transform.TransformPoint(BasePosition + 
+                    new Vector3((((maxSpreadDistance * 2) / hand.Count) * (i + 0.5f)) - maxSpreadDistance,
                     angleHeightInfluence*maxHeight, 0f));
                 hand[i].card.cardObject.transform.localScale = new Vector3(0.5f, 0.5f);
                 hand[i].card.cardObject.transform.parent = Hand.transform;

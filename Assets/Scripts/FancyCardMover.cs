@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FancyCardMover : MonoBehaviour
 {
-    static public float speed = 0.15f;
+    static public float speed = 0.30f;
     static public float rotationSpeed = 0.1f;
     public Vector3 moveCardTo = new Vector3(0f,0f,0f);
     public Vector3 rotateTo = new Vector3(0f, 0f, 0f);

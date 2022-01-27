@@ -186,9 +186,7 @@ public class Card
         card.cardObject = null;
         card.borderObject = null;
         card.spriteObject = null;
-        //card.CreateCardInstance(false);
         card.AddCardGFX(this.cardImage, this.cardBorder);
-        //card.cardObject.SetActive(false);
         return card;
     }
     public void DestroyCardInstance()
@@ -202,7 +200,6 @@ public class Card
     {
         DestroyCardInstance();
         CreateCardInstance(false);
-        //cardObject.SetActive(false);
     }
 }
 public class DeckCard

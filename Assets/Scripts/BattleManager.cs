@@ -80,7 +80,6 @@ public class BattleManager : MonoBehaviour
 
         player.actionPoints = player.data.actionPointsMax;
 
-        //CheatGiveDebugCardsToDeck(10);
         player.PrepareHandBeforeBattle();
         player.DealAFullHand();
         player.SetupCardLocation();
